@@ -6,14 +6,19 @@ import 'package:quran_projet/widgets/mobile_showcase.dart';
 import 'package:quran_projet/widgets/pricing_section.dart';
 import 'package:quran_projet/widgets/section3.dart';
 import 'package:quran_projet/widgets/section6.dart';
-import 'package:quran_projet/widgets/user_card.dart';
-import 'package:quran_projet/widgets/image_carousel.dart';
 import 'package:quran_projet/widgets/users_section.dart';
+import 'package:quran_projet/widgets/image_carousel.dart';
+import 'package:quran_projet/widgets/stats_section.dart';
 
+class Page1 extends StatefulWidget {
+  @override
+  _Page1State createState() => _Page1State();
+}
 
-
-class Page1 extends StatelessWidget {
+class _Page1State extends State<Page1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isHoveredImage = false;
+  bool isHoveredButton = false;
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +94,9 @@ class Page1 extends StatelessWidget {
                       MobileShowcase(),
                       SizedBox(height: 50),
                       PricingSection(),
-                      
                       Section6(),
-                      
-                      CustomAppSection(), 
+                      CustomAppSection(),
+                      StatsSection(),
                     ],
                   ),
                 ),
@@ -103,7 +107,6 @@ class Page1 extends StatelessWidget {
       ),
     );
   }
-}
 
   Widget _largeScreenContent() {
     return Row(
@@ -111,7 +114,17 @@ class Page1 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: Image.asset('assets/homme.png', fit: BoxFit.contain, height: 350),
+          child: MouseRegion(
+            onEnter: (_) => setState(() => isHoveredImage = true),
+            onExit: (_) => setState(() => isHoveredImage = false),
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              transform: isHoveredImage
+                  ? Matrix4.translationValues(0, -10, 0)
+                  : Matrix4.identity(),
+              child: Image.asset('assets/homme.png', fit: BoxFit.contain, height: 350),
+            ),
+          ),
         ),
         SizedBox(width: 20),
         Expanded(child: _textContent()),
@@ -125,7 +138,17 @@ class Page1 extends StatelessWidget {
       children: [
         _textContent(),
         SizedBox(height: 40),
-        Image.asset('assets/homme.png', fit: BoxFit.contain, height: 250),
+        MouseRegion(
+          onEnter: (_) => setState(() => isHoveredImage = true),
+          onExit: (_) => setState(() => isHoveredImage = false),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            transform: isHoveredImage
+                ? Matrix4.translationValues(0, -10, 0)
+                : Matrix4.identity(),
+            child: Image.asset('assets/homme.png', fit: BoxFit.contain, height: 250),
+          ),
+        ),
       ],
     );
   }
@@ -140,13 +163,25 @@ class Page1 extends StatelessWidget {
         Text('.نظام أهل القرآن هو نظام سحابي متكامل .. يمكن بواسطته إنشاء بيئة رقمية', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
          Text(' تربط بين مشرفي الحلقات ومدرسيها وطلابها وأولياء الأمور ، وذلك بمنحهم الأدوات الحديثة للارتقاء بحلقات القرآن', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         SizedBox(height: 25),
-        ElevatedButton(
-          onPressed: () {},
-          child: Text('طلب نسخة', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
+        MouseRegion(
+          onEnter: (_) => setState(() => isHoveredButton = true),
+          onExit: (_) => setState(() => isHoveredButton = false),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            decoration: BoxDecoration(
+              color: isHoveredButton ? Colors.white : Colors.orange,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange, width: 2),
+            ),
             padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-            textStyle: TextStyle(fontSize: 18),
+            child: Text(
+              'طلب نسخة',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isHoveredButton ? Colors.orange : Colors.white,
+              ),
+            ),
           ),
         ),
       ],
@@ -154,13 +189,13 @@ class Page1 extends StatelessWidget {
   }
 
   Widget _carouselSection() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 20),
-    child: ImageCarousel(),
-  );
-}
- 
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: ImageCarousel(),
+    );
+  }
+
   Widget _drawerItem(String title) {
     return ListTile(title: Text(title), onTap: () {});
   }
-
+}
