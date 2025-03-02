@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quran_projet/widgets/user_card.dart';
+
+import '../widgets/user_card.dart'; // Assure-toi que ce fichier existe et est bien structuré
 
 class UsersSection extends StatelessWidget {
   const UsersSection({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class UsersSection extends StatelessWidget {
         children: [
           Text(
             "مستخدمو النظام",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 8),
@@ -23,19 +24,52 @@ class UsersSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           GridView.count(
-            crossAxisCount: MediaQuery.of(context).size.width > 800 ? 4 : 2,
+            crossAxisCount: MediaQuery.of(context).size.width > 800 ? 4 : 1,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
             children: [
-              UserCard(imagePath: "assets/images/parent.png", title: "ولي الأمر"),
-              UserCard(imagePath: "assets/images/student.png", title: "الطالب"),
-              UserCard(imagePath: "assets/images/teacher.png", title: "المعلم"),
-              UserCard(imagePath: "assets/images/admin.png", title: "المشرف"),
+              HoverUserCard(imagePath: "assets/images1/parent.png", title: "ولي الأمر"),
+              HoverUserCard(imagePath: "assets/images1/student.png", title: "الطالب"),
+              HoverUserCard(imagePath: "assets/images1/teacher.png", title: "المعلم"),
+              HoverUserCard(imagePath: "assets/images1/admin.png", title: "المشرف"),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class HoverUserCard extends StatefulWidget {
+  final String imagePath;
+  final String title;
+
+  const HoverUserCard({Key? key, required this.imagePath, required this.title}) : super(key: key);
+
+  @override
+  _HoverUserCardState createState() => _HoverUserCardState();
+}
+
+class _HoverUserCardState extends State<HoverUserCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        transform: _isHovered ? Matrix4.translationValues(0, -5, 0) : Matrix4.identity(),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: _isHovered
+              ? [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2, offset: Offset(0, 4))]
+              : [],
+        ),
+        child: UserCard(imagePath: widget.imagePath, title: widget.title),
       ),
     );
   }
