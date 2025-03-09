@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quran_projet/nav.dart';
+import 'package:quran_projet/widgets/Footer.dart';
+import 'package:quran_projet/widgets/PartnersSection.dart';
+import 'package:quran_projet/widgets/appbar.dart';
 import 'package:quran_projet/widgets/custom_app_section.dart';
 import 'package:quran_projet/widgets/features_section.dart';
+import 'package:quran_projet/widgets/image3scrol.dart';
 import 'package:quran_projet/widgets/mobile_showcase.dart';
 import 'package:quran_projet/widgets/pricing_section.dart';
 import 'package:quran_projet/widgets/section3.dart';
@@ -24,28 +28,7 @@ class _Page1State extends State<Page1> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFF0E9D6D)),
-              child: Text(
-                'القائمة',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            _drawerItem('الرئيسية'),
-            _drawerItem('الأسعار'),
-            _drawerItem('المزايا'),
-            _drawerItem('الدعم الفني'),
-            _drawerItem('التسويق بالعمولة'),
-            _drawerItem('تسجيل الدخول'),
-          ],
-        ),
-      ),
+      drawer: CustomDrawer(), // Utilisation du fichier séparé pour le menu
       body: Stack(
         children: [
           Container(color: Color(0xFF0E9D6D)),
@@ -67,13 +50,13 @@ class _Page1State extends State<Page1> {
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: NavBar(scaffoldKey: _scaffoldKey),
               ),
-              // Contenu avec espace pour éviter le chevauchement
+              // Contenu principal
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(height: 120), // Ajuste l'espacement
+                      SizedBox(height: 120),
                       LayoutBuilder(
                         builder: (context, constraints) {
                           bool isLargeScreen = constraints.maxWidth > 800;
@@ -97,6 +80,10 @@ class _Page1State extends State<Page1> {
                       Section6(),
                       CustomAppSection(),
                       StatsSection(),
+                      ImageCarousel3() ,
+                      PartnersSection(),
+                      FooterSection()
+
                     ],
                   ),
                 ),
@@ -160,8 +147,10 @@ class _Page1State extends State<Page1> {
         Text('نظام أهل القرآن', style: TextStyle(fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         Text('تسيير وتيسير التعليم القرآني', style: TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         SizedBox(height: 20),
-        Text('.نظام أهل القرآن هو نظام سحابي متكامل .. يمكن بواسطته إنشاء بيئة رقمية', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-         Text(' تربط بين مشرفي الحلقات ومدرسيها وطلابها وأولياء الأمور ، وذلك بمنحهم الأدوات الحديثة للارتقاء بحلقات القرآن', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        Text('.نظام أهل القرآن هو نظام سحابي متكامل .. يمكن بواسطته إنشاء بيئة رقمية', 
+            style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        Text(' تربط بين مشرفي الحلقات ومدرسيها وطلابها وأولياء الأمور ، وذلك بمنحهم الأدوات الحديثة للارتقاء بحلقات القرآن', 
+            style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         SizedBox(height: 25),
         MouseRegion(
           onEnter: (_) => setState(() => isHoveredButton = true),
@@ -193,9 +182,5 @@ class _Page1State extends State<Page1> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: ImageCarousel(),
     );
-  }
-
-  Widget _drawerItem(String title) {
-    return ListTile(title: Text(title), onTap: () {});
   }
 }
