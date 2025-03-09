@@ -12,11 +12,7 @@ class FooterSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Description seulement (sans logo)
-          const Text(
-            "نظام أهل القرآن هو نظام سحابي متكامل ...",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
+          
           const SizedBox(height: 20),
 
           // Liens rapides avec l'ordre inversé

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quran_projet/nav.dart';
+import 'package:quran_projet/widgets/ContactForm.dart';
 import 'package:quran_projet/widgets/Footer.dart';
 import 'package:quran_projet/widgets/PartnersSection.dart';
+import 'package:quran_projet/widgets/SubscriptionSection.dart';
 import 'package:quran_projet/widgets/appbar.dart';
 import 'package:quran_projet/widgets/custom_app_section.dart';
 import 'package:quran_projet/widgets/features_section.dart';
 import 'package:quran_projet/widgets/image3scrol.dart';
 import 'package:quran_projet/widgets/mobile_showcase.dart';
+import 'package:quran_projet/widgets/nutifForm.dart';
 import 'package:quran_projet/widgets/pricing_section.dart';
 import 'package:quran_projet/widgets/section3.dart';
 import 'package:quran_projet/widgets/section6.dart';
@@ -82,6 +85,9 @@ class _Page1State extends State<Page1> {
                       StatsSection(),
                       ImageCarousel3() ,
                       PartnersSection(),
+                      SubscriptionSection(),
+                      ContactForm(),
+                      NutifForm(),
                       FooterSection()
 
                     ],
