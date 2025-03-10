@@ -55,7 +55,6 @@ class SubscriptionInformationController extends GetxController {
     studentNumController.dispose();
     super.onClose();
   }
-
 }
 
 //TODO when to revert to minValue
@@ -77,10 +76,6 @@ class NumberLimitFormatter extends TextInputFormatter {
     return newValue;
   }
 }
-
-
-
-
 
 class SubscriptionInformation extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -145,56 +140,66 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
   Widget build(BuildContext context) {
     SubscriptionInformationController studentCountManagement =
         Get.find<SubscriptionInformationController>();
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Text(
-              'معلومات الاشتراك',
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Text(
+            'معلومات الاشتراك',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          Center(
+            child: Text(
+              'أدخل عدد الطلاب',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            Center(
-              child: Text(
-                'أدخل عدد الطلاب',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            ),
-            TextField(
-              controller: studentCountManagement.studentNumController,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              inputFormatters: [
-                //inputFormatters are applied in order
-                // FilteringTextInputFormatter is asubclass of TextInputFormatter
-                FilteringTextInputFormatter.digitsOnly, //[0-9]
-                //LengthLimitingTextInputFormatter(2),
-                //NumberLimitFormatter(minValue: 20),
-              ],
-              /*onChanged: (value) {
+          ),
+          TextField(
+            controller: studentCountManagement.studentNumController,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            inputFormatters: [
+              //inputFormatters are applied in order
+              // FilteringTextInputFormatter is asubclass of TextInputFormatter
+              FilteringTextInputFormatter.digitsOnly, //[0-9]
+              //LengthLimitingTextInputFormatter(2),
+              //NumberLimitFormatter(minValue: 20),
+            ],
+            /*onChanged: (value) {
                   studentCountManagement.updateStudentNum();
                 },*/
-              decoration: InputDecoration(
-                hintText: ' عدد الطلاب (اقل من20 ) ',
-                prefixIcon: IconButton(
-                  onPressed: () {
-                    studentCountManagement.increment();
-                  },
-                  icon: Icon(Icons.add),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    studentCountManagement.decrement();
-                  },
-                  icon: Icon(Icons.remove),
-                ),
-                border: OutlineInputBorder(borderSide: BorderSide(width: 1)),
+            decoration: InputDecoration(
+              hintText: ' عدد الطلاب (اقل من20 ) ',
+              prefixIcon: IconButton(
+                onPressed: () {
+                  studentCountManagement.increment();
+                },
+                icon: Icon(Icons.add),
               ),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  studentCountManagement.decrement();
+                },
+                icon: Icon(Icons.remove),
+              ),
+              border: OutlineInputBorder(borderSide: BorderSide(width: 1)),
             ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            'إختر الخدمات الإضافية',
+          ),
+          SizedBox(
+            height: 5,
+          ),
 
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                DottedBorderButton(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: DottedBorderButton(
                   serviceName: 'الحلقات الالكترونية',
                   serviceIcone: Icons.camera_alt,
                   onTap: () {
@@ -204,7 +209,9 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                     studentCountManagement.totalPrice.value -= 9900;
                   },
                 ),
-                DottedBorderButton(
+              ),
+              Expanded(
+                child: DottedBorderButton(
                   serviceName: 'الشؤون المالية',
                   serviceIcone: Icons.data_exploration_sharp,
                   onTap: () {
@@ -214,12 +221,14 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                     studentCountManagement.totalPrice.value -= 19900;
                   },
                 ),
-              ],
-            ),
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                DottedBorderButton(
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: DottedBorderButton(
                   serviceName: 'موقع تعريفي',
                   serviceIcone: Icons.computer,
                   onTap: () {
@@ -229,7 +238,9 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                     studentCountManagement.totalPrice.value -= 19900;
                   },
                 ),
-                DottedBorderButton(
+              ),
+              Expanded(
+                child: DottedBorderButton(
                   serviceName: 'الرسائل الخاصة',
                   serviceIcone: Icons.email,
                   onTap: () {
@@ -239,39 +250,45 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                     studentCountManagement.totalPrice.value -= 9900;
                   },
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("التفاصيل"),
-                //can student num be null? add validator
-                Obx(() => Text(
-                      "${studentCountManagement.calculateTotalPrice()}",
-                    )),
-                Text("المبلغ الاجمالي"),
-              ],
-            ),
-            Divider(),
-            Text(
-                'بعد تأكيد الطّلب ستصلك رسالة عبر البريد الإلكتروني بها طرق الدّفع الممكنة'),
-            SizedBox(
-              height: 10,
-            ),
-            //symmetric reveal animation
-            //showSnackBar() + moveToTheFirstEmptyFeild()
-            Obx(() => CustomButton(
-                  onPressFunction: () {
-                    widget
-                        .onEmptyFeild(); //widget.functionName = refers to the function itself, with () = function call
-                    showSnackBar();
-                  },
-                  y: y.value,
-                  formKey: widget.formKey,
-                  toggleAnimation: toggleAnimation,
-                )),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("التفاصيل"),
+              //can student num be null? add validator
+              Obx(() => Text(
+                    "${studentCountManagement.calculateTotalPrice()}",
+                  )),
+              Text("المبلغ الاجمالي"),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Divider(),
+          Text(
+              'بعد تأكيد الطّلب ستصلك رسالة عبر البريد الإلكتروني بها طرق الدّفع الممكنة'),
+          SizedBox(
+            height: 10,
+          ),
+          //symmetric reveal animation
+          //showSnackBar() + moveToTheFirstEmptyFeild()
+          Obx(() => CustomButton(
+                onPressFunction: () {
+                  widget
+                      .onEmptyFeild(); //widget.functionName = refers to the function itself, with () = function call
+                  showSnackBar();
+                },
+                y: y.value,
+                formKey: widget.formKey,
+                toggleAnimation: toggleAnimation,
+              )),
+        ],
       ),
     );
   }
@@ -364,66 +381,70 @@ class _DottedBorderButtonState extends State<DottedBorderButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        toggleSwitch();
-        if (isOn) {
-          widget.onTap();
-        } else {
-          widget.onTapUp();
-        }
-      },
-      child: SizedBox(
-        height: 104,
-        width: 193,
-        child: Stack(
-          children: [
-            // ColoredBox with the same dimensions and border radius as DottedBorder
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(10), // Match DottedBorder's radius
-                child: ColoredBox(
-                  color: isOn
-                      ? Colors.greenAccent.withOpacity(0.2)
-                      : Colors.transparent,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: GestureDetector(
+        onTap: () {
+          toggleSwitch();
+          if (isOn) {
+            widget.onTap();
+          } else {
+            widget.onTapUp();
+          }
+        },
+        child: SizedBox(
+          height: 100,
+          width: 240,
+          child: Stack(
+            children: [
+              // ColoredBox with the same dimensions and border radius as DottedBorder
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(10), // Match DottedBorder's radius
+                  child: ColoredBox(
+                    color: isOn
+                        ? Color(0xff1D6176)
+                        //.withOpacity() to add transparency
+                        : Colors.transparent,
+                  ),
                 ),
               ),
-            ),
-            // DottedBorder
-            DottedBorder(
-              color: Colors.greenAccent,
-              radius: Radius.circular(10),
-              borderType: BorderType.RRect,
-              dashPattern: const [5, 2], // Dashed border pattern
-              strokeWidth: 0.5,
-              strokeCap: StrokeCap.round,
-              padding: EdgeInsets.all(20),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.serviceName,
-                      style: TextStyle(
-                        color: isOn
-                            ? Colors.green
-                            : Colors.black, // Dynamic text color
+              // DottedBorder
+              DottedBorder(
+                color: Colors.greenAccent,
+                radius: Radius.circular(10),
+                borderType: BorderType.RRect,
+                dashPattern: const [5, 2], // Dashed border pattern
+                strokeWidth: 0.5,
+                strokeCap: StrokeCap.round,
+                padding: EdgeInsets.all(20),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.serviceName,
+                        style: TextStyle(
+                          color: isOn
+                              ? Colors.white
+                              : Colors.black, // Dynamic text color
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Icon(
-                      widget.serviceIcone,
-                      color: isOn
-                          ? Colors.green
-                          : Colors.black, // Dynamic icon color
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      Icon(
+                        widget.serviceIcone,
+                        color: isOn
+                            ? Colors.white
+                            : Colors.black, // Dynamic icon color
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

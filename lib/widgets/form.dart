@@ -167,8 +167,9 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
   @override
   Widget build(BuildContext context) {
     controller = Get.find<Controller>();
-    return Scaffold(
-      body: Column(
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
         children: [
           Text('معلومات المدرسة و المشرف'),
           Form(
@@ -187,7 +188,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                       controller.notEmptyValidator('يجب ادخال اسم المدرسة'),
                   onChangedFunction: (value) {},
                 ),
-
+      
                 //2
                 LabeledText(text: 'البلد'),
                 Obx(
@@ -202,7 +203,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                     },
                   ),
                 ),
-
+      
                 //3
                 LabeledText(text: 'عنوان المدرسة'),
                 CummonTextFormFeild(
@@ -213,7 +214,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                       controller.notEmptyValidator('يجب ادخال عنوان المدرسة'),
                   onChangedFunction: (value) {},
                 ),
-
+      
                 //4, 5
                 Row(
                   children: [
@@ -225,8 +226,8 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                             textEditingController: controllers[3],
                             focusNodeFunction: focusNodes[3],
                             textInputType: TextInputType.name,
-                            validatorFunction: controller
-                                .notEmptyValidator('يجب ادخال الكنية'),
+                            validatorFunction:
+                                controller.notEmptyValidator('يجب ادخال الكنية'),
                             onChangedFunction: (value) {},
                           ),
                         ],
@@ -252,7 +253,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                     ),
                   ],
                 ),
-
+      
                 //6, 7
                 Row(
                   children: [
@@ -293,9 +294,15 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                     ),
                   ],
                 ),
-                
-                CustomCheckbox(isAgree: controller.isAgree1, text: 'الشروط والاحكام',),
-                CustomCheckbox(isAgree: controller.isAgree2, text: 'سياسة الخصوصية',),
+      
+                CustomCheckbox(
+                  isAgree: controller.isAgree1,
+                  text: 'الشروط والاحكام',
+                ),
+                CustomCheckbox(
+                  isAgree: controller.isAgree2,
+                  text: 'سياسة الخصوصية',
+                ),
               ],
             ),
           ),
@@ -305,9 +312,9 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
   }
 }
 
-
 class CustomCheckbox extends StatelessWidget {
-  final RxBool isAgree; //the reference to the Rx variable itself cannot change, but the value inside it can still be updated.
+  final RxBool
+      isAgree; //the reference to the Rx variable itself cannot change, but the value inside it can still be updated.
   final String text;
 
   CustomCheckbox({super.key, required this.isAgree, required this.text});
@@ -318,15 +325,14 @@ class CustomCheckbox extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: RichText(
         textAlign: TextAlign.right,
-      
         text: TextSpan(
           children: [
             WidgetSpan(
               alignment: PlaceholderAlignment.middle,
               child: Obx(() => Checkbox(
-                    value: isAgree.value, 
+                    value: isAgree.value,
                     onChanged: (bool? value) {
-                      isAgree.value = value ?? false; 
+                      isAgree.value = value ?? false;
                     },
                   )),
             ),
@@ -344,7 +350,6 @@ class CustomCheckbox extends StatelessWidget {
     );
   }
 }
-
 
 /*Obx(()=>Checkbox(
       value: isAgree.value,
