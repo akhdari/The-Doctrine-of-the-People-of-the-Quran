@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import '../widgets/subscription_information.dart';
 import '../widgets/form.dart';
 import 'package:flutter/gestures.dart';
-import '../widgets/Footer.dart';
-import '../widgets/appbar.dart';
-import '../widgets/custom_nav_bar.dart';
+import '../widgets/footer.dart';
+import '../widgets/drawer.dart';
+import '../widgets/nav.dart';
 
 class CopyPage extends StatefulWidget {
   const CopyPage({super.key});
@@ -43,7 +43,7 @@ class _CopyPageState extends State<CopyPage> {
                       ),
                     ),
                   ),
-                  CustomAppBar(
+                  NavBar(
                     scaffoldKey: scaffoldKey,
                   )
                 ],

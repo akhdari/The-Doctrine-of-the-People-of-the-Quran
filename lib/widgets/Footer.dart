@@ -12,7 +12,7 @@ class FooterSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Description seulement (sans logo)
-          
+
           const SizedBox(height: 20),
 
           // Liens rapides avec l'ordre inversé
@@ -46,12 +46,14 @@ class FooterSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () => _launchURL('https://apps.apple.com/us/app/example-app/id123456789'), // Remplace par le bon lien
+                onTap: () => _launchURL(
+                    'https://apps.apple.com/us/app/example-app/id123456789'), // Remplace par le bon lien
                 child: Image.asset('assets/footer/APP.png', height: 72),
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: () => _launchURL('https://play.google.com/store/apps/details?id=com.example.app'), // Remplace par le bon lien
+                onTap: () => _launchURL(
+                    'https://play.google.com/store/apps/details?id=com.example.app'), // Remplace par le bon lien
                 child: Image.asset('assets/footer/google-play.png', height: 50),
               ),
             ],
@@ -66,7 +68,8 @@ class FooterSection extends StatelessWidget {
               SizedBox(width: 10),
               FaIcon(FontAwesomeIcons.facebook, color: Colors.blue, size: 30),
               SizedBox(width: 10),
-              FaIcon(FontAwesomeIcons.twitter, color: Colors.lightBlue, size: 30),
+              FaIcon(FontAwesomeIcons.twitter,
+                  color: Colors.lightBlue, size: 30),
             ],
           ),
           const SizedBox(height: 30),
@@ -82,13 +85,18 @@ class FooterSection extends StatelessWidget {
   }
 
   // Générer une colonne de liens
-  Widget _buildLinkColumn(BuildContext context, String title, List<Map<String, String>> links) {
+  Widget _buildLinkColumn(
+      BuildContext context, String title, List<Map<String, String>> links) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 20),
-        ...links.map((link) => AnimatedNavigationText(text: link["title"]!, routeName: link["route"]!)).toList(),
+        ...links
+            .map((link) => AnimatedNavigationText(
+                text: link["title"]!, routeName: link["route"]!))
+            .toList(),
       ],
     );
   }
@@ -104,8 +112,88 @@ void _launchURL(String url) async {
   }
 }
 
-// Widget avec animation de survol
+
 class AnimatedNavigationText extends StatefulWidget {
+  final String text;
+  final String routeName;
+  const AnimatedNavigationText({
+    required this.text,
+    required this.routeName,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedNavigationText> createState() => _AnimatedNavigationTextState();
+}
+
+class _AnimatedNavigationTextState extends State<AnimatedNavigationText>
+    with SingleTickerProviderStateMixin {
+  bool isHovered = false;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+
+    _animation = Tween<double>(begin: 0, end: 5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    _animation.addListener(() {
+      setState(() {});
+    });
+  }
+
+  void toggleAnimation(bool hover) {
+    if (hover) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+    setState(() {
+      isHovered = hover;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => toggleAnimation(true),
+      onExit: (_) => toggleAnimation(false),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, widget.routeName);
+        },
+        child: Transform.translate(
+          offset: Offset(_animation.value,0),
+          child: Text(
+            widget.text,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: isHovered ? const Color(0xFF0E9D6D) : Colors.grey.withOpacity(0.7),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Widget avec animation de survol
+/*class AnimatedNavigationText extends StatefulWidget {
   final String text;
   final String routeName;
 
@@ -140,4 +228,4 @@ class _AnimatedNavigationTextState extends State<AnimatedNavigationText> {
       ),
     );
   }
-}
+}*/

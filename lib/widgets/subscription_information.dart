@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:get/get.dart';
+import '../widgets/dotted_border_button.dart';
+import '../widgets/custom_button.dart';
+
 
 class SubscriptionInformationController extends GetxController {
   RxInt totalPrice = 0.obs;
@@ -294,162 +295,9 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
   }
 }
 
-//Custom Button
-class CustomButton extends StatefulWidget {
-  final double y;
-  final GlobalKey<FormState> formKey;
-  final VoidCallback toggleAnimation;
-  final VoidCallback onPressFunction;
-  const CustomButton({
-    super.key,
-    required this.y,
-    required this.formKey,
-    required this.toggleAnimation,
-    required this.onPressFunction,
-  });
 
-  @override
-  State<CustomButton> createState() => _CustomButtonState();
-}
 
-class _CustomButtonState extends State<CustomButton> {
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (event) => setState(() => widget.toggleAnimation()),
-      onExit: (event) => setState(() => widget.toggleAnimation()),
-      child: Transform.translate(
-        offset: Offset(0, -widget.y * 5),
-        child: Container(
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3),
-            ),
-          ]),
-          child: AnimatedButton(
-            text: 'تأكيد الطلب',
-            textOverflow: TextOverflow.visible,
-            isReverse: true,
-            onPress: widget.onPressFunction,
-            transitionType: TransitionType.CENTER_LR_IN,
-            //textStyle:,
-            //width: ,
-            //height: ,
-            borderRadius: 5,
-            backgroundColor: Color(0xffBD8A36),
-            selectedBackgroundColor: Colors.blueAccent,
-            selectedTextColor: Colors.white,
-            animationDuration: Duration(seconds: 1),
-            animatedOn: AnimatedOn.onHover,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
-// Dotted Border Button
-
-class DottedBorderButton extends StatefulWidget {
-  final VoidCallback onTap;
-  final VoidCallback onTapUp;
-  final String serviceName;
-  final IconData serviceIcone;
-  const DottedBorderButton({
-    super.key,
-    required this.onTap,
-    required this.serviceName,
-    required this.serviceIcone,
-    required this.onTapUp,
-  });
-
-  @override
-  State<DottedBorderButton> createState() => _DottedBorderButtonState();
-}
-
-class _DottedBorderButtonState extends State<DottedBorderButton> {
-  bool isOn = false;
-
-  void toggleSwitch() {
-    setState(() {
-      isOn = !isOn;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      child: GestureDetector(
-        onTap: () {
-          toggleSwitch();
-          if (isOn) {
-            widget.onTap();
-          } else {
-            widget.onTapUp();
-          }
-        },
-        child: SizedBox(
-          height: 100,
-          width: 240,
-          child: Stack(
-            children: [
-              // ColoredBox with the same dimensions and border radius as DottedBorder
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(10), // Match DottedBorder's radius
-                  child: ColoredBox(
-                    color: isOn
-                        ? Color(0xff1D6176)
-                        //.withOpacity() to add transparency
-                        : Colors.transparent,
-                  ),
-                ),
-              ),
-              // DottedBorder
-              DottedBorder(
-                color: Colors.greenAccent,
-                radius: Radius.circular(10),
-                borderType: BorderType.RRect,
-                dashPattern: const [5, 2], // Dashed border pattern
-                strokeWidth: 0.5,
-                strokeCap: StrokeCap.round,
-                padding: EdgeInsets.all(20),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.serviceName,
-                        style: TextStyle(
-                          color: isOn
-                              ? Colors.white
-                              : Colors.black, // Dynamic text color
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Icon(
-                        widget.serviceIcone,
-                        color: isOn
-                            ? Colors.white
-                            : Colors.black, // Dynamic icon color
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 
 

@@ -1,47 +1,9 @@
 import 'package:flutter/material.dart';
+import '../widgets/input.dart';
 
-class ResponsiveScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          bool showRightSide = constraints.maxWidth > 600;
 
-          return Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  color: Colors.blue,
-                  child: const Center(
-                    child: MyWidget(),
-                  ),
-                ),
-              ),
-              if (showRightSide)
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    color: Colors.white,
-                    child: const Center(
-                      child: Text(
-                        "Right Side",
-                        style: TextStyle(color: Colors.lightBlue, fontSize: 20),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key});
+class LogIn extends StatelessWidget {
+  const LogIn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,37 +57,3 @@ class MyWidget extends StatelessWidget {
   }
 }
 
-class Input extends StatelessWidget {
-  late bool ispassword;
-  final String hintText;
-  final Icon icon;
-Input ({super.key, required this.hintText, this.ispassword=false, required this.icon});
-
-  @override
-
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: TextField(
-        obscureText: ispassword,
-        textAlign: TextAlign.right,
-        decoration: InputDecoration(
-          prefixIcon: Container(
-            width: 50, // Set a fixed width for better styling
-            height: 50, // Matches TextField height
-            decoration: const BoxDecoration(
-              color: Colors.blue, // Background color for icon
-              borderRadius: BorderRadius.zero,
-          
-            ),
-            child: icon,
-          ),
-          border: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide( width: 1)),
-          focusedBorder: const OutlineInputBorder(borderRadius:BorderRadius.zero, borderSide: BorderSide(width: 1)),
-          contentPadding: const EdgeInsets.symmetric(horizontal:12, vertical: 6),
-          hintText: hintText,
-        ),
-      ),
-    );
-  }
-}
