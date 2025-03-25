@@ -7,7 +7,15 @@ class TablePage extends StatelessWidget {
   RxString searchQuery = ''.obs;
   RxBool asc = true.obs;
   RxInt sortIndex = 0.obs;
-  TablePage({super.key});
+  List<String> colums = [""];
+  List<String> rows = [""];
+  int rowsPerPage;
+//TODO if rowsPerPage is not provided the default value
+  TablePage(
+      {required this.colums,
+      required this.rows,
+      required this.rowsPerPage,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,48 +30,30 @@ class TablePage extends StatelessWidget {
               () {
                 return AsyncPaginatedDataTable2(
                   empty: Text("Empty"),
-                  rowsPerPage: 2,
-                  columns: [
-                    //TODO to be updated
-                    DataColumn(
+                  rowsPerPage: rowsPerPage,
+                  columns: colums
+                      .map((e) => DataColumn(
+                          label: Text(e),
+                          onSort: (columnIndex, ascending) {
+                            sortIndex.value = columnIndex;
+                            asc.value = asc.isFalse;
+                          }))
+                      .toList(),
+                  /* DataColumn(
                       label: Text('ID'),
                       onSort: (columnIndex, ascending) {
                         sortIndex.value = columnIndex;
                         asc.value = asc.isFalse;
                       },
-                    ),
-                    DataColumn(
-                        label: Text('First Name Arabic'),
-                        onSort: (columnIndex, ascending) {
-                          sortIndex.value = columnIndex;
-                          asc.value = asc.isFalse;
-                        }),
-                    DataColumn(
-                      label: Text('First Name Latin'),
-                      onSort: (columnIndex, ascending) {
-                        sortIndex.value = columnIndex;
-                        asc.value = asc.isFalse;
-                      },
-                    ),
-                    DataColumn(
-                        label: Text('Last Name Arabic'),
-                        onSort: (columnIndex, ascending) {
-                          sortIndex.value = columnIndex;
-                          asc.value = asc.isFalse;
-                        }),
-                    DataColumn(
-                        label: Text('Last Name Latin'),
-                        onSort: (columnIndex, ascending) {
-                          sortIndex.value = columnIndex;
-                          asc.value = asc.isFalse;
-                        }),
-                  ],
+                    ),*/
+
                   /*
                   in DataTable the order and the count of datacells in datarows must match datacolums 
                   unlike naming which they dont have to match
                   the label of data column is used for display 
                   */
                   source: MyDataTableSource(
+                    rows: rows,
                     search: searchQuery.value,
                     sortIndex: sortIndex.value,
                     sortAscending: asc.value,

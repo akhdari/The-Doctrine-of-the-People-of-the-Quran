@@ -39,11 +39,14 @@ class MyDataTableSource extends AsyncDataTableSource {
   String search = "";
   int sortIndex = 0;
   bool sortAscending = true;
+  List<String> rows = [""];
+
 //constructor
   MyDataTableSource(
       {required this.search,
       required this.sortIndex,
-      required this.sortAscending});
+      required this.sortAscending,
+      required this.rows});
 
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
@@ -91,14 +94,9 @@ class MyDataTableSource extends AsyncDataTableSource {
     return AsyncRowsResponse(
       data.length,
       studentListPage.map((item) {
-        //TODO to be updated
-        return DataRow(cells: [
-          DataCell(Text(item["ID"].toString())),
-          DataCell(Text(item["first_name_arabic"].toString())),
-          DataCell(Text(item["first_name_latin"].toString())),
-          DataCell(Text(item["last_name_arabic"].toString())),
-          DataCell(Text(item["last_name_latin"].toString())),
-        ]);
+        return DataRow(
+          cells: rows.map((e) => DataCell(Text(item[e].toString()))).toList(),
+        );
       }).toList(), // Convert Iterable to List here!
     );
   }
