@@ -1,40 +1,27 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import '../connect/connect.dart';
+
+const url = 'http://192.168.100.20/phpscript/connect.php';
+
+Future<List<Map<String, dynamic>>> fetchData() async {
+  try {
+    Connect connect = Connect();
+    Map<String, dynamic>? data = await connect.get(url);
+    log("Received Data: $data"); // Debug print
+    if (data != null) {
+      return [data];
+    } else {
+      return []; //empty list , not nullable
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
 
 class MyDataTableSource extends AsyncDataTableSource {
-  //data source
-  List<Map<String, dynamic>> data = [
-    {
-      "id": 5462,
-      "last_name": "Ali",
-      "first_name_arabic": "فاطمة",
-      "first_name_latin": "Ali"
-    },
-    {
-      "id": 7103,
-      "last_name": "Hassan",
-      "first_name_arabic": "علي",
-      "first_name_latin": "Fatima"
-    },
-    {
-      "id": 9354,
-      "last_name": "Saeed",
-      "first_name_arabic": "زينب",
-      "first_name_latin": "Hassan"
-    },
-    {
-      "id": 1734,
-      "last_name": "Ahmad",
-      "first_name_arabic": "حسن",
-      "first_name_latin": "Mohammad"
-    },
-    {
-      "id": 4097,
-      "last_name": "Nour",
-      "first_name_arabic": "محمد",
-      "first_name_latin": "Zainab"
-    }
-  ];
+//data source
 //attributes
   String search = "";
   int sortIndex = 0;
@@ -51,7 +38,9 @@ class MyDataTableSource extends AsyncDataTableSource {
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
     // network request
+    List<Map<String, dynamic>> data = await fetchData();
     List<Map<String, dynamic>> studentList = data;
+    log("studentList: $studentList");
     //filter
     if (search.isNotEmpty) {
       //list.removeWhere((element) => condition);
