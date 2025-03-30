@@ -53,7 +53,7 @@ class TablePage extends StatelessWidget {
                   the label of data column is used for display 
                   */
                   source: MyDataTableSource(
-                    rows: rows,
+                    // rows: rows,
                     search: searchQuery.value,
                     sortIndex: sortIndex.value,
                     sortAscending: asc.value,

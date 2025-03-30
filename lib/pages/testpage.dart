@@ -18,14 +18,29 @@ class EmptyPage extends StatelessWidget {
           child: Text('copy page'),
         ),
         TextButton(
-          onPressed: () => Get.toNamed('/logIn',),
+          onPressed: () => Get.toNamed(
+            '/logIn',
+          ),
           child: Text('logIn page'),
         ),
         TextButton(
-          onPressed: () => Get.toNamed('/test',),
+          onPressed: () => Get.toNamed(
+            '/test',
+          ),
           child: Text('new page'),
         ),
-
+        TextButton(
+          onPressed: () => Get.toNamed(
+            '/table',
+          ),
+          child: Text('table page'),
+        ),
+        TextButton(
+          onPressed: () => Get.toNamed(
+            'ui',
+          ),
+          child: Text('ui page'),
+        ),
       ]),
     );
   }

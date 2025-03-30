@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './file2.dart';
 
-class CustomDataTable extends StatelessWidget {
+class CustomDataTable extends StatefulWidget {
   final int rowsPerPage;
   List<String> colums = [""]; //List.empty(growable: true)
   List<String> rows = [""];
@@ -13,11 +13,16 @@ class CustomDataTable extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<CustomDataTable> createState() => _CustomDataTableState();
+}
+
+class _CustomDataTableState extends State<CustomDataTable> {
+  @override
   Widget build(BuildContext context) {
     return TablePage(
-      rowsPerPage: rowsPerPage,
-      colums: colums,
-      rows: rows,
+      rowsPerPage: widget.rowsPerPage,
+      colums: widget.colums,
+      rows: widget.rows,
     );
   }
 }

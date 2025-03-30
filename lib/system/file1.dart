@@ -7,33 +7,32 @@ const url = 'http://192.168.100.20/phpscript/connect.php';
 
 Future<List<Map<String, dynamic>>> fetchData() async {
   try {
-    Connect connect = Connect();
-    Map<String, dynamic>? data = await connect.get(url);
-    log("Received Data: $data"); // Debug print
-    if (data != null) {
-      return [data];
-    } else {
-      return []; //empty list , not nullable
-    }
+    final connect = Connect();
+    final data = await connect.get(url);
+    log("Received Data: $data");
+    return data;
   } catch (e) {
-    throw Exception(e);
+    log("Error fetching data: $e");
+    throw Exception('Failed to fetch data: $e');
   }
 }
 
 class MyDataTableSource extends AsyncDataTableSource {
 //data source
+
 //attributes
   String search = "";
   int sortIndex = 0;
   bool sortAscending = true;
-  List<String> rows = [""];
+  // List<String> rows = [];
 
 //constructor
-  MyDataTableSource(
-      {required this.search,
-      required this.sortIndex,
-      required this.sortAscending,
-      required this.rows});
+  MyDataTableSource({
+    required this.search,
+    required this.sortIndex,
+    required this.sortAscending,
+    //required this.rows
+  });
 
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
@@ -48,20 +47,19 @@ class MyDataTableSource extends AsyncDataTableSource {
       //e=list element
       //e[map key]=map value
       studentList.removeWhere(
-          (e) => !e["last_name"].toString().contains(search.toLowerCase()));
+          (e) => !e["first_name_ar"].toString().contains(search.toLowerCase()));
     } else {
       switch (sortIndex) {
         case 0:
-          studentList.sort((a, b) => a["id"]
-              .compareTo(b["id"])); //sort each 2 by 2 elements in the list}
+          studentList.sort((a, b) => a["first_name_ar"].compareTo(
+              b["first_name_ar"])); //sort each 2 by 2 elements in the list}
           break;
         case 1:
-          studentList.sort((a, b) =>
-              a["first_name_arabic"].compareTo(b["first_name_arabic"]));
+          studentList
+              .sort((a, b) => a["last_name_ar"].compareTo(b["last_name_ar"]));
           break;
         case 2:
-          studentList.sort(
-              (a, b) => a["first_name_latin"].compareTo(b["first_name_latin"]));
+          studentList.sort((a, b) => a["sex"].compareTo(b["sex"]));
           break;
       }
     }
@@ -84,8 +82,17 @@ class MyDataTableSource extends AsyncDataTableSource {
       data.length,
       studentListPage.map((item) {
         return DataRow(
-          cells: rows.map((e) => DataCell(Text(item[e].toString()))).toList(),
-        );
+            cells: //rows.map((e) => DataCell(Text(item[e].toString()))).toList(),
+                [
+              DataCell(Text(item["first_name_ar"].toString())),
+              DataCell(Text(item["last_name_ar"].toString())),
+              DataCell(Text(item["sex"].toString())),
+              DataCell(Text(item["date_of_birth"].toString())),
+              DataCell(Text(item["place_of_birth"].toString())),
+              DataCell(Text(item["nationality"].toString())),
+              DataCell(Text(item["lecture_name_ar"].toString())),
+              DataCell(Text(item["username"].toString())),
+            ]);
       }).toList(), // Convert Iterable to List here!
     );
   }
