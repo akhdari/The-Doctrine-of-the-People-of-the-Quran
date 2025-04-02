@@ -64,6 +64,7 @@ class _NavBarState extends State<NavBar> {
                 double textWidth = _calculateTextWidth(titles[index]);
 
                 return ClipRRect(
+                  // widget that clips its child using rounded rectangle borders.
                   borderRadius: BorderRadius.circular(10),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -71,13 +72,14 @@ class _NavBarState extends State<NavBar> {
                       width: textWidth + 24, // Ajuste selon la taille du texte
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
                 );
               }),
+
             /// Texte animé avec changement de couleur et zoom
             AnimatedContainer(
               duration: Duration(milliseconds: 200),

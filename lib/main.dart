@@ -51,13 +51,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // Used to select if we use the dark or light theme, start with system mode.
-  ThemeMode themeMode = ThemeMode.system;
+  //ThemeMode themeMode = ThemeMode.system;
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      themeMode: themeMode,
+      themeMode: ThemeMode.light, //themeMode: themeMode,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       routes: {

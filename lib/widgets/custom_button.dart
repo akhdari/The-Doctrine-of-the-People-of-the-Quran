@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
+
 //Custom Button
 class CustomButton extends StatefulWidget {
   final double y;
@@ -29,7 +30,9 @@ class _CustomButtonState extends State<CustomButton> {
         child: Container(
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              // improving Flutter’s color system
+              //.withOpasity(0.5), => withValues(alpha: 0.5)
+              color: Colors.grey.withValues(alpha: 0.5),
               spreadRadius: 5,
               blurRadius: 7,
               offset: Offset(0, 3),
