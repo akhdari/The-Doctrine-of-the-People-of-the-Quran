@@ -5,10 +5,7 @@ import 'package:get/get.dart';
 import 'pages/login_page.dart';
 import '../system/file3.dart';
 import '../system/ui.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
-
-import 'package:flutter/cupertino.dart';
-//import 'package:flutter/foundation.dart';
+import '../system/widgets/theme.dart';
 
 List<String> columnLabels = [
   'first_name_ar',
@@ -35,6 +32,7 @@ List<String> rowLabels =
 ];
 
 void main() {
+  Get.put(ThemeController()); //globally accessible
   runApp(MyApp());
 }
 
@@ -55,21 +53,23 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light, //themeMode: themeMode,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      routes: {
-        '/copy': (context) => const CopyPage(),
-        '/logIn': (context) => const LogInPage(),
-        '/test': (context) => const EmptyPage(),
-        '/table': (context) => CustomDataTable(
-            rowsPerPage: 2, colums: columnLabels, rows: rowLabels),
-        "ui": (context) => SystemUI()
-      },
-      home: EmptyPage(),
-    );
+    // you should wrap the widget that is being updated with Obx, not the widget that is updating the value.
+    return Obx(() => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          //the theme should be used
+          themeMode: Get.find<ThemeController>().mode.value, //ThemeMode.light
+          theme: AppTheme.light, //defines light theme of the app
+          darkTheme: AppTheme.dark,
+          routes: {
+            '/copy': (context) => const CopyPage(),
+            '/logIn': (context) => const LogInPage(),
+            '/test': (context) => const EmptyPage(),
+            '/table': (context) => CustomDataTable(
+                rowsPerPage: 2, colums: columnLabels, rows: rowLabels),
+            "ui": (context) => SystemUI()
+          },
+          home: EmptyPage(),
+        ));
   }
 }
 
@@ -86,43 +86,3 @@ copy theme code
 ///   darkTheme: AppTheme.dark,
 /// );
 /// white/light gray for light mode and black/dark gray for dark mode
-abstract final class AppTheme {
-  // The FlexColorScheme defined light mode ThemeData.
-  static ThemeData light = FlexThemeData.light(
-    // Using FlexColorScheme built-in FlexScheme enum based colors
-    scheme: FlexScheme.greys,
-    // Component theme configurations for light mode.
-    subThemesData: const FlexSubThemesData(
-      interactionEffects: true,
-      tintedDisabledControls: true,
-      useM2StyleDividerInM3: true,
-      inputDecoratorIsFilled: true,
-      inputDecoratorBorderType: FlexInputBorderType.outline,
-      alignedDropdown: true,
-      navigationRailUseIndicator: true,
-    ),
-    // Direct ThemeData properties.
-    visualDensity: FlexColorScheme.comfortablePlatformDensity,
-    cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
-  );
-
-  // The FlexColorScheme defined dark mode ThemeData.
-  static ThemeData dark = FlexThemeData.dark(
-    // Using FlexColorScheme built-in FlexScheme enum based colors.
-    scheme: FlexScheme.greys,
-    // Component theme configurations for dark mode.
-    subThemesData: const FlexSubThemesData(
-      interactionEffects: true,
-      tintedDisabledControls: true,
-      blendOnColors: true,
-      useM2StyleDividerInM3: true,
-      inputDecoratorIsFilled: true,
-      inputDecoratorBorderType: FlexInputBorderType.outline,
-      alignedDropdown: true,
-      navigationRailUseIndicator: true,
-    ),
-    // Direct ThemeData properties.
-    visualDensity: FlexColorScheme.comfortablePlatformDensity,
-    cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
-  );
-}

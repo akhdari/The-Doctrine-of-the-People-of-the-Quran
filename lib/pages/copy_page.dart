@@ -39,7 +39,8 @@ class _CopyPageState extends State<CopyPage> {
                         image: AssetImage('assets/back.png'),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                            Colors.white.withOpacity(0.2), BlendMode.dstIn),
+                            Colors.white.withValues(alpha: 0.2),
+                            BlendMode.dstIn),
                       ),
                     ),
                   ),
