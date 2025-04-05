@@ -1,14 +1,69 @@
-import 'dart:developer';
-
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import './widgets/containers.dart';
-import './widgets/matrix/custom_matrix.dart';
 import './widgets/input_field.dart';
 import 'widgets/picker.dart';
 import './widgets/end_drawer.dart';
 import 'package:get/get.dart';
 import './widgets/theme.dart';
+import 'dart:math';
 
+class Generate extends GetxController {
+  //username generation
+  String generateUsername(
+      TextEditingController lastName, TextEditingController firstName) {
+    if (firstName.text.isNotEmpty && lastName.text.isNotEmpty) {
+      Random random = Random();
+
+      String ln = lastName.text.trim();
+      String fn = firstName.text.trim();
+
+      String lnPart = ln.length >= 3 ? ln.substring(0, 3) : ln;
+      String fnPart = fn.length >= 3 ? fn.substring(0, 3) : fn;
+
+      String username =
+          lnPart + fnPart + random.nextInt(10).toString(); // up to 999
+
+      return username;
+    } else {
+      //TODO
+      return "please enter your name";
+    }
+  }
+
+//password generation
+  String generatePassword() {
+    const chars =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#%&*';
+    const length = 10;
+    final Random random = Random.secure();
+    String password =
+        //random.nextInt = generate a random index
+        //(chars.length) = between 0 and the length of chars -1
+        //join = list of string -> string
+        List.generate(length, (index) => chars[random.nextInt(chars.length)])
+            .join();
+
+    return password;
+  }
+}
+
+const List<String> sex = ["male", "female"];
+const List<String> bloodType = [
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "AB+",
+  "AB-",
+  "O+",
+  "O-"
+];
+const List<String> yesNo = ["yes", "no"];
+const List<String> state = ["alive", "dead"];
+//generation happens length times
+List<TextEditingController> textcontrollers =
+    List.generate(14, (index) => TextEditingController());
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class SystemUI extends StatefulWidget {
@@ -24,11 +79,17 @@ class _SystemUIState extends State<SystemUI> {
   Picker picker = Picker();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isClicked = false;
+  TextEditingController userNameController = textcontrollers[8];
+  TextEditingController passwordController = textcontrollers[9];
+  TextEditingController firstNameController = textcontrollers[3];
+  TextEditingController lastNameController = textcontrollers[4];
   final ThemeController themeController = Get.find<ThemeController>();
+  final Generate generate = Get.find<Generate>();
   @override
   void initState() {
     super.initState();
-    // final ThemeController themeController = Get.find<ThemeController>();
+    Get.put(Generate());
+    passwordController.text = generate.generatePassword();
   }
 
   @override
@@ -60,7 +121,7 @@ class _SystemUIState extends State<SystemUI> {
               onPressed: () {
                 isClicked = !isClicked;
                 themeController.switchTheme();
-                log("theme changed");
+                dev.log("theme changed");
               },
               icon: Icon(Icons.nightlight_round)),
           Center(
@@ -124,7 +185,11 @@ class _SystemUIState extends State<SystemUI> {
                                                 CustomContainer(
                                                   title: "session",
                                                   child: InputField(
-                                                      inputTitle: "sessions:"),
+                                                      inputTitle: "sessions:",
+                                                      child: CustomTextField(
+                                                        controller:
+                                                            textcontrollers[0],
+                                                      )),
                                                 ),
                                                 SizedBox(height: 10),
                                                 CustomContainer(
@@ -133,7 +198,7 @@ class _SystemUIState extends State<SystemUI> {
                                                   child: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
-                                                    children: const [
+                                                    children: [
                                                       // Row 1
                                                       Padding(
                                                         padding:
@@ -142,14 +207,27 @@ class _SystemUIState extends State<SystemUI> {
                                                         child: Row(
                                                           children: [
                                                             Expanded(
-                                                                child: InputField(
-                                                                    inputTitle:
-                                                                        "First name in Arabic")),
+                                                              child: InputField(
+                                                                  inputTitle:
+                                                                      "First name in Arabic",
+                                                                  child:
+                                                                      CustomTextField(
+                                                                    controller:
+                                                                        textcontrollers[
+                                                                            1],
+                                                                  )),
+                                                            ),
                                                             SizedBox(width: 8),
                                                             Expanded(
-                                                                child: InputField(
-                                                                    inputTitle:
-                                                                        "Last name in Arabic")),
+                                                                child:
+                                                                    InputField(
+                                                                        inputTitle:
+                                                                            "Last name in Arabic",
+                                                                        child:
+                                                                            CustomTextField(
+                                                                          controller:
+                                                                              textcontrollers[2],
+                                                                        ))),
                                                           ],
                                                         ),
                                                       ),
@@ -161,14 +239,49 @@ class _SystemUIState extends State<SystemUI> {
                                                         child: Row(
                                                           children: [
                                                             Expanded(
-                                                                child: InputField(
-                                                                    inputTitle:
-                                                                        "First name in Latin")),
+                                                              child: InputField(
+                                                                inputTitle:
+                                                                    "First name in Latin",
+                                                                child:
+                                                                    CustomTextField(
+                                                                  controller:
+                                                                      firstNameController,
+                                                                  textDirection:
+                                                                      TextDirection
+                                                                          .ltr,
+                                                                  onChanged:
+                                                                      (_) {
+                                                                    userNameController
+                                                                            .text =
+                                                                        generate.generateUsername(
+                                                                            lastNameController,
+                                                                            firstNameController);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
                                                             SizedBox(width: 8),
                                                             Expanded(
-                                                                child: InputField(
-                                                                    inputTitle:
-                                                                        "Last name in Latin")),
+                                                                child:
+                                                                    InputField(
+                                                              inputTitle:
+                                                                  "Last name in Latin",
+                                                              child:
+                                                                  CustomTextField(
+                                                                controller:
+                                                                    lastNameController,
+                                                                textDirection:
+                                                                    TextDirection
+                                                                        .ltr,
+                                                                onChanged: (_) {
+                                                                  userNameController
+                                                                          .text =
+                                                                      generate.generateUsername(
+                                                                          lastNameController,
+                                                                          firstNameController);
+                                                                },
+                                                              ),
+                                                            )),
                                                           ],
                                                         ),
                                                       ),
@@ -180,14 +293,28 @@ class _SystemUIState extends State<SystemUI> {
                                                         child: Row(
                                                           children: [
                                                             Expanded(
-                                                                child: InputField(
-                                                                    inputTitle:
-                                                                        "Sex")),
+                                                                child:
+                                                                    InputField(
+                                                                        inputTitle:
+                                                                            "Sex",
+                                                                        child:
+                                                                            dropDown(
+                                                                          sex,
+                                                                          sex[0],
+                                                                        ))),
                                                             SizedBox(width: 8),
                                                             Expanded(
-                                                                child: InputField(
-                                                                    inputTitle:
-                                                                        "Date of Birth")),
+                                                              child: InputField(
+                                                                inputTitle:
+                                                                    "Date of Birth",
+                                                                child:
+                                                                    CustomTextField(
+                                                                  controller:
+                                                                      textcontrollers[
+                                                                          5],
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ],
                                                         ),
                                                       ),
@@ -196,13 +323,27 @@ class _SystemUIState extends State<SystemUI> {
                                                         children: [
                                                           Expanded(
                                                               child: InputField(
-                                                                  inputTitle:
-                                                                      "Nationality")),
+                                                            inputTitle:
+                                                                "Nationality",
+                                                            child:
+                                                                CustomTextField(
+                                                              controller:
+                                                                  textcontrollers[
+                                                                      6],
+                                                            ),
+                                                          )),
                                                           SizedBox(width: 8),
                                                           Expanded(
                                                               child: InputField(
-                                                                  inputTitle:
-                                                                      "Address")),
+                                                            inputTitle:
+                                                                "Address",
+                                                            child:
+                                                                CustomTextField(
+                                                              controller:
+                                                                  textcontrollers[
+                                                                      7],
+                                                            ),
+                                                          )),
                                                         ],
                                                       ),
                                                     ],
@@ -212,16 +353,28 @@ class _SystemUIState extends State<SystemUI> {
                                                 CustomContainer(
                                                     title: "account info",
                                                     child: Row(
-                                                      children: const [
+                                                      children: [
                                                         Expanded(
                                                             child: InputField(
-                                                                inputTitle:
-                                                                    "username")),
+                                                          inputTitle:
+                                                              "username",
+                                                          child:
+                                                              CustomTextField(
+                                                            controller:
+                                                                userNameController,
+                                                          ),
+                                                        )),
                                                         SizedBox(width: 8),
                                                         Expanded(
                                                             child: InputField(
-                                                                inputTitle:
-                                                                    "password")),
+                                                          inputTitle:
+                                                              "password",
+                                                          child:
+                                                              CustomTextField(
+                                                            controller:
+                                                                passwordController,
+                                                          ),
+                                                        )),
                                                       ],
                                                     )),
 
@@ -229,21 +382,34 @@ class _SystemUIState extends State<SystemUI> {
                                                 CustomContainer(
                                                   title: "health info",
                                                   child: Row(
-                                                    children: const [
+                                                    children: [
                                                       Expanded(
                                                           child: InputField(
                                                               inputTitle:
-                                                                  "blood type")),
+                                                                  "blood type",
+                                                              child: dropDown(
+                                                                  bloodType,
+                                                                  bloodType[
+                                                                      0]))),
                                                       SizedBox(width: 8),
                                                       Expanded(
                                                           child: InputField(
                                                               inputTitle:
-                                                                  "has a desease?")),
+                                                                  "has desease",
+                                                              child: dropDown(
+                                                                  yesNo,
+                                                                  yesNo[0]))),
                                                       SizedBox(width: 8),
                                                       Expanded(
                                                           child: InputField(
-                                                              inputTitle:
-                                                                  "desease causes"))
+                                                        inputTitle:
+                                                            "desease causes",
+                                                        child: CustomTextField(
+                                                          controller:
+                                                              textcontrollers[
+                                                                  10],
+                                                        ),
+                                                      ))
                                                     ],
                                                   ),
                                                 ),
@@ -252,40 +418,62 @@ class _SystemUIState extends State<SystemUI> {
                                                 CustomContainer(
                                                     title: "contact info",
                                                     child: Row(
-                                                      children: const [
+                                                      children: [
                                                         Expanded(
                                                             child: InputField(
-                                                                inputTitle:
-                                                                    "phone number")),
+                                                          inputTitle:
+                                                              "phone number",
+                                                          child:
+                                                              CustomTextField(
+                                                            controller:
+                                                                textcontrollers[
+                                                                    11],
+                                                          ),
+                                                        )),
                                                         SizedBox(width: 8),
                                                         Expanded(
                                                             child: InputField(
-                                                                inputTitle:
-                                                                    "email address")),
+                                                          inputTitle:
+                                                              "email address",
+                                                          child:
+                                                              CustomTextField(
+                                                            controller:
+                                                                textcontrollers[
+                                                                    12],
+                                                          ),
+                                                        )),
                                                       ],
                                                     )),
                                                 SizedBox(height: 10),
-                                                CustomContainer(
-                                                    title: "parents state",
-                                                    child: Row(
-                                                      children: const [
-                                                        Expanded(
-                                                            child: InputField(
-                                                                inputTitle:
-                                                                    "father's state")),
-                                                        SizedBox(width: 8),
-                                                        Expanded(
-                                                            child: InputField(
-                                                                inputTitle:
-                                                                    "mother's state")),
-                                                      ],
-                                                    )),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                        child: CustomContainer(
+                                                            title:
+                                                                "fother state",
+                                                            child: dropDown(
+                                                                state,
+                                                                state[0]))),
+                                                    Expanded(
+                                                        child: CustomContainer(
+                                                            title:
+                                                                "mother state",
+                                                            child: dropDown(
+                                                                state,
+                                                                state[0]))),
+                                                  ],
+                                                ),
                                                 SizedBox(height: 10),
                                                 CustomContainer(
                                                   title: "info about guardient",
                                                   child: InputField(
-                                                      inputTitle:
-                                                          "guardient's account"),
+                                                    inputTitle:
+                                                        "guardient's account",
+                                                    child: CustomTextField(
+                                                      controller:
+                                                          textcontrollers[13],
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(height: 10),
                                                 CustomContainer(
@@ -295,28 +483,8 @@ class _SystemUIState extends State<SystemUI> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 //DropdownButton
-                                                DropdownButtonFormField<String>(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder()),
-                                                  value: '1',
-                                                  items: [
-                                                    '1',
-                                                    '2',
-                                                    '3',
-                                                    '4',
-                                                    '5'
-                                                  ].map((String value) {
-                                                    return DropdownMenuItem<
-                                                        String>(
-                                                      value: value,
-                                                      child: Text(value),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (String? value) {},
-                                                ),
+
                                                 SizedBox(height: 10),
-                                                CustomMatrix()
                                               ],
                                             ),
                                           ),
@@ -354,6 +522,26 @@ class _SystemUIState extends State<SystemUI> {
           ),
         ],
       ),
+    );
+  }
+
+  DropdownButtonFormField<String> dropDown(
+      List<String> items, String initialValue) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+          filled: false,
+          hoverColor: null,
+          fillColor: null,
+          focusColor: null,
+          border: OutlineInputBorder()),
+      value: initialValue,
+      items: items.map((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? value) {},
     );
   }
 }

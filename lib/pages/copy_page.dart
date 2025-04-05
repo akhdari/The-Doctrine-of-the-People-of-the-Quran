@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import '../widgets/footer.dart';
 import '../widgets/drawer.dart';
 import '../widgets/nav.dart';
+import '../validators.dart';
 
 class CopyPage extends StatefulWidget {
   const CopyPage({super.key});

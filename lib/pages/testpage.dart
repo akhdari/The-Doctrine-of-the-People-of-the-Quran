@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/subscription_information.dart';
-import '../widgets/form.dart';
+import '../validators.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -31,15 +31,33 @@ class EmptyPage extends StatelessWidget {
         ),
         TextButton(
           onPressed: () => Get.toNamed(
-            '/table',
+            '/student',
           ),
-          child: Text('table page'),
+          child: Text('student page'),
         ),
         TextButton(
           onPressed: () => Get.toNamed(
-            'ui',
+            '/lecture',
+          ),
+          child: Text('lecture page'),
+        ),
+        TextButton(
+          onPressed: () => Get.toNamed(
+            '/guardian',
+          ),
+          child: Text('guardian page'),
+        ),
+        TextButton(
+          onPressed: () => Get.toNamed(
+            '/ui',
           ),
           child: Text('ui page'),
+        ),
+        TextButton(
+          onPressed: () => Get.toNamed(
+            '/multiselect',
+          ),
+          child: Text('multiselect page'),
         ),
       ]),
     );

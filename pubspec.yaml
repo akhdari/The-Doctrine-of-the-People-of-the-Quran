@@ -45,6 +45,7 @@ dependencies:
   http: ^1.3.0
   flex_color_scheme: ^8.2.0
   image_picker: ^1.1.2
+  multiple_search_selection: ^2.7.2
 
 
 

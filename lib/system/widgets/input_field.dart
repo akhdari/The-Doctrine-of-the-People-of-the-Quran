@@ -1,62 +1,150 @@
 import 'package:flutter/material.dart';
+import '../style.dart';
 
+//import '/widgets/custom_text_form_feild.dart';
 class InputField extends StatelessWidget {
   final String inputTitle;
-  const InputField({required this.inputTitle, super.key});
+  final child;
+
+  const InputField({
+    required this.inputTitle,
+    required this.child,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           inputTitle,
-          textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xff169b88),
+            fontWeight: FontWeight.bold,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: TextFormField(
-            //text alignment
-            //keyboardType
-            //validator
-            //maxLines
-            //what is toolbarOptions
-            //enabled or not = does user can interact with it
-            //disabledBorder = style applied when disabled
-            //enabledBorder = style applied when enabled
-            //border = style applied when neither disabled nor enabled and ignored when they are set.
-            //Always define at least enabledBorder and disabledBorder for better control. Use border only for simplicity.
-            mouseCursor: SystemMouseCursors.text,
-
-            controller: TextEditingController(),
-            decoration: InputDecoration(
-              hoverColor: Colors.transparent,
-              border: OutlineInputBorder(), //may be overried by themedata
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(
-                  color: Color(0xff169b88),
-                  width: 0.5,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(
-                  color: Color(0xff169b88),
-                  width: 0.5,
-                ),
-              ),
-            ),
-            style: TextStyle(
-              color: Color(0xffceaa63),
-            ),
-          ),
-        ),
+        const SizedBox(height: 10),
+        child
       ],
     );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  // labelText;
+  final String? Function(String?)? validator;
+  void Function(String)? onChanged;
+  final TextInputType keyboardType;
+  final bool obscureText;
+  final int? maxLines;
+  final TextDirection textDirection;
+
+  CustomTextField({
+    super.key,
+    required this.controller,
+    this.validator,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.maxLines = 1,
+    this.textDirection = TextDirection.rtl,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      textDirection: textDirection,
+      obscureText: obscureText,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        enabledBorder: borderStyle,
+        focusedBorder: borderStyle,
+      ),
+      style: const TextStyle(
+        color: Color(0xffceaa63),
+      ),
+    );
+  }
+}
+
+/*Widget TextField(
+    {String? Function(String?)? validator,
+    TextEditingController controller,
+    TextAlign textAlign,
+    TextDirection textDirection}) {
+  return TextFormField(
+    controller: controller,
+    validator: validator,
+    textDirection: textDirection,
+    textAlign: textAlign,
+    keyboardType: TextInputType.text,
+    decoration: InputDecoration(
+      border: OutlineInputBorder(),
+      enabledBorder: borderStyle,
+      focusedBorder: borderStyle,
+    ),
+    style: const TextStyle(
+      color: Color(0xffceaa63),
+    ),
+  );
+}*/
+
+Widget dropDown(String value, List<String> items) {
+  return DropdownButtonFormField<String>(
+    decoration: InputDecoration(border: OutlineInputBorder()),
+    value: value,
+    items: items.map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList(),
+    onChanged: (String? value) {},
+  );
+}
+
+Future function(BuildContext context) async {
+  DateTime? time;
+  await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(1900),
+    lastDate: DateTime.now(),
+  ).then((value) {
+    time = value;
+    return dateToString(time);
+  });
+}
+
+String dateToString(DateTime? time) {
+  if (time == null) {
+    return "";
+  } else {
+    return time.toString(); //formattedDate(time);
+  }
+}
+
+class DatePicker extends StatefulWidget {
+  const DatePicker({super.key});
+
+  @override
+  State<DatePicker> createState() => _DatePickerState();
+}
+
+class _DatePickerState extends State<DatePicker> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () async {
+          await function(context);
+        },
+        child: Text("pick date"));
   }
 }

@@ -3,35 +3,15 @@ import 'pages/testpage.dart';
 import 'pages/copy_page.dart';
 import 'package:get/get.dart';
 import 'pages/login_page.dart';
-import '../system/file3.dart';
 import '../system/ui.dart';
 import '../system/widgets/theme.dart';
-
-List<String> columnLabels = [
-  'first_name_ar',
-  'last_name_ar',
-  'sex',
-  'date_of_birth',
-  'place_of_birth',
-  'nationality',
-  'lecture_name_ar',
-  'username'
-];
-
-List<String> rowLabels =
-    //should match the data list map keys
-    [
-  'first_name_ar',
-  'last_name_ar',
-  'sex',
-  'date_of_birth',
-  'place_of_birth',
-  'nationality',
-  'lecture_name_ar',
-  'username'
-];
+import './system/pages/student.dart';
+import './system/pages/lecture.dart';
+import './system/pages/guardian.dart';
+import './system/widgets/multiselect.dart';
 
 void main() {
+  Get.put(Generate());
   Get.put(ThemeController()); //globally accessible
   runApp(MyApp());
 }
@@ -41,7 +21,7 @@ void main() {
 //but we can call an async function inside
 
 class MyApp extends StatefulWidget {
-  MyApp();
+  const MyApp({super.key}); //const MyApp();
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -64,9 +44,11 @@ class _MyAppState extends State<MyApp> {
             '/copy': (context) => const CopyPage(),
             '/logIn': (context) => const LogInPage(),
             '/test': (context) => const EmptyPage(),
-            '/table': (context) => CustomDataTable(
-                rowsPerPage: 2, colums: columnLabels, rows: rowLabels),
-            "ui": (context) => SystemUI()
+            '/student': (context) => Student(),
+            '/guardian': (context) => Guardian(),
+            '/lecture': (context) => Lecture(),
+            "/ui": (context) => SystemUI(),
+            "/multiselect": (context) => DefaultConstructorExample(),
           },
           home: EmptyPage(),
         ));

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomContainer extends StatelessWidget {
-  String title;
-  Widget child;
-  CustomContainer({required this.title, required this.child, super.key});
+  final String title;
+  final Widget child;
+  const CustomContainer({required this.title, required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,10 @@ class CustomContainer extends StatelessWidget {
           //2
           /// Only use Expanded for parts that need to fill space
           /// Expanded must have a single child
-          SizedBox(height: 10),
-          child
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: child,
+          )
         ],
       ),
     );
