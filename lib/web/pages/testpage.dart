@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../widgets/subscription_information.dart';
-import '../../validators.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -11,10 +9,9 @@ class EmptyPage extends StatelessWidget {
     return Scaffold(
       body: Column(children: [
         TextButton(
-          onPressed: () => Get.toNamed('/copy', arguments: {
-            Get.put(SubscriptionInformationController()),
-            Get.put(Controller()),
-          }),
+          onPressed: () => Get.toNamed(
+            '/copy',
+          ),
           child: Text('copy page'),
         ),
         TextButton(

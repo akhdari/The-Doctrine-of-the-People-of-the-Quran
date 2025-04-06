@@ -3,44 +3,56 @@ import 'package:flutter/material.dart';
 
 class Controller extends GetxController {
   Rx<String> selectedCountry = 'الجزائر'.obs;
-  Rx<String>? emailAddress = ''.obs;
-  Rx<String>? phoneNumber = ''.obs;
+
   late List<TextEditingController> controllers = [];
   late List<FocusNode> focusNodes = [];
-  final int feildCount = 6;
+  int feildCount = 6;
   RxBool isAgree1 = false.obs;
   RxBool isAgree2 = false.obs;
-  // TODO
 
   Controller() {
     controllers = List.generate(feildCount, (index) => TextEditingController());
     focusNodes = List.generate(feildCount, (index) => FocusNode());
   }
-
+//When you create a TextEditingController, it's initialized with an empty string by default.
+/*
+The TextEditingController holds the text state.
+The validator reacts to that state (empty or not).
+*/
+/*
+What isEmpty Does in Dart/Flutter
+---------------------------------
+isEmpty is a property of the String class in Dart that:
+Checks if the string has no characters (length = 0)
+Returns a bool:
+true → String is empty ("").
+false → String has content (e.g., "abc").
+*/
 //TODO RFC 5322
-  String? isValidEmail(String? emailAddress) {
-    /*It removes spaces from the beginning and end of the string.
-If the string contains only spaces, trim() will return an empty string ("")*/
-    if (emailAddress == null || emailAddress.trim().isEmpty) {
+  String? isValidEmail(String? value) {
+    // Check empty first
+    if (value == null || value.isEmpty) {
       return "يجب ادخال ايميل";
     }
-    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(emailAddress.trim())) {
+
+    // Then check format
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value.trim())) {
       return "من فضلك ادخل ايميل صحيح";
     }
 
-    return null; // Valid email
+    return null;
   }
 
+// Usage:
+
 //TODO  international phone number
-  String? isValidPhoneNumber(String? phoneNumber) {
-    if (phoneNumber == null || phoneNumber.trim().isEmpty) {
-      return "يجب ادخال رقم هاتف";
-    }
-
+  String? isValidPhoneNumber(String? value) {
     final RegExp phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
-
-    if (!phoneRegex.hasMatch(phoneNumber.trim())) {
+    if (value == null || value.isEmpty) {
+      return 'يجب ادخال رقم الواتساب';
+    }
+    if (!phoneRegex.hasMatch(value.trim())) {
       return "من فضلك ادخل رقم هاتف صحيح";
     }
 

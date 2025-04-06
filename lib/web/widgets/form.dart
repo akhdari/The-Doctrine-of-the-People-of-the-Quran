@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../validators.dart';
 import 'custom_checkbox.dart';
@@ -67,13 +68,13 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
   @override
   void initState() {
     //Use Get.find when you need to access the same controller instance in a different widget or when lazy initialization
-    const int feildCount = 6;
-    controllers = List.generate(feildCount, (index) => TextEditingController());
-    focusNodes = List.generate(feildCount, (index) => FocusNode());
+    //const int feildCount = 6;
+    /*controllers = List.generate(feildCount, (index) => TextEditingController());
+    focusNodes = List.generate(feildCount, (index) => FocusNode());*/
 
     controller = Get.find<Controller>();
-    controller.controllers = controllers;
-    controller.focusNodes = focusNodes;
+    controllers = controller.controllers;
+    focusNodes = controller.focusNodes;
     super.initState();
   }
 
@@ -193,11 +194,14 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                           TextFormField(
                             controller: controllers[5],
                             focusNode: focusNodes[5],
-                            keyboardType: TextInputType.name,
-                            validator: controller
-                                .notEmptyValidator('يجب ادخال اسم المدرسة'),
-                            onChanged: (value) {
-                              controller.phoneNumber?.value = value;
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              //prevent or allow certain input from being entered to the input feild
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            validator: (v) {
+                              return controller
+                                  .isValidPhoneNumber(controllers[5].text);
                             },
                             textAlign: TextAlign.right,
                           ),
@@ -212,13 +216,12 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                         children: [
                           LabeledText(text: 'البريد الالكتروني'),
                           TextFormField(
-                            controller: controllers[5],
-                            focusNode: focusNodes[5],
+                            controller: controllers[4],
+                            focusNode: focusNodes[4],
                             keyboardType: TextInputType.name,
-                            validator: controller
-                                .notEmptyValidator('يجب ادخال اسم المدرسة'),
-                            onChanged: (value) {
-                              controller.emailAddress?.value = value;
+                            validator: (v) {
+                              return controller
+                                  .isValidEmail(controllers[4].text);
                             },
                             textAlign: TextAlign.right,
                           ),
