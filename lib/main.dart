@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'pages/testpage.dart';
-import 'pages/copy_page.dart';
+import 'web/pages/testpage.dart';
+import 'web/pages/copy_page.dart';
 import 'package:get/get.dart';
-import 'pages/login_page.dart';
+import 'web/pages/login_page.dart';
 import '../system/ui.dart';
 import '../system/widgets/theme.dart';
 import './system/pages/student.dart';

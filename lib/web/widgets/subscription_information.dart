@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../widgets/dotted_border_button.dart';
-import '../widgets/custom_button.dart';
-
+import 'dotted_border_button.dart';
+import 'custom_button.dart';
 
 class SubscriptionInformationController extends GetxController {
   RxInt totalPrice = 0.obs;
@@ -294,15 +293,6 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
     );
   }
 }
-
-
-
-
-
-
-
-
-
 
 /*
 GestureDetector(

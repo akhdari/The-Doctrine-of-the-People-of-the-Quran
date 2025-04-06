@@ -479,7 +479,7 @@ class _SystemUIState extends State<SystemUI> {
                                                 CustomContainer(
                                                   title: "add account image",
                                                   //inputFeild("add image"),
-                                                  child: Picker(),
+                                                  child: Text("add image"),
                                                 ),
                                                 SizedBox(height: 10),
                                                 //DropdownButton

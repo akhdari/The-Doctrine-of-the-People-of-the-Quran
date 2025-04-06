@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/subscription_information.dart';
-import '../validators.dart';
+import '../../validators.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});

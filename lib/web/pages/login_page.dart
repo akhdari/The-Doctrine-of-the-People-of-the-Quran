@@ -14,14 +14,13 @@ class LogInPage extends StatelessWidget {
         rightChild: Stack(
           children: [
             Container(
-              color:Colors.white,
+              color: Colors.white,
             ),
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/men.png'),
                   fit: BoxFit.cover,
-                  
                 ),
               ),
             ),
@@ -31,4 +30,3 @@ class LogInPage extends StatelessWidget {
     );
   }
 }
-

@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/connect/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/connect/connect.dart';
 
 class MyDataTableSource extends AsyncDataTableSource {
   final String url;

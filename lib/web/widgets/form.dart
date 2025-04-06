@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:get/get.dart';
-import '../validators.dart';
-import './custom_checkbox.dart';
+import '../../validators.dart';
+import 'custom_checkbox.dart';
 
 class CustomFormWidget extends StatefulWidget {
   final GlobalKey<FormState> formKey;

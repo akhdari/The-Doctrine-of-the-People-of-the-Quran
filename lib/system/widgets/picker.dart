@@ -1,11 +1,45 @@
 import 'dart:developer' as log;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-//import 'dart:io';
 import 'dart:typed_data';
+import 'package:permission_handler/permission_handler.dart';
 
-// TODO permisson handelling
-//https://pub.dev/packages/permission_handler
+//Android specific
+class HandlePermission {
+  Future<bool> requestPermission() async {
+    try {
+//when you await a Future, it unwraps the Future and gives you the actual value
+      PermissionStatus status = await Permission.photos.request();
+      //repeated if else => use switch
+      switch (status) {
+        case PermissionStatus.granted:
+          log.log('Permission granted');
+          return true;
+        case PermissionStatus.denied:
+          log.log('Permission denied');
+          return false;
+        case PermissionStatus.permanentlyDenied:
+          //The user has explicitly denied the permission and selected "Don't ask again"
+          log.log('Permission permanently denied');
+          //open settings to allow the user to change the permission
+          openAppSettings(); //silently does nothing (no error, but no effect).
+          return false;
+        case PermissionStatus.restricted:
+          // The user can't grant this permission even if they want to.
+          log.log('Permission restricted');
+          return false;
+        //isLimited cannot be used for Android—it is iOS-only
+        default:
+          log.log('Permission not determined');
+          return false;
+      }
+      //isLimited cannot be used for Android—it is iOS-only
+    } catch (e) {
+      log.log(e.toString());
+      return false;
+    }
+  }
+}
 
 class Picker extends StatefulWidget {
   const Picker({super.key});
@@ -28,12 +62,21 @@ Yes — a variable declared inside a try block is scoped to that block, meaning 
       */
 class _PickerState extends State<Picker> {
   XFile? imageFile;
+  HandlePermission handlePermission = HandlePermission();
 
   Future<void> imagePicker() async {
     try {
-      imageFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
+      //if permission is granted, pick image
+      if (await handlePermission.requestPermission()) {
+        //if permission is granted, pick image
+        log.log('Permission granted');
+        imageFile = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+      } else {
+        log.log('Permission denied');
+        return;
+      }
     } catch (e) {
       log.log(e.toString());
     }
@@ -48,14 +91,10 @@ class _PickerState extends State<Picker> {
           child: const Text('Pick Image'),
           onPressed: () async {
             await imagePicker();
-            setState(() {}); // Rebuild the widget to show the image
+            setState(() {});
           },
         ),
         const SizedBox(height: 16),
-        if (imageFile != null)
-          buildImage(imageFile)
-        else
-          const Text('No image selected.'),
       ],
     );
   }
