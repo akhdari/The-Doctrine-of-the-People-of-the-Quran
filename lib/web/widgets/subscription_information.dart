@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'dotted_border_button.dart';
 import 'custom_button.dart';
+import './snackbar.dart';
 
 class SubscriptionInformationController extends GetxController {
   RxInt totalPrice = 0.obs;
@@ -95,18 +96,6 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
   Rx<double> y = 0.0.obs;
   late AnimationController _controller;
   late Animation<double> _animation;
-
-  void showSnackBar() {
-    if (widget.formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Valid form')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid form')),
-      );
-    }
-  }
 
   @override
   void initState() {
@@ -282,7 +271,10 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                 onPressFunction: () {
                   widget
                       .onEmptyFeild(); //widget.functionName = refers to the function itself, with () = function call
-                  showSnackBar();
+                  showSnackBar(
+                    context,
+                    widget.formKey,
+                  );
                 },
                 y: y.value,
                 formKey: widget.formKey,

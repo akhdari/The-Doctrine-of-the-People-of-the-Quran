@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-class Controller extends GetxController {
+class Validator extends GetxController {
   Rx<String> selectedCountry = 'الجزائر'.obs;
 
   late List<TextEditingController> controllers = [];
@@ -10,7 +10,7 @@ class Controller extends GetxController {
   RxBool isAgree1 = false.obs;
   RxBool isAgree2 = false.obs;
 
-  Controller() {
+  Validator() {
     controllers = List.generate(feildCount, (index) => TextEditingController());
     focusNodes = List.generate(feildCount, (index) => FocusNode());
   }
@@ -86,6 +86,14 @@ false → String has content (e.g., "abc").
           return;
         }
       }
+    }
+  }
+
+  bool validateForm(GlobalKey<FormState> formKey) {
+    if (formKey.currentState!.validate()) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

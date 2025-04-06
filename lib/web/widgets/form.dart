@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../validators.dart';
+import '../../logic/validators.dart';
 import 'custom_checkbox.dart';
 
 class CustomFormWidget extends StatefulWidget {
@@ -17,7 +17,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
   //TODO
   bool isAgree3 = false;
 
-  late Controller controller;
+  late Validator controller;
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
 
@@ -72,7 +72,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
     /*controllers = List.generate(feildCount, (index) => TextEditingController());
     focusNodes = List.generate(feildCount, (index) => FocusNode());*/
 
-    controller = Get.find<Controller>();
+    controller = Get.find<Validator>();
     controllers = controller.controllers;
     focusNodes = controller.focusNodes;
     super.initState();
@@ -92,7 +92,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    controller = Get.find<Controller>();
+    controller = Get.find<Validator>();
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(

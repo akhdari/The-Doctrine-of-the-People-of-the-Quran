@@ -7,6 +7,8 @@ import './widgets/end_drawer.dart';
 import 'package:get/get.dart';
 import './widgets/theme.dart';
 import 'dart:math';
+import '../logic/validators.dart';
+import '/web/widgets/snackbar.dart';
 
 class Generate extends GetxController {
   //username generation
@@ -85,6 +87,7 @@ class _SystemUIState extends State<SystemUI> {
   TextEditingController lastNameController = textcontrollers[4];
   final ThemeController themeController = Get.find<ThemeController>();
   final Generate generate = Get.find<Generate>();
+  final Validator validator = Get.find<Validator>();
   @override
   void initState() {
     super.initState();
@@ -215,6 +218,9 @@ class _SystemUIState extends State<SystemUI> {
                                                                     controller:
                                                                         textcontrollers[
                                                                             1],
+                                                                    validator: validator
+                                                                        .notEmptyValidator(
+                                                                            "يجب ادخال الاسم"),
                                                                   )),
                                                             ),
                                                             SizedBox(width: 8),
@@ -227,6 +233,8 @@ class _SystemUIState extends State<SystemUI> {
                                                                             CustomTextField(
                                                                           controller:
                                                                               textcontrollers[2],
+                                                                          validator:
+                                                                              validator.notEmptyValidator("يجب ادخال الاسم"),
                                                                         ))),
                                                           ],
                                                         ),
@@ -398,7 +406,7 @@ class _SystemUIState extends State<SystemUI> {
                                                                   "has desease",
                                                               child: dropDown(
                                                                   yesNo,
-                                                                  yesNo[0]))),
+                                                                  yesNo[1]))),
                                                       SizedBox(width: 8),
                                                       Expanded(
                                                           child: InputField(
@@ -428,6 +436,11 @@ class _SystemUIState extends State<SystemUI> {
                                                             controller:
                                                                 textcontrollers[
                                                                     11],
+                                                            validator: (String?
+                                                                    value) =>
+                                                                validator
+                                                                    .isValidPhoneNumber(
+                                                                        value),
                                                           ),
                                                         )),
                                                         SizedBox(width: 8),
@@ -440,6 +453,12 @@ class _SystemUIState extends State<SystemUI> {
                                                             controller:
                                                                 textcontrollers[
                                                                     12],
+                                                            validator: (String?
+                                                                value) {
+                                                              return validator
+                                                                  .isValidEmail(
+                                                                      value);
+                                                            },
                                                           ),
                                                         )),
                                                       ],
@@ -483,7 +502,6 @@ class _SystemUIState extends State<SystemUI> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 //DropdownButton
-
                                                 SizedBox(height: 10),
                                               ],
                                             ),
@@ -510,7 +528,12 @@ class _SystemUIState extends State<SystemUI> {
                                                 Color(0xff169b88),
                                               ),
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              validator
+                                                  .moveToTheFirstEmptyFeild(
+                                                      formKey);
+                                              showSnackBar(context, formKey);
+                                            },
                                             child: Text("send")),
                                       ),
                                     ],

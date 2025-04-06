@@ -6,11 +6,10 @@ import 'package:flutter/gestures.dart';
 import '../widgets/footer.dart';
 import '../widgets/drawer.dart';
 import '../widgets/nav.dart';
-import '../../validators.dart';
+import '../../logic/validators.dart';
 
 class CopyPage extends StatefulWidget {
   const CopyPage({super.key});
-
   @override
   State<CopyPage> createState() => _CopyPageState();
 }
@@ -21,7 +20,7 @@ class _CopyPageState extends State<CopyPage> {
 
   @override
   Widget build(BuildContext context) {
-    Controller controller = Get.find<Controller>();
+    Validator controller = Get.find<Validator>();
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(

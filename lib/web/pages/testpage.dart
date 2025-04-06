@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '/logic/validators.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -9,9 +10,13 @@ class EmptyPage extends StatelessWidget {
     return Scaffold(
       body: Column(children: [
         TextButton(
-          onPressed: () => Get.toNamed(
-            '/copy',
-          ),
+          onPressed: () {
+            Get.put(Validator(), permanent: true);
+
+            Get.toNamed(
+              '/copy',
+            );
+          },
           child: Text('copy page'),
         ),
         TextButton(
@@ -45,9 +50,12 @@ class EmptyPage extends StatelessWidget {
           child: Text('guardian page'),
         ),
         TextButton(
-          onPressed: () => Get.toNamed(
-            '/ui',
-          ),
+          onPressed: () {
+            Get.put(Validator(), permanent: true);
+            Get.toNamed(
+              '/ui',
+            );
+          },
           child: Text('ui page'),
         ),
         TextButton(

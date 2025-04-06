@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 class HandlePermission {
   Future<bool> requestPermission() async {
     try {
-//when you await a Future, it unwraps the Future and gives you the actual value
+//when you await a Future, it unwraps the Future and deaives you the actual value
       PermissionStatus status = await Permission.photos.request();
       //repeated if else => use switch
       switch (status) {

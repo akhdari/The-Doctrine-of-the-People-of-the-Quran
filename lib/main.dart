@@ -9,12 +9,12 @@ import './system/pages/student.dart';
 import './system/pages/lecture.dart';
 import './system/pages/guardian.dart';
 import './system/widgets/multiselect.dart';
-import './web/widgets/subscription_information.dart';
-import '../../validators.dart';
+import 'logic/validators.dart';
+import 'web/widgets/subscription_information.dart';
 
 void main() {
   Get.put(SubscriptionInformationController());
-  Get.put(Controller());
+  Get.put(Validator());
   Get.put(Generate());
   Get.put(ThemeController()); //globally accessible
   runApp(MyApp());
