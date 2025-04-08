@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 
 class Validator extends GetxController {
   Rx<String> selectedCountry = 'الجزائر'.obs;
-
+  final int feildCount;
   late List<TextEditingController> controllers = [];
   late List<FocusNode> focusNodes = [];
-  int feildCount = 6;
   RxBool isAgree1 = false.obs;
   RxBool isAgree2 = false.obs;
 
-  Validator() {
+  Validator(this.feildCount) {
     controllers = List.generate(feildCount, (index) => TextEditingController());
     focusNodes = List.generate(feildCount, (index) => FocusNode());
   }

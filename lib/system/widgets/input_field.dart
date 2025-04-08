@@ -35,16 +35,20 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   // labelText;
   final String? Function(String?)? validator;
-  void Function(String)? onChanged;
+  final void Function(String)? onChanged;
+  final void Function(String?)? onSaved;
+  final FocusNode? focusNode;
   final TextInputType keyboardType;
   final bool obscureText;
   final int? maxLines;
   final TextDirection textDirection;
 
-  CustomTextField({
+  const CustomTextField({
     super.key,
     required this.controller,
+    required this.onSaved,
     this.validator,
+    this.focusNode,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.maxLines = 1,
@@ -57,7 +61,9 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
+      focusNode: focusNode,
       onChanged: onChanged,
+      onSaved: onSaved,
       keyboardType: keyboardType,
       textDirection: textDirection,
       obscureText: obscureText,

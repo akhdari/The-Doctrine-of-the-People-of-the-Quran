@@ -17,7 +17,7 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
   //TODO
   bool isAgree3 = false;
 
-  late Validator controller;
+  late Validator formcontroller;
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
 
@@ -71,14 +71,11 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
     //const int feildCount = 6;
     /*controllers = List.generate(feildCount, (index) => TextEditingController());
     focusNodes = List.generate(feildCount, (index) => FocusNode());*/
-
-    controller = Get.find<Validator>();
-    controllers = controller.controllers;
-    focusNodes = controller.focusNodes;
+    Get.put(Validator(6), permanent: true, tag: "copyPage");
     super.initState();
   }
 
-  @override
+  /* @override
   void dispose() {
     controller.dispose();
     for (var controller in controllers) {
@@ -88,11 +85,11 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
       node.dispose();
     }
     super.dispose();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    controller = Get.find<Validator>();
+    formcontroller = Get.find<Validator>(tag: "copyPage");
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -107,11 +104,11 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                 //1
                 LabeledText(text: 'اسم المدرسة'),
                 TextFormField(
-                  controller: controllers[0],
-                  focusNode: focusNodes[0],
+                  controller: formcontroller.controllers[0],
+                  focusNode: formcontroller.focusNodes[0],
                   keyboardType: TextInputType.name,
                   validator:
-                      controller.notEmptyValidator('يجب ادخال اسم المدرسة'),
+                      formcontroller.notEmptyValidator('يجب ادخال اسم المدرسة'),
                   onChanged: (value) {},
                   textAlign: TextAlign.right,
                 ),
@@ -121,10 +118,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                 Obx(
                   () => DropdownFlutter<String>.search(
                     items: countries,
-                    initialItem: controller.selectedCountry.value,
+                    initialItem: formcontroller.selectedCountry.value,
                     onChanged: (country) {
                       if (country != null) {
-                        controller.selectedCountry.value =
+                        formcontroller.selectedCountry.value =
                             country; // No need for setState
                       }
                     },
@@ -134,11 +131,11 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                 //3
                 LabeledText(text: 'عنوان المدرسة'),
                 TextFormField(
-                  controller: controllers[1],
-                  focusNode: focusNodes[1],
+                  controller: formcontroller.controllers[1],
+                  focusNode: formcontroller.focusNodes[1],
                   keyboardType: TextInputType.name,
                   validator:
-                      controller.notEmptyValidator('يجب ادخال اسم المدرسة'),
+                      formcontroller.notEmptyValidator('يجب ادخال اسم المدرسة'),
                   onChanged: (value) {},
                   textAlign: TextAlign.right,
                 ),
@@ -151,10 +148,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                         children: [
                           LabeledText(text: 'الكنية'),
                           TextFormField(
-                            controller: controllers[3],
-                            focusNode: focusNodes[3],
+                            controller: formcontroller.controllers[3],
+                            focusNode: formcontroller.focusNodes[3],
                             keyboardType: TextInputType.name,
-                            validator: controller
+                            validator: formcontroller
                                 .notEmptyValidator('يجب ادخال اسم المدرسة'),
                             onChanged: (value) {},
                             textAlign: TextAlign.right,
@@ -170,10 +167,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                         children: [
                           LabeledText(text: 'اسم المشرف'),
                           TextFormField(
-                            controller: controllers[2],
-                            focusNode: focusNodes[2],
+                            controller: formcontroller.controllers[2],
+                            focusNode: formcontroller.focusNodes[2],
                             keyboardType: TextInputType.name,
-                            validator: controller
+                            validator: formcontroller
                                 .notEmptyValidator('يجب ادخال اسم المدرسة'),
                             onChanged: (value) {},
                             textAlign: TextAlign.right,
@@ -192,16 +189,16 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                         children: [
                           LabeledText(text: 'رقم الواتساب مع رمز الدولة'),
                           TextFormField(
-                            controller: controllers[5],
-                            focusNode: focusNodes[5],
+                            controller: formcontroller.controllers[5],
+                            focusNode: formcontroller.focusNodes[5],
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               //prevent or allow certain input from being entered to the input feild
                               FilteringTextInputFormatter.digitsOnly,
                             ],
                             validator: (v) {
-                              return controller
-                                  .isValidPhoneNumber(controllers[5].text);
+                              return formcontroller.isValidPhoneNumber(
+                                  formcontroller.controllers[5].text);
                             },
                             textAlign: TextAlign.right,
                           ),
@@ -216,12 +213,12 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                         children: [
                           LabeledText(text: 'البريد الالكتروني'),
                           TextFormField(
-                            controller: controllers[4],
-                            focusNode: focusNodes[4],
+                            controller: formcontroller.controllers[4],
+                            focusNode: formcontroller.focusNodes[4],
                             keyboardType: TextInputType.name,
                             validator: (v) {
-                              return controller
-                                  .isValidEmail(controllers[4].text);
+                              return formcontroller.isValidEmail(
+                                  formcontroller.controllers[4].text);
                             },
                             textAlign: TextAlign.right,
                           ),
@@ -232,11 +229,11 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                 ),
 
                 CustomCheckbox(
-                  isAgree: controller.isAgree1,
+                  isAgree: formcontroller.isAgree1,
                   text: 'الشروط والاحكام',
                 ),
                 CustomCheckbox(
-                  isAgree: controller.isAgree2,
+                  isAgree: formcontroller.isAgree2,
                   text: 'سياسة الخصوصية',
                 ),
               ],

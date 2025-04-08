@@ -20,7 +20,7 @@ class _CopyPageState extends State<CopyPage> {
 
   @override
   Widget build(BuildContext context) {
-    Validator controller = Get.find<Validator>();
+    Validator controller = Get.find<Validator>(tag: "copyPage");
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(

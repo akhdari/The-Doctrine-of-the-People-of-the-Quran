@@ -8,8 +8,12 @@ import 'package:get/get.dart';
 import './widgets/theme.dart';
 import 'dart:math';
 import '../logic/validators.dart';
-import '/web/widgets/snackbar.dart';
+import 'const/info.dart';
+import 'connect/connect.dart';
 
+const url = 'http://192.168.100.20/phpscript/get_student.php';
+
+//TODO titles in a list
 class Generate extends GetxController {
   //username generation
   String generateUsername(
@@ -64,8 +68,8 @@ const List<String> bloodType = [
 const List<String> yesNo = ["yes", "no"];
 const List<String> state = ["alive", "dead"];
 //generation happens length times
-List<TextEditingController> textcontrollers =
-    List.generate(14, (index) => TextEditingController());
+/*List<TextEditingController> textcontrollers =
+    List.generate(14, (index) => TextEditingController());*/
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class SystemUI extends StatefulWidget {
@@ -78,21 +82,73 @@ class SystemUI extends StatefulWidget {
 }
 
 class _SystemUIState extends State<SystemUI> {
+  //picker
   Picker picker = Picker();
+  //form key
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  //var
   bool isClicked = false;
-  TextEditingController userNameController = textcontrollers[8];
-  TextEditingController passwordController = textcontrollers[9];
-  TextEditingController firstNameController = textcontrollers[3];
-  TextEditingController lastNameController = textcontrollers[4];
-  final ThemeController themeController = Get.find<ThemeController>();
-  final Generate generate = Get.find<Generate>();
-  final Validator validator = Get.find<Validator>();
+  //other controllers
+  late Generate generate;
+  late Validator validator;
+  late ThemeController themeController;
+  //connect
+  Connect connect = Connect();
+
+  // Text Controllers
+  late final TextEditingController userNameController;
+  late final TextEditingController passwordController;
+  late final TextEditingController firstNameControllerEn;
+  late final TextEditingController lastNameControllerEn;
+  //focus nodes
+  late final FocusNode userNameFocusNode;
+  late final FocusNode passwordFocusNode;
+  late final FocusNode firstNameFocusNodeAr;
+  late final FocusNode lastNameFocusNodeAr;
+
   @override
   void initState() {
     super.initState();
-    Get.put(Generate());
+    generate = Get.put(Generate());
+    validator = Get.find<Validator>(tag: "uiPage");
+    themeController = Get.find<ThemeController>();
+    // Assign text controllers from validator
+    userNameController = validator.controllers[8];
+    passwordController = validator.controllers[9];
+    firstNameControllerEn = validator.controllers[3];
+    lastNameControllerEn = validator.controllers[4];
+    // Assign focus nodes from validator
+    userNameFocusNode = validator.focusNodes[8];
+    passwordFocusNode = validator.focusNodes[9];
+    firstNameFocusNodeAr = validator.focusNodes[3];
+    lastNameFocusNodeAr = validator.focusNodes[4];
+
+    // Set generated password
     passwordController.text = generate.generatePassword();
+  }
+
+  final _studentInfo = StudentInfoDialog();
+
+  Future submitForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      if (_studentInfo.isComplete == true) {
+        dev.log("required data is available");
+        connect.post(url, _studentInfo);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('valid form'),
+          ),
+        );
+      }
+    } else {
+      dev.log("required data is not available");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(' invalid form'),
+        ),
+      );
+    }
   }
 
   @override
@@ -190,8 +246,11 @@ class _SystemUIState extends State<SystemUI> {
                                                   child: InputField(
                                                       inputTitle: "sessions:",
                                                       child: CustomTextField(
-                                                        controller:
-                                                            textcontrollers[0],
+                                                        onSaved: (p0) {
+                                                          _studentInfo.sessions;
+                                                        },
+                                                        controller: validator
+                                                            .controllers[0],
                                                       )),
                                                 ),
                                                 SizedBox(height: 10),
@@ -211,31 +270,53 @@ class _SystemUIState extends State<SystemUI> {
                                                           children: [
                                                             Expanded(
                                                               child: InputField(
-                                                                  inputTitle:
-                                                                      "First name in Arabic",
-                                                                  child:
-                                                                      CustomTextField(
-                                                                    controller:
-                                                                        textcontrollers[
-                                                                            1],
-                                                                    validator: validator
-                                                                        .notEmptyValidator(
-                                                                            "يجب ادخال الاسم"),
-                                                                  )),
+                                                                inputTitle:
+                                                                    "First name in Arabic",
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onSaved:
+                                                                      (p0) {
+                                                                    _studentInfo
+                                                                            .firstNameAR =
+                                                                        p0!;
+                                                                  },
+                                                                  controller:
+                                                                      validator
+                                                                          .controllers[1],
+                                                                  validator: validator
+                                                                      .notEmptyValidator(
+                                                                          "يجب ادخال الاسم"),
+                                                                  focusNode:
+                                                                      validator
+                                                                          .focusNodes[1],
+                                                                ),
+                                                              ),
                                                             ),
                                                             SizedBox(width: 8),
                                                             Expanded(
+                                                              child: InputField(
+                                                                inputTitle:
+                                                                    "Last name in Arabic",
                                                                 child:
-                                                                    InputField(
-                                                                        inputTitle:
-                                                                            "Last name in Arabic",
-                                                                        child:
-                                                                            CustomTextField(
-                                                                          controller:
-                                                                              textcontrollers[2],
-                                                                          validator:
-                                                                              validator.notEmptyValidator("يجب ادخال الاسم"),
-                                                                        ))),
+                                                                    CustomTextField(
+                                                                  controller:
+                                                                      validator
+                                                                          .controllers[2],
+                                                                  validator: validator
+                                                                      .notEmptyValidator(
+                                                                          "يجب ادخال الاسم"),
+                                                                  focusNode:
+                                                                      validator
+                                                                          .focusNodes[2],
+                                                                  onSaved:
+                                                                      (p0) {
+                                                                    _studentInfo
+                                                                            .lastNameAR =
+                                                                        p0!;
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ],
                                                         ),
                                                       ),
@@ -253,7 +334,7 @@ class _SystemUIState extends State<SystemUI> {
                                                                 child:
                                                                     CustomTextField(
                                                                   controller:
-                                                                      firstNameController,
+                                                                      firstNameControllerEn,
                                                                   textDirection:
                                                                       TextDirection
                                                                           .ltr,
@@ -262,8 +343,13 @@ class _SystemUIState extends State<SystemUI> {
                                                                     userNameController
                                                                             .text =
                                                                         generate.generateUsername(
-                                                                            lastNameController,
-                                                                            firstNameController);
+                                                                            lastNameControllerEn,
+                                                                            firstNameControllerEn);
+                                                                  },
+                                                                  onSaved:
+                                                                      (p0) {
+                                                                    _studentInfo
+                                                                        .firstNameEN = p0;
                                                                   },
                                                                 ),
                                                               ),
@@ -277,7 +363,7 @@ class _SystemUIState extends State<SystemUI> {
                                                               child:
                                                                   CustomTextField(
                                                                 controller:
-                                                                    lastNameController,
+                                                                    lastNameControllerEn,
                                                                 textDirection:
                                                                     TextDirection
                                                                         .ltr,
@@ -285,8 +371,12 @@ class _SystemUIState extends State<SystemUI> {
                                                                   userNameController
                                                                           .text =
                                                                       generate.generateUsername(
-                                                                          lastNameController,
-                                                                          firstNameController);
+                                                                          lastNameControllerEn,
+                                                                          firstNameControllerEn);
+                                                                },
+                                                                onSaved: (p0) {
+                                                                  _studentInfo
+                                                                      .lastNameEN = p0;
                                                                 },
                                                               ),
                                                             )),
@@ -305,11 +395,13 @@ class _SystemUIState extends State<SystemUI> {
                                                                     InputField(
                                                                         inputTitle:
                                                                             "Sex",
-                                                                        child:
-                                                                            dropDown(
-                                                                          sex,
-                                                                          sex[0],
-                                                                        ))),
+                                                                        child: dropDown(
+                                                                            sex,
+                                                                            sex[0],
+                                                                            (p0) {
+                                                                          _studentInfo.sex =
+                                                                              p0!;
+                                                                        }))),
                                                             SizedBox(width: 8),
                                                             Expanded(
                                                               child: InputField(
@@ -318,8 +410,13 @@ class _SystemUIState extends State<SystemUI> {
                                                                 child:
                                                                     CustomTextField(
                                                                   controller:
-                                                                      textcontrollers[
-                                                                          5],
+                                                                      validator
+                                                                          .controllers[5],
+                                                                  onSaved:
+                                                                      (p0) {
+                                                                    _studentInfo
+                                                                        .dateOfBirth = p0;
+                                                                  },
                                                                 ),
                                                               ),
                                                             ),
@@ -335,9 +432,13 @@ class _SystemUIState extends State<SystemUI> {
                                                                 "Nationality",
                                                             child:
                                                                 CustomTextField(
-                                                              controller:
-                                                                  textcontrollers[
-                                                                      6],
+                                                              controller: validator
+                                                                  .controllers[6],
+                                                              onSaved: (p0) {
+                                                                _studentInfo
+                                                                        .nationality =
+                                                                    p0!;
+                                                              },
                                                             ),
                                                           )),
                                                           SizedBox(width: 8),
@@ -347,9 +448,12 @@ class _SystemUIState extends State<SystemUI> {
                                                                 "Address",
                                                             child:
                                                                 CustomTextField(
-                                                              controller:
-                                                                  textcontrollers[
-                                                                      7],
+                                                              controller: validator
+                                                                  .controllers[7],
+                                                              onSaved: (p0) {
+                                                                _studentInfo
+                                                                    .address = p0;
+                                                              },
                                                             ),
                                                           )),
                                                         ],
@@ -370,6 +474,11 @@ class _SystemUIState extends State<SystemUI> {
                                                               CustomTextField(
                                                             controller:
                                                                 userNameController,
+                                                            onSaved: (p0) {
+                                                              _studentInfo
+                                                                      .username =
+                                                                  p0!;
+                                                            },
                                                           ),
                                                         )),
                                                         SizedBox(width: 8),
@@ -381,6 +490,11 @@ class _SystemUIState extends State<SystemUI> {
                                                               CustomTextField(
                                                             controller:
                                                                 passwordController,
+                                                            onSaved: (p0) {
+                                                              _studentInfo
+                                                                      .password =
+                                                                  p0!;
+                                                            },
                                                           ),
                                                         )),
                                                       ],
@@ -392,32 +506,62 @@ class _SystemUIState extends State<SystemUI> {
                                                   child: Row(
                                                     children: [
                                                       Expanded(
-                                                          child: InputField(
-                                                              inputTitle:
-                                                                  "blood type",
-                                                              child: dropDown(
-                                                                  bloodType,
-                                                                  bloodType[
-                                                                      0]))),
-                                                      SizedBox(width: 8),
-                                                      Expanded(
-                                                          child: InputField(
-                                                              inputTitle:
-                                                                  "has desease",
-                                                              child: dropDown(
-                                                                  yesNo,
-                                                                  yesNo[1]))),
-                                                      SizedBox(width: 8),
-                                                      Expanded(
-                                                          child: InputField(
-                                                        inputTitle:
-                                                            "desease causes",
-                                                        child: CustomTextField(
-                                                          controller:
-                                                              textcontrollers[
-                                                                  10],
+                                                        child: InputField(
+                                                          inputTitle:
+                                                              "blood type",
+                                                          child: dropDown(
+                                                              bloodType,
+                                                              bloodType[0],
+                                                              (p0) {
+                                                            _studentInfo
+                                                                .bloodType = p0;
+                                                          }),
                                                         ),
-                                                      ))
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: InputField(
+                                                          inputTitle:
+                                                              "has desease",
+                                                          child: dropDown(
+                                                              yesNo, yesNo[1],
+                                                              (p0) {
+                                                            _studentInfo
+                                                                .hasDisease = p0;
+                                                          }),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: InputField(
+                                                          inputTitle:
+                                                              "disease causes",
+                                                          child:
+                                                              CustomTextField(
+                                                            controller: validator
+                                                                .controllers[10],
+                                                            onSaved: (p0) {
+                                                              _studentInfo
+                                                                  .diseaseCauses = p0;
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: InputField(
+                                                          inputTitle:
+                                                              "allergies",
+                                                          child:
+                                                              CustomTextField(
+                                                            controller: validator
+                                                                .controllers[10],
+                                                            onSaved: (p0) {
+                                                              _studentInfo
+                                                                  .allergies = p0;
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
@@ -433,14 +577,21 @@ class _SystemUIState extends State<SystemUI> {
                                                               "phone number",
                                                           child:
                                                               CustomTextField(
-                                                            controller:
-                                                                textcontrollers[
-                                                                    11],
+                                                            controller: validator
+                                                                .controllers[11],
                                                             validator: (String?
                                                                     value) =>
                                                                 validator
                                                                     .isValidPhoneNumber(
                                                                         value),
+                                                            focusNode: validator
+                                                                    .focusNodes[
+                                                                11], //2
+                                                            onSaved: (p0) {
+                                                              _studentInfo
+                                                                      .phoneNumber =
+                                                                  p0!;
+                                                            },
                                                           ),
                                                         )),
                                                         SizedBox(width: 8),
@@ -450,14 +601,21 @@ class _SystemUIState extends State<SystemUI> {
                                                               "email address",
                                                           child:
                                                               CustomTextField(
-                                                            controller:
-                                                                textcontrollers[
-                                                                    12],
+                                                            controller: validator
+                                                                .controllers[12],
                                                             validator: (String?
                                                                 value) {
                                                               return validator
                                                                   .isValidEmail(
                                                                       value);
+                                                            },
+                                                            focusNode: validator
+                                                                    .focusNodes[
+                                                                12], //3
+                                                            onSaved: (p0) {
+                                                              _studentInfo
+                                                                      .emailAddress =
+                                                                  p0!;
                                                             },
                                                           ),
                                                         )),
@@ -471,15 +629,21 @@ class _SystemUIState extends State<SystemUI> {
                                                             title:
                                                                 "fother state",
                                                             child: dropDown(
-                                                                state,
-                                                                state[0]))),
+                                                                state, state[0],
+                                                                (p0) {
+                                                              _studentInfo
+                                                                  .fatherStatus = p0;
+                                                            }))),
                                                     Expanded(
                                                         child: CustomContainer(
                                                             title:
                                                                 "mother state",
                                                             child: dropDown(
-                                                                state,
-                                                                state[0]))),
+                                                                state, state[0],
+                                                                (p0) {
+                                                              _studentInfo
+                                                                  .motherStatus = p0;
+                                                            }))),
                                                   ],
                                                 ),
                                                 SizedBox(height: 10),
@@ -489,8 +653,9 @@ class _SystemUIState extends State<SystemUI> {
                                                     inputTitle:
                                                         "guardient's account",
                                                     child: CustomTextField(
-                                                      controller:
-                                                          textcontrollers[13],
+                                                      controller: validator
+                                                          .controllers[13],
+                                                      onSaved: (p0) {},
                                                     ),
                                                   ),
                                                 ),
@@ -532,7 +697,8 @@ class _SystemUIState extends State<SystemUI> {
                                               validator
                                                   .moveToTheFirstEmptyFeild(
                                                       formKey);
-                                              showSnackBar(context, formKey);
+                                              submitForm();
+                                              Navigator.pop(context);
                                             },
                                             child: Text("send")),
                                       ),
@@ -548,8 +714,8 @@ class _SystemUIState extends State<SystemUI> {
     );
   }
 
-  DropdownButtonFormField<String> dropDown(
-      List<String> items, String initialValue) {
+  DropdownButtonFormField<String> dropDown(List<String> items,
+      String initialValue, void Function(String?)? onSaved) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
           filled: false,
@@ -565,6 +731,7 @@ class _SystemUIState extends State<SystemUI> {
         );
       }).toList(),
       onChanged: (String? value) {},
+      onSaved: onSaved,
     );
   }
 }
