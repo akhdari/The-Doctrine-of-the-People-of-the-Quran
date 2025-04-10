@@ -79,11 +79,11 @@ class NumberLimitFormatter extends TextInputFormatter {
 }
 
 class SubscriptionInformation extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
+  final GlobalKey<FormState> subscriptionFormKey;
   final Function onEmptyFeild;
   const SubscriptionInformation({
     super.key,
-    required this.formKey,
+    required this.subscriptionFormKey,
     required this.onEmptyFeild,
   });
   @override
@@ -273,11 +273,11 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                       .onEmptyFeild(); //widget.functionName = refers to the function itself, with () = function call
                   showSnackBar(
                     context,
-                    widget.formKey,
+                    widget.subscriptionFormKey,
                   );
                 },
                 y: y.value,
-                formKey: widget.formKey,
+                formKey: widget.subscriptionFormKey,
                 toggleAnimation: toggleAnimation,
               )),
         ],

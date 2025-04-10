@@ -63,7 +63,7 @@ class StudentInfoDialog {
     return firstNameAR.isNotEmpty &&
         lastNameAR.isNotEmpty &&
         sex.isNotEmpty &&
-        username.isNotEmpty &&
+        //username.isNotEmpty &&
         password.isNotEmpty &&
         phoneNumber.isNotEmpty &&
         emailAddress.isNotEmpty;

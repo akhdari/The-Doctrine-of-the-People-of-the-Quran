@@ -8,7 +8,6 @@ import '../system/widgets/theme.dart';
 import './system/pages/student.dart';
 import './system/pages/lecture.dart';
 import './system/pages/guardian.dart';
-import './system/widgets/multiselect.dart';
 import 'web/widgets/subscription_information.dart';
 
 void main() {
@@ -49,7 +48,6 @@ class _MyAppState extends State<MyApp> {
             '/guardian': (context) => Guardian(),
             '/lecture': (context) => Lecture(),
             "/ui": (context) => SystemUI(),
-            "/multiselect": (context) => DefaultConstructorExample(),
           },
           home: EmptyPage(),
         ));

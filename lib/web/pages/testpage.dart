@@ -12,7 +12,7 @@ class EmptyPage extends StatelessWidget {
       body: Column(children: [
         TextButton(
           onPressed: () {
-            Get.put(Validator(6), permanent: true, tag: "copyPage");
+            Get.put(Validator(6), tag: "copyPage");
             Get.put(Generate());
             Get.toNamed(
               '/copy',
@@ -25,12 +25,6 @@ class EmptyPage extends StatelessWidget {
             '/logIn',
           ),
           child: Text('logIn page'),
-        ),
-        TextButton(
-          onPressed: () => Get.toNamed(
-            '/test',
-          ),
-          child: Text('new page'),
         ),
         TextButton(
           onPressed: () => Get.toNamed(
@@ -52,18 +46,12 @@ class EmptyPage extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Get.put(Validator(14), permanent: true, tag: "uiPage");
+            Get.put(Validator(16), tag: "uiPage");
             Get.toNamed(
               '/ui',
             );
           },
           child: Text('ui page'),
-        ),
-        TextButton(
-          onPressed: () => Get.toNamed(
-            '/multiselect',
-          ),
-          child: Text('multiselect page'),
         ),
       ]),
     );

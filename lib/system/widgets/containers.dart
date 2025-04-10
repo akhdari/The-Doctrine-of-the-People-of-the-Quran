@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CustomContainer extends StatelessWidget {
+class CustomContainer extends StatefulWidget {
   final String title;
+  final IconData icon;
   final Widget child;
-  const CustomContainer({required this.title, required this.child, super.key});
+  const CustomContainer(
+      {required this.title,
+      required this.child,
+      required this.icon,
+      super.key});
 
+  @override
+  State<CustomContainer> createState() => _CustomContainerState();
+}
+
+class _CustomContainerState extends State<CustomContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +52,23 @@ class CustomContainer extends StatelessWidget {
                       //other options: cover, contain
                     ),
                   ),
-                  Text(title),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        widget.icon,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  )
                 ]),
           ),
           //2
@@ -50,7 +76,7 @@ class CustomContainer extends StatelessWidget {
           /// Expanded must have a single child
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: child,
+            child: widget.child,
           )
         ],
       ),

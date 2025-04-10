@@ -38,6 +38,7 @@ class Connect {
           headers: {'Content-Type': 'application/json'},
           body: json.encode(obj.toMap()));
       if (response.statusCode == 200) {
+        dev.log(jsonEncode(obj.toMap()));
         dev.log("you seccusfully added data to the backend");
         return json.decode(response.body);
       } else if (response.statusCode == 400) {

@@ -27,6 +27,7 @@ Returns a bool:
 true → String is empty ("").
 false → String has content (e.g., "abc").
 */
+
 //TODO RFC 5322
   String? isValidEmail(String? value) {
     // Check empty first
@@ -94,5 +95,16 @@ false → String has content (e.g., "abc").
     } else {
       return false;
     }
+  }
+
+  @override
+  void onClose() {
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    for (var node in focusNodes) {
+      node.dispose();
+    }
+    super.onClose();
   }
 }

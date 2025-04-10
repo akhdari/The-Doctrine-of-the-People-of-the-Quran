@@ -4,7 +4,7 @@ import '../style.dart';
 //import '/widgets/custom_text_form_feild.dart';
 class InputField extends StatelessWidget {
   final String inputTitle;
-  final child;
+  final Widget child;
 
   const InputField({
     required this.inputTitle,
@@ -101,20 +101,6 @@ class CustomTextField extends StatelessWidget {
     ),
   );
 }*/
-
-Widget dropDown(String value, List<String> items) {
-  return DropdownButtonFormField<String>(
-    decoration: InputDecoration(border: OutlineInputBorder()),
-    value: value,
-    items: items.map((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Text(value),
-      );
-    }).toList(),
-    onChanged: (String? value) {},
-  );
-}
 
 Future function(BuildContext context) async {
   DateTime? time;

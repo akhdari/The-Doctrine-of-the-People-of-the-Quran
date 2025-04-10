@@ -15,8 +15,8 @@ class CopyPage extends StatefulWidget {
 }
 
 class _CopyPageState extends State<CopyPage> {
-  final formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final copyPageFormKey = GlobalKey<FormState>();
+  final copyPageScaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _CopyPageState extends State<CopyPage> {
                     ),
                   ),
                   NavBar(
-                    scaffoldKey: scaffoldKey,
+                    scaffoldKey: copyPageScaffoldKey,
                   )
                 ],
               ),
@@ -60,12 +60,12 @@ class _CopyPageState extends State<CopyPage> {
                   return Column(
                     children: [
                       SubscriptionInformation(
-                        onEmptyFeild: () =>
-                            controller.moveToTheFirstEmptyFeild(formKey),
-                        formKey: formKey,
+                        onEmptyFeild: () => controller
+                            .moveToTheFirstEmptyFeild(copyPageFormKey),
+                        subscriptionFormKey: copyPageFormKey,
                       ),
                       SizedBox(height: 20), // Add spacing for small screens
-                      CustomFormWidget(formKey: formKey),
+                      CustomFormWidget(formKey: copyPageFormKey),
                     ],
                   );
                 } else {
@@ -73,12 +73,13 @@ class _CopyPageState extends State<CopyPage> {
                     children: [
                       Expanded(
                         child: SubscriptionInformation(
-                          onEmptyFeild: () =>
-                              controller.moveToTheFirstEmptyFeild(formKey),
-                          formKey: formKey,
+                          onEmptyFeild: () => controller
+                              .moveToTheFirstEmptyFeild(copyPageFormKey),
+                          subscriptionFormKey: copyPageFormKey,
                         ),
                       ),
-                      Expanded(child: CustomFormWidget(formKey: formKey)),
+                      Expanded(
+                          child: CustomFormWidget(formKey: copyPageFormKey)),
                     ],
                   );
                 }
