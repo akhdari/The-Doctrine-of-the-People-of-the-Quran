@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class NavBar extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const NavBar({Key? key, required this.scaffoldKey}) : super(key: key);
+  const NavBar({super.key, required this.scaffoldKey});
 
   @override
-  _NavBarState createState() => _NavBarState();
+  NavBarState createState() => NavBarState();
 }
 
-class _NavBarState extends State<NavBar> {
+class NavBarState extends State<NavBar> {
   List<bool> isHovered = List.generate(6, (index) => false);
 
   @override

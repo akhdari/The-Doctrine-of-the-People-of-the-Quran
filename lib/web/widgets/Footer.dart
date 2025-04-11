@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FooterSection extends StatelessWidget {
+  const FooterSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -112,15 +114,14 @@ void _launchURL(String url) async {
   }
 }
 
-
 class AnimatedNavigationText extends StatefulWidget {
   final String text;
   final String routeName;
   const AnimatedNavigationText({
     required this.text,
     required this.routeName,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<AnimatedNavigationText> createState() => _AnimatedNavigationTextState();
@@ -177,13 +178,15 @@ class _AnimatedNavigationTextState extends State<AnimatedNavigationText>
           Navigator.pushNamed(context, widget.routeName);
         },
         child: Transform.translate(
-          offset: Offset(_animation.value,0),
+          offset: Offset(_animation.value, 0),
           child: Text(
             widget.text,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: isHovered ? const Color(0xFF0E9D6D) : Colors.grey.withOpacity(0.7),
+              color: isHovered
+                  ? const Color(0xFF0E9D6D)
+                  : Colors.grey.withValues(alpha: 0.7),
             ),
           ),
         ),

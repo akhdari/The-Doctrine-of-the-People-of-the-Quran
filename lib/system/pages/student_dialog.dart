@@ -2,96 +2,21 @@ import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
-import 'dart:math';
-import './widgets/timer.dart';
-import './widgets/containers.dart';
-import './widgets/input_field.dart';
-import './widgets/end_drawer.dart';
-import './widgets/theme.dart';
-import '../logic/validators.dart';
-import 'const/info.dart';
-import 'connect/connect.dart';
-import 'widgets/multiselect.dart';
-import 'connect/get_sessions.dart';
-import 'connect/get_guardians.dart';
+import '../widgets/timer.dart';
+import '../widgets/containers.dart';
+import '../widgets/input_field.dart';
+import '../../logic/validators.dart';
+import '../const/student_class.dart';
+import '../connect/connect.dart';
+import '../widgets/multiselect.dart';
+import '../connect/get_sessions.dart';
+import '../connect/get_guardians.dart';
+import '../const/student_const.dart';
+import '../../logic/generate.dart';
+import '../widgets/drop_down.dart';
+import '../../logic/submit_form.dart';
 
-// Constants
-const url = 'http://192.168.100.20/phpscript/get_student.php';
-const List<String> sex = ["male", "female"];
-const List<String> bloodType = [
-  "A+",
-  "A-",
-  "B+",
-  "B-",
-  "AB+",
-  "AB-",
-  "O+",
-  "O-"
-];
-const List<String> yesNo = ["yes", "no"];
-const List<bool> trueFalse = [true, false];
-List<String?> schoolType = ["public", "private", "international"];
-const List<String> academicLevel = [
-  "Kindergarten",
-  "Primary School",
-  "Elementary School",
-  "Middle School",
-  "High School",
-  "Undergraduate",
-  "Postgraduate",
-  "Doctorate"
-];
-const List<String> grades = [
-  "Grade 1",
-  "Grade 2",
-  "Grade 3",
-  "Grade 4",
-  "Grade 5",
-  "Grade 6",
-  "Grade 7",
-  "Grade 8",
-  "Grade 9",
-  "Grade 10",
-  "Grade 11",
-  "Grade 12",
-  "Undergraduate Year 1",
-  "Undergraduate Year 2",
-  "Undergraduate Year 3",
-  "Undergraduate Year 4",
-  "Master's Year 1",
-  "Master's Year 2",
-  "Doctorate Year 1",
-  "Doctorate Year 2",
-  "Doctorate Year 3"
-];
-List<double> exemptionPercentage = [25, 50, 75, 100];
-const List<String> state = ["alive", "dead"];
-const List<String> test = ["single", "married", "widowed"];
-
-class Generate extends GetxController {
-  String generateUsername(
-      TextEditingController lastName, TextEditingController firstName) {
-    if (firstName.text.isNotEmpty && lastName.text.isNotEmpty) {
-      Random random = Random();
-      String ln = lastName.text.trim();
-      String fn = firstName.text.trim();
-      String lnPart = ln.length >= 3 ? ln.substring(0, 3) : ln;
-      String fnPart = fn.length >= 3 ? fn.substring(0, 3) : fn;
-      String username = lnPart + fnPart + random.nextInt(10).toString();
-      return username;
-    }
-    return "please enter your name";
-  }
-
-  String generatePassword() {
-    const chars =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#%&*';
-    const length = 10;
-    final Random random = Random.secure();
-    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
-        .join();
-  }
-}
+const String url = 'http://192.168.100.20/phpscript/get_student.php';
 
 class StudentDialog extends StatefulWidget {
   const StudentDialog({super.key});
@@ -101,7 +26,7 @@ class StudentDialog extends StatefulWidget {
 }
 
 class _StudentDialogState extends State<StudentDialog> {
-  Future<void> _loadData() async {
+  Future<void> loadData() async {
     try {
       final fetchedSessionNames = await getSessions();
       final fetchedGuardianAccounts = await getGuardians();
@@ -117,8 +42,7 @@ class _StudentDialogState extends State<StudentDialog> {
       dev.log("Error loading data: $e");
     }
   }
-
-  Future<void> submitForm() async {
+/*  Future<void> submitForm() async {
     if (studentFormKey.currentState!.validate()) {
       studentFormKey.currentState!.save();
       if (studentInfo.isComplete) {
@@ -136,13 +60,13 @@ class _StudentDialogState extends State<StudentDialog> {
       }
     }
   }
+*/
 
   // Controllers and keys
   final GlobalKey<FormState> studentFormKey = GlobalKey<FormState>();
 
   late Generate generate;
   late Validator validator;
-  late ThemeController themeController;
   final Connect connect = Connect();
   final StudentInfoDialog studentInfo = StudentInfoDialog();
 
@@ -157,13 +81,13 @@ class _StudentDialogState extends State<StudentDialog> {
 
   late MultipleSearchController multiSearchController1;
   late MultipleSearchController multiSearchController2;
-
+  //scroll conroller
+  late ScrollController scrollController;
   @override
   void initState() {
     super.initState();
-    generate = Get.put(Generate());
-    validator = Get.find<Validator>(tag: "uiPage");
-    themeController = Get.find<ThemeController>();
+    generate = Get.find<Generate>();
+    validator = Get.find<Validator>(tag: "studentPage");
 
     validator.controllers[9].text = generate.generatePassword();
 
@@ -175,12 +99,12 @@ class _StudentDialogState extends State<StudentDialog> {
       minCharsToShowItems: 1,
       allowDuplicateSelection: false,
     );
-    _loadData();
+    scrollController = ScrollController();
+    loadData();
   }
 
   @override
   Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
@@ -193,7 +117,7 @@ class _StudentDialogState extends State<StudentDialog> {
           controller: scrollController,
           child: Column(
             children: [
-              // Header
+              //header
               Stack(children: [
                 ColorFiltered(
                   colorFilter: ColorFilter.mode(Colors.white, BlendMode.dstIn),
@@ -753,7 +677,12 @@ class _StudentDialogState extends State<StudentDialog> {
                 child: OutlinedButton(
                   onPressed: () {
                     validator.moveToTheFirstEmptyFeild(studentFormKey);
-                    submitForm();
+                    submitForm(
+                      studentFormKey,
+                      connect,
+                      studentInfo,
+                      url,
+                    );
                   },
                   child: const Text("Submit"),
                 ),
@@ -762,114 +691,6 @@ class _StudentDialogState extends State<StudentDialog> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class SystemUI extends StatefulWidget {
-  final dialogContent = const StudentDialog();
-  const SystemUI({super.key});
-
-  @override
-  State<SystemUI> createState() => _SystemUIState();
-}
-
-class _SystemUIState extends State<SystemUI> {
-  final GlobalKey<ScaffoldState> studentScaffoldKey =
-      GlobalKey<ScaffoldState>();
-
-  bool isClicked = false;
-  late ThemeController themeController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    themeController = Get.find<ThemeController>();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: studentScaffoldKey,
-      drawerEnableOpenDragGesture: true,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black),
-            onPressed: () => studentScaffoldKey.currentState?.openEndDrawer(),
-          ),
-        ],
-      ),
-      endDrawer: customEndDrawer(),
-      body: Column(
-        children: [
-          IconButton(
-            onPressed: () {
-              isClicked = !isClicked;
-              themeController.switchTheme();
-              dev.log("theme changed");
-            },
-            icon: const Icon(Icons.nightlight_round),
-          ),
-          Center(
-            child: OutlinedButton(
-              onPressed: () => Get.dialog(widget.dialogContent),
-              child: const Text("Open Student Form"),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DropDownWidget<T> extends StatefulWidget {
-  final List<T> items;
-  final T? initialValue;
-  final void Function(T?)? onChanged;
-  final void Function(T?)? onSaved;
-
-  const DropDownWidget({
-    super.key,
-    required this.items,
-    this.initialValue,
-    this.onChanged,
-    this.onSaved,
-  });
-
-  @override
-  State<DropDownWidget<T>> createState() => _DropDownWidgetState<T>();
-}
-
-class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
-  T? _selectedValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedValue = widget.initialValue;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<T>(
-      decoration: const InputDecoration(
-        filled: false,
-        border: OutlineInputBorder(),
-      ),
-      value: _selectedValue,
-      items: widget.items.map((T value) {
-        return DropdownMenuItem<T>(
-          value: value,
-          child: Text(value.toString()),
-        );
-      }).toList(),
-      onChanged: (T? newValue) {
-        setState(() => _selectedValue = newValue);
-        widget.onChanged?.call(newValue);
-      },
-      onSaved: widget.onSaved,
     );
   }
 }

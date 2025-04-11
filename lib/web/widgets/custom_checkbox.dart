@@ -6,7 +6,7 @@ class CustomCheckbox extends StatelessWidget {
       isAgree; //the reference to the Rx variable itself cannot change, but the value inside it can still be updated.
   final String text;
 
-  CustomCheckbox({super.key, required this.isAgree, required this.text});
+  const CustomCheckbox({super.key, required this.isAgree, required this.text});
 
   @override
   Widget build(BuildContext context) {

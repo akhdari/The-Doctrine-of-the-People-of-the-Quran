@@ -1,4 +1,6 @@
-class StudentInfoDialog {
+import 'abstract_class.dart';
+
+class StudentInfoDialog extends AbstractClass {
   // Required fields (non-nullable)
   //personal ifo
   late String firstNameAR;
@@ -58,6 +60,7 @@ class StudentInfoDialog {
   // Constructor for empty form initialization
   StudentInfoDialog();
 
+  @override
   // Method to check if all required fields are filled
   bool get isComplete {
     return firstNameAR.isNotEmpty &&
@@ -69,6 +72,7 @@ class StudentInfoDialog {
         emailAddress.isNotEmpty;
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'student': {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -12,7 +14,9 @@ class CustomDrawer extends StatelessWidget {
             child: Text(
               'القائمة',
               style: TextStyle(
-                  color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
           ),

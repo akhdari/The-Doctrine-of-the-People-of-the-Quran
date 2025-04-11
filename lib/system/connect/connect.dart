@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '/system/const/info.dart';
+import '../const/abstract_class.dart';
 import 'dart:developer' as dev;
 
 class Connect {
@@ -32,11 +32,14 @@ class Connect {
     }
   }
 
-  Future post(String url, StudentInfoDialog obj) async {
+  Future post(String url, AbstractClass obj) async {
     try {
+      final requestBody = json.encode(obj.toMap());
+      dev.log("Request Body: $requestBody");
       final response = await http.post(Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(obj.toMap()));
+
       if (response.statusCode == 200) {
         dev.log(jsonEncode(obj.toMap()));
         dev.log("you seccusfully added data to the backend");

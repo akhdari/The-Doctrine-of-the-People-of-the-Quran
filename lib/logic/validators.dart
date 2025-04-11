@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+//TODO a seperate num for validators
 class Validator extends GetxController {
   Rx<String> selectedCountry = 'الجزائر'.obs;
   final int feildCount;

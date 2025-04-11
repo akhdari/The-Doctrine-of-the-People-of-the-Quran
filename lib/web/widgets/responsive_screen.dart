@@ -8,11 +8,11 @@ class ResponsiveHide extends StatelessWidget {
   final double breakpoint; // Make it flexible
 
   const ResponsiveHide({
-    Key? key,
+    super.key,
     required this.rightChild,
     required this.leftChild,
     this.breakpoint = 600, // Default value
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,5 +40,3 @@ class ResponsiveHide extends StatelessWidget {
     );
   }
 }
-
-
