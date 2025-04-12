@@ -55,13 +55,25 @@ class EmptyPage extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Get.put(Validator(10), tag: "guardianPage");
+            Get.put(
+              Validator(10),
+              tag: "guardianPage",
+            );
             Get.put(Generate());
             Get.toNamed(
               '/add_guardian',
             );
           },
           child: Text('add guardian'),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.put(Validator(2), tag: "lecturePage");
+            Get.toNamed(
+              '/add_lecture',
+            );
+          },
+          child: Text('add lecture'),
         ),
       ]),
     );

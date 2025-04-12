@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/pages/add_guardian.dart';
 import 'testpage.dart';
 import 'web/pages/copy_page.dart';
 import 'package:get/get.dart';
 import 'web/pages/login_page.dart';
-import 'system/pages/add_student.dart';
 import '../system/widgets/theme.dart';
 import './system/pages/student.dart';
 import './system/pages/lecture.dart';
 import './system/pages/guardian.dart';
 import 'web/widgets/subscription_information.dart';
+import 'system/pages/add_student.dart';
+import '/system/pages/add_guardian.dart';
+import 'system/pages/add_lecture.dart';
 
 void main() {
   Get.put(SubscriptionInformationController());
@@ -50,6 +51,7 @@ class _MyAppState extends State<MyApp> {
             '/lecture': (context) => Lecture(),
             '/add_student': (context) => AddStudent(),
             '/add_guardian': (context) => AddGuardian(),
+            '/add_lecture': (context) => AddLecture(),
           },
           home: EmptyPage(),
         ));

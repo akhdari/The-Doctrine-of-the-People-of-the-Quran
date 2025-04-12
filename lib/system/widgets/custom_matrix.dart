@@ -1,81 +1,151 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'timer.dart';
-import 'dart:developer' as dev;
 
 class TimeCellController extends GetxController {
-  //for switches
   final Map<String, RxBool> weekDays = {
-    'الجمعة': false.obs,
-    'السبت': false.obs,
-    'الأحد': false.obs,
-    'الإثنين': false.obs,
-    'الثلاثاء': false.obs,
-    'الأربعاء': false.obs,
-    'الخميس': false.obs,
+    'Friday': false.obs,
+    'Saturday': false.obs,
+    'Sunday': false.obs,
+    'Monday': false.obs,
+    'Tuesday': false.obs,
+    'Wednesday': false.obs,
+    'Thursday': false.obs,
   };
-  //for time selection
-  //nasted map
+
   final Map<String, Map<String, RxString>> dayTimes = {
-    'الجمعة': {'from': ''.obs, 'to': ''.obs},
-    'السبت': {'from': ''.obs, 'to': ''.obs},
-    'الأحد': {'from': ''.obs, 'to': ''.obs},
-    'الإثنين': {'from': ''.obs, 'to': ''.obs},
-    'الثلاثاء': {'from': ''.obs, 'to': ''.obs},
-    'الأربعاء': {'from': ''.obs, 'to': ''.obs},
-    'الخميس': {'from': ''.obs, 'to': ''.obs},
+    'Friday': {'from': ''.obs, 'to': ''.obs},
+    'Saturday': {'from': ''.obs, 'to': ''.obs},
+    'Sunday': {'from': ''.obs, 'to': ''.obs},
+    'Monday': {'from': ''.obs, 'to': ''.obs},
+    'Tuesday': {'from': ''.obs, 'to': ''.obs},
+    'Wednesday': {'from': ''.obs, 'to': ''.obs},
+    'Thursday': {'from': ''.obs, 'to': ''.obs},
   };
 
   void toggleSwitch(String day) => weekDays[day]!.toggle();
-  //map acess map_name[key]
-  /*why use null aware operator ?
-  /because the map may not contain the key*/
 
   void clearTime(String day, String type) => dayTimes[day]![type]!.value = '';
 
-  void setTime(String day, String type, String newTime) =>
-      dayTimes[day]![type]!.value = newTime;
+  void setTime(String day, String type, String newTime) {
+    if (!_isValidTime(newTime)) {
+      Get.snackbar('Format Error', 'Please enter time in HH:MM format',
+          snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+
+    final otherType = type == 'from' ? 'to' : 'from';
+    final otherTime = dayTimes[day]![otherType]!.value;
+
+    if (otherTime.isNotEmpty) {
+      if (type == 'from' && !_isFromBeforeTo(newTime, otherTime)) {
+        Get.snackbar('Time Error', 'Start time must be before end time',
+            snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+      if (type == 'to' &&
+          !_isFromBeforeTo(dayTimes[day]!['from']!.value, newTime)) {
+        Get.snackbar('Time Error', 'End time must be after start time',
+            snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+    }
+
+    dayTimes[day]![type]!.value = newTime;
+  }
+
+  bool _isValidTime(String time) {
+    final parts = time.split(':');
+    if (parts.length != 2) return false;
+    final hours = int.tryParse(parts[0]);
+    final minutes = int.tryParse(parts[1]);
+    return hours != null &&
+        minutes != null &&
+        hours >= 0 &&
+        hours <= 23 &&
+        minutes >= 0 &&
+        minutes <= 59;
+  }
+
+  bool _isFromBeforeTo(String from, String to) {
+    final fromMinutes = _timeToMinutes(from);
+    final toMinutes = _timeToMinutes(to);
+
+    if (fromMinutes == toMinutes) return false; // same time = invalid
+    return true; // allow both same-day and overnight
+  }
+
+  int _timeToMinutes(String time) {
+    final parts = time.split(':');
+    final hours = int.parse(parts[0]);
+    final minutes = int.parse(parts[1]);
+    return hours * 60 + minutes;
+  }
+
+  Map<String, Map<String, String>> getSelectedDays() {
+    final result = <String, Map<String, String>>{};
+
+    for (var entry in weekDays.entries) {
+      if (entry.value.value) {
+        final day = entry.key;
+        final fromTime = dayTimes[day]!['from']!.value;
+        final toTime = dayTimes[day]!['to']!.value;
+
+        if (fromTime.isEmpty || toTime.isEmpty) {
+          Get.snackbar(
+            'Error',
+            'Please specify both start and end time for $day',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+          continue;
+        }
+
+        result[day] = {
+          'from': fromTime,
+          'to': toTime,
+        };
+      }
+    }
+
+    return result;
+  }
 }
 
 class CustomMatrix extends StatelessWidget {
-  const CustomMatrix({super.key});
+  final TimeCellController controller;
+
+  const CustomMatrix({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(TimeCellController());
-
     return Table(
       border: TableBorder.all(color: Colors.grey),
-      //column width
       columnWidths: const {
-        //index: flex
-        //index should be ordered and starts from 0
         0: FlexColumnWidth(2),
         1: FlexColumnWidth(1),
         2: FlexColumnWidth(1),
         3: FlexColumnWidth(1),
       },
-      //rows
       children: <TableRow>[
-        //row 1
         TableRow(
           decoration: const BoxDecoration(color: Colors.teal),
           children: [
-            _buildHeaderCell('اليوم'),
-            _buildHeaderCell('الحالة'),
-            _buildHeaderCell('من'),
-            _buildHeaderCell('إلى'),
+            _buildHeaderCell('Day'),
+            _buildHeaderCell('Status'),
+            _buildHeaderCell('From'),
+            _buildHeaderCell('To'),
           ],
         ),
-        //data rows
         ...controller.weekDays.entries.map((entry) {
           String day = entry.key;
           return TableRow(
             children: [
               _buildDataCell(day),
-              _buildSwitchCell(day),
-              TimeCell(day: day, isFrom: true),
-              TimeCell(day: day, isFrom: false),
+              _buildSwitchCell(controller, day),
+              TimeCell(controller: controller, day: day, isFrom: true),
+              TimeCell(controller: controller, day: day, isFrom: false),
             ],
           );
         }),
@@ -110,8 +180,7 @@ class CustomMatrix extends StatelessWidget {
     );
   }
 
-  Widget _buildSwitchCell(String day) {
-    final controller = Get.find<TimeCellController>();
+  Widget _buildSwitchCell(TimeCellController controller, String day) {
     return Obx(() => Center(
           child: Switch(
             value: controller.weekDays[day]!.value,
@@ -128,18 +197,19 @@ class CustomMatrix extends StatelessWidget {
 }
 
 class TimeCell extends StatelessWidget {
+  final TimeCellController controller;
   final String day;
   final bool isFrom;
 
   const TimeCell({
     super.key,
+    required this.controller,
     required this.day,
     required this.isFrom,
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TimeCellController>();
     final timeType = isFrom ? 'from' : 'to';
 
     return Obx(() {
@@ -149,18 +219,22 @@ class TimeCell extends StatelessWidget {
       return TextButton(
         onPressed: () async {
           if (isSelected) {
-            dev.log('$day ${isFrom ? "from" : "to"} time selected');
             final value = await timer(context);
-            controller.setTime(day, timeType, value);
-            dev.log('Selected time for $day $timeType: $value');
-          } else {
-            dev.log('$day is not selected');
-            if (timeValue.isNotEmpty) {
-              controller.clearTime(day, timeType);
+            if (value.isNotEmpty) {
+              controller.setTime(day, timeType, value);
             }
           }
         },
-        child: Text(timeValue),
+        child: Text(
+          timeValue.isEmpty
+              ? isFrom
+                  ? 'Start'
+                  : 'End'
+              : timeValue,
+          style: TextStyle(
+            color: timeValue.isEmpty ? Colors.grey : Colors.black,
+          ),
+        ),
       );
     });
   }

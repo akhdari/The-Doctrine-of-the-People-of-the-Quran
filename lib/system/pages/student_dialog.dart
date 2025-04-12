@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import '../widgets/timer.dart';
 import '../widgets/containers.dart';
@@ -477,8 +478,7 @@ class _StudentDialogState extends State<StudentDialog> {
                             inputTitle: "guardian's account",
                             child: DefaultConstructorExample(
                               multipleSearchController: multiSearchController2,
-                              pickedItems:
-                                  studentInfo.username2, //studentInfo.username2
+                              pickedItems: studentInfo.username2,
                               preparedData: guardianAccounts,
                               searchkey: "username",
                               hintText: "search for guardian account",
