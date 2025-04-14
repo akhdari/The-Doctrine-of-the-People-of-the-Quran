@@ -1,62 +1,109 @@
+import 'dart:async';
 import 'dart:convert';
+//import 'package:get/get_connect/connect.dart';
 import 'package:http/http.dart' as http;
 import '../const/abstract_class.dart';
 import 'dart:developer' as dev;
 
+class ApiResult<T> {
+  final String? errorMessage;
+  final String? errorCode;
+  final T? data;
+  ApiResult.seccess({required this.data})
+      : errorMessage = null,
+        errorCode = null;
+  ApiResult.failure({this.errorCode, this.errorMessage}) : data = null;
+  bool get isSuccess {
+    return data != null;
+  }
+}
+
 class Connect {
-  Future<List<Map<String, dynamic>>> get(String url) async {
+  String? errorMessage;
+  String? errorCode;
+  List<Map<String, dynamic>> parseJsonList(http.Response response) {
+    final List<dynamic> jsonResponse =
+        json.decode(response.body) as List<dynamic>;
+    final List<Map<String, dynamic>> listOfMaps = jsonResponse
+        .cast<Map<String, dynamic>>()
+        .map((map) => map.map(
+            (key, value) => MapEntry(key, value ?? ''))) // Replace null with ''
+        .toList();
+    return listOfMaps;
+  }
+
+  Future<ApiResult<List<Map<String, dynamic>>>> get(String url) async {
     try {
       final response = await http.get(
         Uri.parse(url),
         headers: {'Accept': 'application/json'},
-      );
-
+      ).timeout(const Duration(seconds: 10));
+      dev.log("response: ${response.body}");
       if (response.statusCode == 200) {
-        final List<dynamic> jsonResponse =
-            json.decode(response.body) as List<dynamic>;
-        final List<Map<String, dynamic>> listOfMaps = jsonResponse
-            .cast<Map<String, dynamic>>()
-            .map((map) => map.map((key, value) =>
-                MapEntry(key, value ?? ''))) // Replace null with ''
-            .toList();
-        return listOfMaps;
+        return ApiResult.seccess(data: parseJsonList(response));
       } else {
-        throw Exception('Request failed with status: ${response.statusCode}');
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: response.body,
+        );
       }
     } on FormatException catch (e) {
-      throw FormatException('Invalid JSON format: $e');
+      return ApiResult.failure(errorMessage: e.message);
     } on http.ClientException catch (e) {
-      throw http.ClientException('Network error: ${e.message}');
+      return ApiResult.failure(errorMessage: e.message);
+    } on TimeoutException catch (e) {
+      return ApiResult.failure(errorMessage: e.message);
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      return ApiResult.failure(errorMessage: e.toString());
     }
   }
 
-  Future post(String url, AbstractClass obj) async {
+  Future<ApiResult<dynamic>> post(String url, AbstractClass obj) async {
     try {
       final requestBody = json.encode(obj.toMap());
       dev.log("Request Body: $requestBody");
-      final response = await http.post(Uri.parse(url),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(obj.toMap()));
-
+      final response = await http
+          .post(Uri.parse(url),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(obj.toMap()))
+          .timeout(const Duration(seconds: 10));
+      dev.log("response: ${response.body}");
       if (response.statusCode == 200) {
         dev.log(jsonEncode(obj.toMap()));
         dev.log("you seccusfully added data to the backend");
-        return json.decode(response.body);
+        return ApiResult.seccess(data: json.decode(response.body));
       } else if (response.statusCode == 400) {
-        throw Exception("end point not found");
+        dev.log("end point not found");
+
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: response.body,
+        );
       } else if (response.statusCode == 500) {
-        throw Exception("server error");
+        dev.log("server error");
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: response.body,
+        );
       } else {
-        throw Exception('Request failed with status: ${response.statusCode}');
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: response.body,
+        );
       }
     } on FormatException catch (e) {
-      throw FormatException('Invalid JSON format: $e');
+      dev.log("Invalid JSON format ${e.message}");
+      return ApiResult.failure(errorMessage: e.message);
     } on http.ClientException catch (e) {
-      throw http.ClientException('Network error: ${e.message}');
+      dev.log("Network error: ${e.message}");
+      return ApiResult.failure(errorMessage: e.message);
+    } on TimeoutException catch (e) {
+      dev.log("Timeout error: ${e.message}");
+      dev.log(ApiResult.failure(errorMessage: e.message).toString());
+      return ApiResult.failure(errorMessage: e.message);
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      dev.log("Unknown error: ${e.toString()}");
+      return ApiResult.failure(errorMessage: e.toString());
     }
   }
 }

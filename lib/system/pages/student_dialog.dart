@@ -1,7 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import '../widgets/timer.dart';
 import '../widgets/containers.dart';
@@ -16,6 +15,7 @@ import '../const/student_const.dart';
 import '../../logic/generate.dart';
 import '../widgets/drop_down.dart';
 import '../../logic/submit_form.dart';
+import '../widgets/picker.dart';
 
 const String url = 'http://192.168.100.20/phpscript/get_student.php';
 
@@ -43,25 +43,6 @@ class _StudentDialogState extends State<StudentDialog> {
       dev.log("Error loading data: $e");
     }
   }
-/*  Future<void> submitForm() async {
-    if (studentFormKey.currentState!.validate()) {
-      studentFormKey.currentState!.save();
-      if (studentInfo.isComplete) {
-        try {
-          final response = await connect.post(url, studentInfo);
-          dev.log(response.toString());
-          Get.back(); // Close the dialog
-          Get.snackbar('Success', 'Form submitted successfully');
-        } catch (e) {
-          dev.log("Error submitting form: $e");
-          Get.snackbar('Error', 'Failed to submit form');
-        }
-      } else {
-        Get.snackbar('Error', 'Please complete all required fields');
-      }
-    }
-  }
-*/
 
   // Controllers and keys
   final GlobalKey<FormState> studentFormKey = GlobalKey<FormState>();
@@ -84,6 +65,8 @@ class _StudentDialogState extends State<StudentDialog> {
   late MultipleSearchController multiSearchController2;
   //scroll conroller
   late ScrollController scrollController;
+  //picker
+  late Picker imagePicker;
   @override
   void initState() {
     super.initState();
@@ -92,17 +75,19 @@ class _StudentDialogState extends State<StudentDialog> {
 
     validator.controllers[9].text = generate.generatePassword();
 
-    multiSearchController1 = MultipleSearchController(
+    /*multiSearchController1 = MultipleSearchController(
       minCharsToShowItems: 1,
       allowDuplicateSelection: false,
     );
     multiSearchController2 = MultipleSearchController(
       minCharsToShowItems: 1,
       allowDuplicateSelection: false,
-    );
+    );*/
     scrollController = ScrollController();
     loadData();
   }
+
+  RxBool isComplete = true.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +95,8 @@ class _StudentDialogState extends State<StudentDialog> {
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
         maxHeight: Get.height * 0.8,
+        minHeight: 400,
+        minWidth: 300,
       ),
       child: Dialog(
         shape: BeveledRectangleBorder(),
@@ -166,8 +153,10 @@ class _StudentDialogState extends State<StudentDialog> {
                           icon: Icons.book,
                           title: "session",
                           child: DefaultConstructorExample(
-                            multipleSearchController: multiSearchController1,
-                            pickedItems: studentInfo.sessions,
+                            //multipleSearchController: multiSearchController1,
+                            getPickedItems: (p0) {
+                              studentInfo.sessions = p0;
+                            },
                             searchkey: "lecture_name_ar",
                             hintText: "search for sessions",
                             preparedData: sessionNames,
@@ -477,8 +466,10 @@ class _StudentDialogState extends State<StudentDialog> {
                           child: InputField(
                             inputTitle: "guardian's account",
                             child: DefaultConstructorExample(
-                              multipleSearchController: multiSearchController2,
-                              pickedItems: studentInfo.username2,
+                              //multipleSearchController: multiSearchController2,
+                              getPickedItems: (c) {
+                                studentInfo.username2 = c[0];
+                              },
                               preparedData: guardianAccounts,
                               searchkey: "username",
                               hintText: "search for guardian account",
@@ -663,7 +654,12 @@ class _StudentDialogState extends State<StudentDialog> {
                         CustomContainer(
                           icon: Icons.image,
                           title: "add account image",
-                          child: const Text("add image"),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              imagePicker;
+                            },
+                            child: Text("pick image"),
+                          ),
                         ),
                       ],
                     ),
@@ -673,20 +669,20 @@ class _StudentDialogState extends State<StudentDialog> {
 
               // Submit button
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: OutlinedButton(
-                  onPressed: () {
-                    validator.moveToTheFirstEmptyFeild(studentFormKey);
-                    submitForm(
-                      studentFormKey,
-                      connect,
-                      studentInfo,
-                      url,
-                    );
-                  },
-                  child: const Text("Submit"),
-                ),
-              ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      isComplete.value = false;
+
+                      await submitForm(studentFormKey, connect, studentInfo,
+                          url, isComplete);
+
+                      isComplete.value = true;
+                    },
+                    child: Obx(() => isComplete.value
+                        ? Text('Submit')
+                        : CircularProgressIndicator()),
+                  )),
             ],
           ),
         ),

@@ -35,6 +35,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
     super.initState();
   }
 
+  RxBool isComplete = true.obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +43,8 @@ class _GuardianDialogState extends State<GuardianDialog> {
         constraints: BoxConstraints(
           maxWidth: Get.width * 0.7,
           maxHeight: Get.height * 0.8,
+          minHeight: 400,
+          minWidth: 300,
         ),
         child: Dialog(
           shape: BeveledRectangleBorder(),
@@ -151,7 +154,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                   children: [
                                     Expanded(
                                       child: InputField(
-                                        inputTitle: "Sex",
+                                        inputTitle: "relationship",
                                         child: DropDownWidget(
                                           items: relationship,
                                           initialValue: relationship[0],
@@ -289,20 +292,20 @@ class _GuardianDialogState extends State<GuardianDialog> {
                 ),
                 // Submit button
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OutlinedButton(
-                    onPressed: () {
-                      validator.moveToTheFirstEmptyFeild(guardianFormKey);
-                      submitForm(
-                        guardianFormKey,
-                        connect,
-                        guardianInfo,
-                        url,
-                      );
-                    },
-                    child: const Text("Submit"),
-                  ),
-                ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        isComplete.value = false;
+
+                        await submitForm(guardianFormKey, connect, guardianInfo,
+                            url, isComplete);
+
+                        isComplete.value = true;
+                      },
+                      child: Obx(() => isComplete.value
+                          ? Text('Submit')
+                          : CircularProgressIndicator()),
+                    )),
               ],
             ),
           ),

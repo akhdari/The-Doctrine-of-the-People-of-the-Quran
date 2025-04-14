@@ -5,18 +5,21 @@ class Lecture extends AbstractClass {
   //required
   late String lectureNameAr;
   late String lectureNameEn;
-  //optional
-  String? circleType;
-  List<String>? teacherNames = [];
-  int? showOnwebsite;
-  String? category;
+  late String circleType;
+  late List<int> teachersId;
+  late int showOnwebsite;
+  late String category; //drop down
 
   //lecture schedule
   Map<String, Map<String, dynamic>>? schedule;
 
   @override
   bool get isComplete {
-    return lectureNameAr.isNotEmpty && lectureNameEn.isNotEmpty;
+    return lectureNameAr.isNotEmpty &&
+        lectureNameEn.isNotEmpty &&
+        circleType.isNotEmpty &&
+        teachersId.isNotEmpty &&
+        schedule != null;
   }
 
   @override
@@ -27,7 +30,7 @@ class Lecture extends AbstractClass {
         "lecture_name_en": lectureNameEn,
         "circle_type": circleType,
         "category": category,
-        "teacher_names": teacherNames,
+        "teacher_ids": teachersId,
         "show_on_website": showOnwebsite
       },
       "schedule": schedule,

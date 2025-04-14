@@ -1,20 +1,19 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 
 class DefaultConstructorExample extends StatefulWidget {
-  final MultipleSearchController multipleSearchController;
   final List<Map<String, dynamic>> preparedData;
-  late dynamic pickedItems;
+  final Function(List<String>) getPickedItems;
   final String searchkey;
   final String hintText;
   final int? maxSelectedItems;
 
-  DefaultConstructorExample({
+  const DefaultConstructorExample({
     super.key,
-    required this.multipleSearchController,
+    // required this.multipleSearchController,
+    required this.getPickedItems,
     required this.preparedData,
-    required this.pickedItems,
     required this.searchkey,
     required this.hintText,
     required this.maxSelectedItems,
@@ -26,13 +25,28 @@ class DefaultConstructorExample extends StatefulWidget {
 }
 
 class _DefaultConstructorExampleState extends State<DefaultConstructorExample> {
-  TextEditingController searchController = TextEditingController();
+  late MultipleSearchController multipleSearchController;
+  late TextEditingController searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    multipleSearchController = MultipleSearchController(
+      allowDuplicateSelection: false,
+      isSelectable: true,
+      minCharsToShowItems: 1,
+    );
+    searchController = TextEditingController();
+  }
+
+  List<String> pickedItems = [];
+  void _updatePickedItems(List<String> newPickedItems) {
+    pickedItems = newPickedItems;
+  }
 
   List<String> get listedData => widget.preparedData
       .map((dataItem) => dataItem[widget.searchkey].toString())
       .toList();
-
-  List<String>? pickedItems;
 
   @override
   void dispose() {
@@ -45,7 +59,8 @@ class _DefaultConstructorExampleState extends State<DefaultConstructorExample> {
     return Column(
       children: [
         MultipleSearchSelection.overlay(
-          controller: widget.multipleSearchController,
+          controller:
+              multipleSearchController, //widget.multipleSearchController
           maxSelectedItems: widget.maxSelectedItems,
           searchField: TextField(
             decoration: InputDecoration(
@@ -56,25 +71,41 @@ class _DefaultConstructorExampleState extends State<DefaultConstructorExample> {
               suffixIcon: IconButton(
                 onPressed: () {
                   searchController.clear();
-                  widget.multipleSearchController.clearSearchField();
+                  // widget.multipleSearchController.clearSearchField();
                 },
                 icon: const Icon(Icons.clear),
               ),
             ),
           ),
           onSearchChanged: (text) {
-            log('Search text: $text');
+            dev.log('Search text: $text');
           },
           itemsVisibility: ShowedItemsVisibility.onType,
           clearSearchFieldOnSelect: true,
           items: listedData,
           fieldToCheck: (item) => item,
           onItemAdded: (c) {
-            widget.multipleSearchController.getAllItems().length;
-            widget.multipleSearchController.getPickedItems().length;
+            // widget.multipleSearchController.getAllItems().length;
+            // widget.multipleSearchController.getPickedItems().length;
+            dev.log('c: $c');
+            // dev.log(multipleSearchController.getAllItems().length.toString());
+
+            pickedItems.add(c);
+            _updatePickedItems(pickedItems);
+            widget.getPickedItems(pickedItems);
+            dev.log('Picked items: $pickedItems');
+
+            // dev.log(
+            // 'All items: ${widget.multipleSearchController.getAllItems()}');
+            //dev.log(
+            //'Item added: ${widget.multipleSearchController.getPickedItems()}');
           },
-          onItemRemoved: (item) {
-            log('Item removed: $item');
+          onItemRemoved: (c) {
+            dev.log('Item removed: $c');
+            pickedItems.remove(c);
+            _updatePickedItems(pickedItems);
+            widget.getPickedItems(pickedItems);
+            dev.log('Picked items: $pickedItems');
           },
           itemBuilder: (item, index, isPicked) {
             return Padding(
@@ -117,65 +148,13 @@ class _DefaultConstructorExampleState extends State<DefaultConstructorExample> {
           },
           sortShowedItems: true,
           sortPickedItems: true,
-          selectAllButton: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Select All'),
-              ),
-            ),
-          ),
-          clearAllButton: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Clear All'),
-              ),
-            ),
-          ),
           caseSensitiveSearch: false,
           fuzzySearch: FuzzySearch.none,
           showSelectAllButton: true,
           maximumShowItemsHeight: 200,
         ),
         const SizedBox(height: 8),
-        /* ElevatedButton(
-          onPressed: _confirmSelection,
-          child: const Text('Confirm Selection'),
-        ),*/
       ],
     );
   }
-
-  /* _confirmSelection() {
-    if (widget.multipleSearchController.getPickedItems().isNotEmpty) {
-      //.cast<T>() converts a List of dynamic or unknown types into a List<T> by casting each element.
-      widget.pickedItems =
-          widget.multipleSearchController.getPickedItems().cast<String>();
-      if (widget.pickedItems != null) {
-        widget.pickedItems = widget.pickedItems!.length == 1
-            ? widget.pickedItems![0]
-            : widget.pickedItems;
-      }
-      log('Confirmed picked items: $widget.pickedItems');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selected ${widget.pickedItems!.length} items')),
-      );
-    } else {
-      log('No items selected');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select at least one item')),
-      );
-    }
-  }*/
 }

@@ -34,11 +34,15 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
         filled: false,
         border: OutlineInputBorder(),
       ),
+      isExpanded: true,
       value: _selectedValue,
       items: widget.items.map((T value) {
         return DropdownMenuItem<T>(
           value: value,
-          child: Text(value.toString()),
+          child: Text(
+            value.toString(),
+            overflow: TextOverflow.ellipsis,
+          ),
         );
       }).toList(),
       onChanged: (T? newValue) {

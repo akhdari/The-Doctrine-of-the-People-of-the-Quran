@@ -18,11 +18,11 @@ class LogInPage extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
+                  /*image: DecorationImage(
                   image: AssetImage('assets/men.png'),
                   fit: BoxFit.cover,
-                ),
-              ),
+                ),*/
+                  ),
             ),
           ],
         ),

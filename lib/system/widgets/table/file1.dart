@@ -18,12 +18,15 @@ class MyDataTableSource extends AsyncDataTableSource {
     required this.sortAscending,
     required this.sortKeys,
   });
-
+//TODO data availibility
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
     // network request
     Connect connect = Connect();
-    List<Map<String, dynamic>> data = await connect.get(url);
+    List<Map<String, dynamic>> data;
+    ApiResult<List<Map<String, dynamic>>> apiResultData =
+        await connect.get(url);
+    data = apiResultData.data!;
 
     List<Map<String, dynamic>> studentList = data;
     dev.log("studentList: $studentList");

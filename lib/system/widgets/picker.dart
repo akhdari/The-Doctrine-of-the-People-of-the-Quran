@@ -2,11 +2,11 @@ import 'dart:developer' as log;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 //Android specific
-class HandlePermission {
-  Future<bool> requestPermission() async {
+/* class HandlePermission {
+ Future<bool> requestPermission() async {
     try {
 //when you await a Future, it unwraps the Future and deaives you the actual value
       PermissionStatus status = await Permission.photos.request();
@@ -39,7 +39,7 @@ class HandlePermission {
       return false;
     }
   }
-}
+}*/
 
 class Picker extends StatefulWidget {
   const Picker({super.key});
@@ -62,21 +62,15 @@ Yes — a variable declared inside a try block is scoped to that block, meaning 
       */
 class _PickerState extends State<Picker> {
   XFile? imageFile;
-  HandlePermission handlePermission = HandlePermission();
+  // HandlePermission handlePermission = HandlePermission();
 
-  Future<void> imagePicker() async {
+  Future<void> imageselector() async {
     try {
-      //if permission is granted, pick image
-      if (await handlePermission.requestPermission()) {
-        //if permission is granted, pick image
-        log.log('Permission granted');
-        imageFile = await ImagePicker().pickImage(
-          source: ImageSource.gallery,
-        );
-      } else {
-        log.log('Permission denied');
-        return;
-      }
+      //permission
+      imageFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      setState(() {});
     } catch (e) {
       log.log(e.toString());
     }
@@ -84,23 +78,12 @@ class _PickerState extends State<Picker> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          child: const Text('Pick Image'),
-          onPressed: () async {
-            await imagePicker();
-            setState(() {});
-          },
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
+    return buildImage(imageFile);
   }
 }
 
 /*
+//mobile only 
     Image.file(
       File(image.path),
       width: 100,
@@ -117,6 +100,7 @@ Widget buildImage(XFile? imageFile) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           return Image.memory(
+            //multiplatform
             snapshot.data as Uint8List,
             width: 100,
             height: 100,
