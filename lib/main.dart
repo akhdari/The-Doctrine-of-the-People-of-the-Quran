@@ -4,6 +4,8 @@ import 'web/pages/copy_page.dart';
 import 'package:get/get.dart';
 import 'web/pages/login_page.dart';
 import '../system/widgets/theme.dart';
+import '../system/widgets/async_table/show.dart';
+
 import './system/pages/student.dart';
 import './system/pages/lecture.dart';
 import './system/pages/guardian.dart';
@@ -52,6 +54,7 @@ class _MyAppState extends State<MyApp> {
             '/add_student': (context) => AddStudent(),
             '/add_guardian': (context) => AddGuardian(),
             '/add_lecture': (context) => AddLecture(),
+            '/async_table': (context) => GuardianShow(),
           },
           home: EmptyPage(),
         ));

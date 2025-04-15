@@ -75,6 +75,14 @@ class EmptyPage extends StatelessWidget {
           },
           child: Text('add lecture'),
         ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(
+              '/async_table',
+            );
+          },
+          child: Text('async table'),
+        ),
       ]),
     );
   }
