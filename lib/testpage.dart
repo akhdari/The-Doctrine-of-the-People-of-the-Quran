@@ -78,6 +78,14 @@ class EmptyPage extends StatelessWidget {
         TextButton(
           onPressed: () {
             Get.toNamed(
+              '/add_achievement',
+            );
+          },
+          child: Text('add acheivement'),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(
               '/async_table',
             );
           },

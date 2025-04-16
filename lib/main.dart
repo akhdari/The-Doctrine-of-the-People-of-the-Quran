@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/pages/add_acheivement.dart';
 import 'testpage.dart';
 import 'web/pages/copy_page.dart';
 import 'package:get/get.dart';
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
             '/add_student': (context) => AddStudent(),
             '/add_guardian': (context) => AddGuardian(),
             '/add_lecture': (context) => AddLecture(),
+            '/add_achievement': (context) => AddAcheivement(),
             '/async_table': (context) => GuardianShow(),
           },
           home: EmptyPage(),

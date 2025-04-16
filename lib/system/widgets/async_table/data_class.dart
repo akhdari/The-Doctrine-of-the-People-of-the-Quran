@@ -36,4 +36,16 @@ class Guardian {
           : null,
     );
   }
+
+  set lastName(String? value) => lastName = value;
+
+  set firstName(String? value) => firstName = value;
+
+  set dateOfBirth(String? value) => dateOfBirth = value;
+
+  set relationship(String? value) => relationship = value;
+
+  set phoneNumber(String? value) => phoneNumber = value;
+
+  set email(String? value) => email = value;
 }

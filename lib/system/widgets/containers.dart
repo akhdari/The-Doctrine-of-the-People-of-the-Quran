@@ -4,11 +4,16 @@ class CustomContainer extends StatefulWidget {
   final String title;
   final IconData icon;
   final Widget child;
+  final Widget? addButton;
+  final Widget? deleteButton;
+
   const CustomContainer(
-      {required this.title,
+      {super.key,
+      required this.title,
       required this.child,
       required this.icon,
-      super.key});
+      this.addButton,
+      this.deleteButton});
 
   @override
   State<CustomContainer> createState() => _CustomContainerState();
@@ -67,6 +72,8 @@ class _CustomContainerState extends State<CustomContainer> {
                           fontSize: 15,
                         ),
                       ),
+                      Spacer(),
+                      if (widget.addButton != null) widget.addButton!,
                     ],
                   )
                 ]),

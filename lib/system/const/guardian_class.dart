@@ -1,7 +1,6 @@
 import 'abstract_class.dart';
 
 class Guardian extends AbstractClass {
-  //TODO extends Abstract class
   //info
   late String firstName;
   late String lastName;
