@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '/logic/validators.dart';
-import '/logic/generate.dart';
+import 'controllers/validator.dart';
+import 'controllers/generate.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -86,10 +86,26 @@ class EmptyPage extends StatelessWidget {
         TextButton(
           onPressed: () {
             Get.toNamed(
-              '/async_table',
+              '/guardian_screen',
             );
           },
-          child: Text('async table'),
+          child: Text('guardian table'),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(
+              '/lecture_screen',
+            );
+          },
+          child: Text('lecture table'),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(
+              '/student_screen',
+            );
+          },
+          child: Text('student table'),
         ),
       ]),
     );

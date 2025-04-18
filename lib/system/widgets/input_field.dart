@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../style.dart';
+import '../utils/style.dart';
 
 //import '/widgets/custom_text_form_feild.dart';
 class InputField extends StatelessWidget {

@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/pages/add_acheivement.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/add_acheivement.dart';
 import 'testpage.dart';
-import 'web/pages/copy_page.dart';
+import 'web/pages/copy.dart';
 import 'package:get/get.dart';
-import 'web/pages/login_page.dart';
-import '../system/widgets/theme.dart';
-import '../system/widgets/async_table/show.dart';
+import 'web/pages/logIn.dart';
+import 'system/utils/theme.dart';
+import 'system/widgets/grids/guardians/guardian_show.dart';
+import 'system/widgets/grids/lectures/lecture_show.dart';
+import 'system/widgets/grids/students/student_show.dart';
 
-import './system/pages/student.dart';
-import './system/pages/lecture.dart';
-import './system/pages/guardian.dart';
 import 'web/widgets/subscription_information.dart';
-import 'system/pages/add_student.dart';
-import '/system/pages/add_guardian.dart';
-import 'system/pages/add_lecture.dart';
+import 'system/screens/add_student.dart';
+import 'system/screens/add_guardian.dart';
+import 'system/screens/add_lecture.dart';
 
 void main() {
   Get.put(SubscriptionInformationController());
@@ -49,14 +48,13 @@ class _MyAppState extends State<MyApp> {
             '/copy': (context) => const CopyPage(),
             '/logIn': (context) => const LogInPage(),
             '/test': (context) => const EmptyPage(),
-            '/student': (context) => Student(),
-            '/guardian': (context) => Guardian(),
-            '/lecture': (context) => Lecture(),
             '/add_student': (context) => AddStudent(),
             '/add_guardian': (context) => AddGuardian(),
             '/add_lecture': (context) => AddLecture(),
             '/add_achievement': (context) => AddAcheivement(),
-            '/async_table': (context) => GuardianShow(),
+            '/guardian_screen': (context) => GuardianScreen(),
+            '/lecture_screen': (context) => LectureScreen(),
+            '/student_screen': (context) => StudentScreen(),
           },
           home: EmptyPage(),
         ));

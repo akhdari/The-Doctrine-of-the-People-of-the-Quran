@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../logic/validators.dart';
+import '../../controllers/validator.dart';
 import 'custom_checkbox.dart';
 
 class CustomFormWidget extends StatefulWidget {
