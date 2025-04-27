@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CustomContainer extends StatefulWidget {
-  final String title;
-  final IconData icon;
+  final String headerText;
+  final IconData headerIcon;
   final Widget child;
-  final Widget? addButton;
-  final Widget? deleteButton;
+  final List<Widget>? headreActions;
 
-  const CustomContainer(
-      {super.key,
-      required this.title,
-      required this.child,
-      required this.icon,
-      this.addButton,
-      this.deleteButton});
+  const CustomContainer({
+    super.key,
+    required this.headerText,
+    required this.child,
+    required this.headerIcon,
+    this.headreActions,
+  });
 
   @override
   State<CustomContainer> createState() => _CustomContainerState();
@@ -34,7 +33,7 @@ class _CustomContainerState extends State<CustomContainer> {
         children: [
           //1
           SizedBox(
-            height: 40,
+            height: 50,
             child: Stack(
                 //textDirection: TextDirection.rtl,
                 children: [
@@ -59,13 +58,14 @@ class _CustomContainerState extends State<CustomContainer> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        widget.icon,
+                        widget.headerIcon,
                         color: Colors.white,
                       ),
                       Text(
-                        widget.title,
+                        widget.headerText,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -73,7 +73,8 @@ class _CustomContainerState extends State<CustomContainer> {
                         ),
                       ),
                       Spacer(),
-                      if (widget.addButton != null) widget.addButton!,
+                      if (widget.headreActions != null)
+                        ...widget.headreActions!,
                     ],
                   )
                 ]),

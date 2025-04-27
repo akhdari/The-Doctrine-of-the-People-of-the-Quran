@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 
 class GenericDataSource<T> extends DataGridSource {
   final DataGridController gridController;
-  final Future<void> Function(int id) onDelete;
+  final Future<void> Function(int id)? onDelete;
   final Future<void> Function() onRefresh;
   final DataGridRow Function(T model) rowBuilder;
-  final String Function(DataGridRow row) idExtractor;
+  final dynamic Function(DataGridRow row) idExtractor;
   final String detailsTitle;
+  final Widget? Function(DataGridCell cell)? cellBuilder;
+  final IconData infoIcon;
+  final IconData deleteIcon;
+  final Color? selectionColor;
 
   GenericDataSource({
     required List<T> data,
@@ -19,6 +23,10 @@ class GenericDataSource<T> extends DataGridSource {
     required this.rowBuilder,
     required this.idExtractor,
     this.detailsTitle = 'Item Details',
+    this.cellBuilder,
+    this.infoIcon = Icons.info_outline,
+    this.deleteIcon = Icons.delete,
+    this.selectionColor,
   }) {
     _data = data;
     buildDataGridRows();
@@ -46,6 +54,9 @@ class GenericDataSource<T> extends DataGridSource {
     final cells = row.getCells();
 
     return DataGridRowAdapter(
+      color: isSelected
+          ? (selectionColor ?? Colors.blue.withValues(alpha: 0.1))
+          : null,
       cells: cells.map<Widget>((cell) {
         if (cell.columnName == 'button') {
           return _buildActionCell(isSelected, row);
@@ -61,23 +72,24 @@ class GenericDataSource<T> extends DataGridSource {
       padding: const EdgeInsets.all(3.0),
       child: GestureDetector(
         child: isSelected
-            ? const Icon(Icons.delete, color: Colors.white)
-            : const Icon(Icons.info_outline, color: Colors.blue),
+            ? Icon(deleteIcon, color: Colors.red)
+            : Icon(infoIcon, color: Colors.blue),
         onTap: () => isSelected ? _showDeleteDialog(row) : _showRowDetails(row),
       ),
     );
   }
 
   Widget _buildDataCell(DataGridCell cell) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        cell.value?.toString() ?? '--',
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontSize: 12),
-      ),
-    );
+    return cellBuilder?.call(cell) ??
+        Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            cell.value?.toString() ?? '',
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12),
+          ),
+        );
   }
 
   void _showDeleteDialog(DataGridRow row) {
@@ -89,8 +101,8 @@ class GenericDataSource<T> extends DataGridSource {
       confirmTextColor: Colors.white,
       onConfirm: () async {
         try {
-          final id = int.parse(idExtractor(row));
-          await onDelete(id);
+          final id = idExtractor(row);
+          await onDelete?.call(id);
           await onRefresh();
         } catch (e) {
           dev.log("Delete error: $e");

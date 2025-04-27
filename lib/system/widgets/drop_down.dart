@@ -5,6 +5,10 @@ class DropDownWidget<T> extends StatefulWidget {
   final T? initialValue;
   final void Function(T?)? onChanged;
   final void Function(T?)? onSaved;
+  final String? Function(T?)? validator;
+  final InputDecoration? decoration;
+  final TextStyle? style;
+  final bool isExpanded;
 
   const DropDownWidget({
     super.key,
@@ -12,6 +16,10 @@ class DropDownWidget<T> extends StatefulWidget {
     this.initialValue,
     this.onChanged,
     this.onSaved,
+    this.validator,
+    this.decoration,
+    this.style,
+    this.isExpanded = true,
   });
 
   @override
@@ -30,11 +38,6 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      decoration: const InputDecoration(
-        filled: false,
-        border: OutlineInputBorder(),
-      ),
-      isExpanded: true,
       value: _selectedValue,
       items: widget.items.map((T value) {
         return DropdownMenuItem<T>(
@@ -42,6 +45,7 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
           child: Text(
             value.toString(),
             overflow: TextOverflow.ellipsis,
+            style: widget.style,
           ),
         );
       }).toList(),
@@ -50,6 +54,9 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
         widget.onChanged?.call(newValue);
       },
       onSaved: widget.onSaved,
+      validator: widget.validator,
+      isExpanded: widget.isExpanded,
+      style: widget.style,
     );
   }
 }

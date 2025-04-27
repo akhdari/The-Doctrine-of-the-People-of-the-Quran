@@ -18,9 +18,11 @@ class GuardianGrid extends StatelessWidget {
     return GenericDataGrid<Guardian>(
       dataFetcher: dataFetcher,
       onDelete: onDelete,
+      //selectionMode: SelectionMode.singleDeselect,
       screenTitle: 'Guardians List',
       detailsTitle: 'Guardian Details',
       rowsPerPage: 10,
+      showCheckBoxColumn: true,
       idExtractor: (row) => row.getCells()[0].value.toString(),
       rowBuilder: (guardian) => DataGridRow(cells: [
         DataGridCell<String>(columnName: 'id', value: guardian.id),

@@ -17,10 +17,12 @@ class StudentGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GenericDataGrid<Student>(
       dataFetcher: dataFetcher,
+      // selectionMode: SelectionMode.singleDeselect,
       onDelete: onDelete,
       screenTitle: 'Students List',
       detailsTitle: 'Student Details',
       rowsPerPage: 10,
+      showCheckBoxColumn: true,
       idExtractor: (row) => row.getCells()[0].value.toString(),
       rowBuilder: (student) => DataGridRow(cells: [
         DataGridCell<String>(columnName: 'id', value: student.id),

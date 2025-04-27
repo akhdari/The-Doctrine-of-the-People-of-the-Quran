@@ -4,6 +4,9 @@ import '../../../models/get/student_class.dart';
 import '../../../services/connect.dart';
 import '../../../models/delete/student.dart'; // your lecture delete request class
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/student.dart';
+import '/controllers/generate.dart';
+import '/controllers/validator.dart';
 
 const String fetchUrl = 'http://192.168.100.20/phpscript/student.php';
 const String deleteUrl = 'http://192.168.100.20/phpscript/delete_student.php';
@@ -36,9 +39,27 @@ class StudentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StudentGrid(
-      dataFetcher: getData,
-      onDelete: postDelete,
+    return Column(
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.add, color: Colors.black),
+              onPressed: () {
+                Get.put(Validator(16), tag: "studentPage");
+                Get.put(Generate());
+                Get.dialog(StudentDialog());
+              },
+            ),
+          ],
+        ),
+        Expanded(
+          child: StudentGrid(
+            dataFetcher: getData,
+            onDelete: postDelete,
+          ),
+        ),
+      ],
     );
   }
 }

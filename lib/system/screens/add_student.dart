@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import '../widgets/grids/students/student_show.dart';
 import 'system_ui.dart';
-import '../widgets/dialogs/student.dart';
 
 class AddStudent extends StatelessWidget {
   const AddStudent({super.key});
@@ -10,8 +9,8 @@ class AddStudent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SystemUI(
-        dialogContent: StudentDialog(),
-        buttonText: 'open student dialoge',
+        title: "Students Management",
+        child: StudentScreen(),
       ),
     );
   }

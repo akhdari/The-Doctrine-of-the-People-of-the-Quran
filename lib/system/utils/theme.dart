@@ -1,13 +1,6 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
-
-class ThemeController extends GetxController {
-  Rx<ThemeMode> mode = ThemeMode.light.obs;
-  switchTheme() => mode.value =
-      mode.value == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-}
 
 abstract final class AppTheme {
   // The FlexColorScheme defined light mode ThemeData.

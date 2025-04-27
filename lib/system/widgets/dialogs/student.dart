@@ -150,8 +150,8 @@ class _StudentDialogState extends State<StudentDialog> {
                       children: [
                         // Session
                         CustomContainer(
-                          icon: Icons.book,
-                          title: "session",
+                          headerIcon: Icons.book,
+                          headerText: "session",
                           child: DefaultConstructorExample(
                             //multipleSearchController: multiSearchController1,
                             getPickedItems: (p0) {
@@ -168,8 +168,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Personal Info
                         CustomContainer(
-                          icon: Icons.person,
-                          title: "Students' Personal Info",
+                          headerIcon: Icons.person,
+                          headerText: "Students' Personal Info",
                           child: Column(
                             children: [
                               // Name fields
@@ -307,8 +307,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Account Info
                         CustomContainer(
-                          icon: Icons.account_box,
-                          title: "account info",
+                          headerIcon: Icons.account_box,
+                          headerText: "account info",
                           child: Row(
                             children: [
                               Expanded(
@@ -337,8 +337,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Health Info
                         CustomContainer(
-                          icon: Icons.health_and_safety,
-                          title: "health info",
+                          headerIcon: Icons.health_and_safety,
+                          headerText: "health info",
                           child: Row(
                             children: [
                               Expanded(
@@ -391,8 +391,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Contact Info
                         CustomContainer(
-                          icon: Icons.phone,
-                          title: "contact info",
+                          headerIcon: Icons.phone,
+                          headerText: "contact info",
                           child: Row(
                             children: [
                               Expanded(
@@ -432,8 +432,8 @@ class _StudentDialogState extends State<StudentDialog> {
                           children: [
                             Expanded(
                               child: CustomContainer(
-                                icon: Icons.person,
-                                title: "father state",
+                                headerIcon: Icons.person,
+                                headerText: "father state",
                                 child: DropDownWidget(
                                   items: state,
                                   initialValue: state[0],
@@ -445,8 +445,8 @@ class _StudentDialogState extends State<StudentDialog> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: CustomContainer(
-                                icon: Icons.person,
-                                title: "mother state",
+                                headerIcon: Icons.person,
+                                headerText: "mother state",
                                 child: DropDownWidget(
                                   items: state,
                                   initialValue: state[0],
@@ -461,8 +461,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Guardian Info
                         CustomContainer(
-                          icon: Icons.family_restroom,
-                          title: "info about guardian",
+                          headerIcon: Icons.family_restroom,
+                          headerText: "info about guardian",
                           child: InputField(
                             inputTitle: "guardian's account",
                             child: DefaultConstructorExample(
@@ -481,8 +481,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Subscription Info
                         CustomContainer(
-                          title: "subscription information",
-                          icon: Icons.subscriptions,
+                          headerText: "subscription information",
+                          headerIcon: Icons.subscriptions,
                           child: Column(
                             children: [
                               Row(children: [
@@ -590,8 +590,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Formal Education
                         CustomContainer(
-                          title: "formal education",
-                          icon: Icons.school,
+                          headerText: "formal education",
+                          headerIcon: Icons.school,
                           child: Column(
                             children: [
                               Row(
@@ -652,8 +652,8 @@ class _StudentDialogState extends State<StudentDialog> {
 
                         // Image
                         CustomContainer(
-                          icon: Icons.image,
-                          title: "add account image",
+                          headerIcon: Icons.image,
+                          headerText: "add account image",
                           child: OutlinedButton(
                             onPressed: () {
                               imagePicker;

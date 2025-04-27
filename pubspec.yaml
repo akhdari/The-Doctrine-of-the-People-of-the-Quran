@@ -51,6 +51,9 @@ dependencies:
   intl: ^0.20.2
   syncfusion_flutter_core: ^29.1.37
   collection: ^1.19.1
+  flutter_typeahead: ^5.2.0
+  dotted_line: ^3.2.3
+  syncfusion_flutter_datepicker: ^29.1.39
 
 
 

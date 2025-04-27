@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/grids/guardians/guardian_show.dart';
 import 'system_ui.dart';
-import '../widgets/dialogs/guardian.dart';
 
 class AddGuardian extends StatelessWidget {
   const AddGuardian({super.key});
@@ -9,8 +9,8 @@ class AddGuardian extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SystemUI(
-        dialogContent: GuardianDialog(),
-        buttonText: 'open guardian dialoge',
+        title: "Guardians Management",
+        child: GuardianScreen(),
       ),
     );
   }

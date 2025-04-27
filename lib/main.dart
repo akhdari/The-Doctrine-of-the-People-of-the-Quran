@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/add_acheivement.dart';
 import 'testpage.dart';
 import 'web/pages/copy.dart';
 import 'package:get/get.dart';
 import 'web/pages/logIn.dart';
 import 'system/utils/theme.dart';
-import 'system/widgets/grids/guardians/guardian_show.dart';
-import 'system/widgets/grids/lectures/lecture_show.dart';
-import 'system/widgets/grids/students/student_show.dart';
-
-import 'web/widgets/subscription_information.dart';
 import 'system/screens/add_student.dart';
 import 'system/screens/add_guardian.dart';
 import 'system/screens/add_lecture.dart';
+import 'system/screens/add_acheivement.dart';
+import 'controllers/theme.dart';
 
 void main() {
-  Get.put(SubscriptionInformationController());
   Get.put(ThemeController()); //globally accessible
   runApp(MyApp());
 }
@@ -47,14 +42,10 @@ class _MyAppState extends State<MyApp> {
           routes: {
             '/copy': (context) => const CopyPage(),
             '/logIn': (context) => const LogInPage(),
-            '/test': (context) => const EmptyPage(),
             '/add_student': (context) => AddStudent(),
             '/add_guardian': (context) => AddGuardian(),
             '/add_lecture': (context) => AddLecture(),
-            '/add_achievement': (context) => AddAcheivement(),
-            '/guardian_screen': (context) => GuardianScreen(),
-            '/lecture_screen': (context) => LectureScreen(),
-            '/student_screen': (context) => StudentScreen(),
+            '/add_acheivement': (context) => AddAcheivement(),
           },
           home: EmptyPage(),
         ));

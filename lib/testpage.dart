@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controllers/validator.dart';
 import 'controllers/generate.dart';
+import 'web/widgets/subscription_information.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -13,6 +14,7 @@ class EmptyPage extends StatelessWidget {
         TextButton(
           onPressed: () {
             Get.put(Validator(6), tag: "copyPage");
+            Get.put(SubscriptionInformationController());
             Get.toNamed(
               '/copy',
             );
@@ -26,32 +28,12 @@ class EmptyPage extends StatelessWidget {
           child: Text('logIn page'),
         ),
         TextButton(
-          onPressed: () => Get.toNamed(
-            '/student',
-          ),
-          child: Text('student page'),
-        ),
-        TextButton(
-          onPressed: () => Get.toNamed(
-            '/lecture',
-          ),
-          child: Text('lecture page'),
-        ),
-        TextButton(
-          onPressed: () => Get.toNamed(
-            '/guardian',
-          ),
-          child: Text('guardian page'),
-        ),
-        TextButton(
           onPressed: () {
-            Get.put(Validator(16), tag: "studentPage");
-            Get.put(Generate());
             Get.toNamed(
               '/add_student',
             );
           },
-          child: Text('add student'),
+          child: Text('student managment'),
         ),
         TextButton(
           onPressed: () {
@@ -64,7 +46,7 @@ class EmptyPage extends StatelessWidget {
               '/add_guardian',
             );
           },
-          child: Text('add guardian'),
+          child: Text('guardian managment'),
         ),
         TextButton(
           onPressed: () {
@@ -73,39 +55,15 @@ class EmptyPage extends StatelessWidget {
               '/add_lecture',
             );
           },
-          child: Text('add lecture'),
+          child: Text('lecture managment'),
         ),
         TextButton(
           onPressed: () {
             Get.toNamed(
-              '/add_achievement',
+              '/add_acheivement',
             );
           },
-          child: Text('add acheivement'),
-        ),
-        TextButton(
-          onPressed: () {
-            Get.toNamed(
-              '/guardian_screen',
-            );
-          },
-          child: Text('guardian table'),
-        ),
-        TextButton(
-          onPressed: () {
-            Get.toNamed(
-              '/lecture_screen',
-            );
-          },
-          child: Text('lecture table'),
-        ),
-        TextButton(
-          onPressed: () {
-            Get.toNamed(
-              '/student_screen',
-            );
-          },
-          child: Text('student table'),
+          child: Text('acheivement management'),
         ),
       ]),
     );

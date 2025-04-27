@@ -5,8 +5,8 @@ const List<String> relationship = [
   "Brother",
   "Sister",
   "uncle",
-  "aunt"
-      "grandfather",
+  "aunt",
+  "grandfather",
   "grandmother",
   "other"
 ];

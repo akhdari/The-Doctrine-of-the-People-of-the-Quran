@@ -18,9 +18,11 @@ class LectureGrid extends StatelessWidget {
     return GenericDataGrid<Lecture>(
       dataFetcher: dataFetcher,
       onDelete: onDelete,
+      //selectionMode: SelectionMode.singleDeselect,
       screenTitle: 'Lectures List',
       detailsTitle: 'Lecture Details',
       rowsPerPage: 10,
+      showCheckBoxColumn: true,
       idExtractor: (row) => row.getCells()[0].value.toString(),
       rowBuilder: (lecture) => DataGridRow(cells: [
         DataGridCell<String>(columnName: 'id', value: lecture.id),

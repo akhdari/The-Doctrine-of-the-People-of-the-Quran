@@ -4,6 +4,9 @@ import '../../../models/get/guardian_class.dart'; // contains Guardian model
 import '../../../services/connect.dart';
 import '../../../models/delete/guardian.dart'; // contains your Connect class
 import 'package:get/get.dart';
+import '/controllers/validator.dart';
+import '/controllers/generate.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/guardian.dart';
 
 const String fetchUrl = 'http://192.168.100.20/phpscript/guardian.php';
 const String deleteUrl = 'http://192.168.100.20/phpscript/delete_guardian.php';
@@ -37,9 +40,30 @@ class GuardianScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GuardianGrid(
-      dataFetcher: getData,
-      onDelete: postDelete,
+    return Column(
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Get.put(
+                  Validator(10),
+                  tag: "guardianPage",
+                );
+                Get.put(Generate());
+                Get.dialog(GuardianDialog());
+              },
+            )
+          ],
+        ),
+        Expanded(
+          child: GuardianGrid(
+            dataFetcher: getData,
+            onDelete: postDelete,
+          ),
+        ),
+      ],
     );
   }
 }

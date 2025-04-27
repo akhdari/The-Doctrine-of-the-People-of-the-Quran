@@ -1,3 +1,8 @@
+const presenceState = [
+  "present",
+  "absent",
+  "late"
+]; //TODO make it match whats in the database
 const List<String> surah = [
   "الفاتحة",
   "البقرة",
@@ -116,3 +121,4 @@ const List<String> surah = [
 ];
 
 List<int> ayahNumbers = List.generate(287, (index) => index);
+List<String> observations = ["good", "bad", "average"];

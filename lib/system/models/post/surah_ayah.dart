@@ -15,6 +15,7 @@ class SurahAyah {
       this.toAyahNumber,
       this.observation})
       : key = UniqueKey();
+
   Map<String, dynamic> toMap() => {
         'fromSurahName': fromSurahName,
         'toSurahName': toSurahName,

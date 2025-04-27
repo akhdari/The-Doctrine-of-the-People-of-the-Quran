@@ -270,11 +270,20 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
           Obx(() => CustomButton(
                 onPressFunction: () {
                   widget
-                      .onEmptyFeild(); //widget.functionName = refers to the function itself, with () = function call
-                  showSnackBar(
-                    context,
-                    widget.subscriptionFormKey,
-                  );
+                      .onEmptyFeild(); // Call onEmptyFeild to trigger any field checks.
+
+                  // Now validate the form along with the checkboxes.
+                  if (widget.subscriptionFormKey.currentState!.validate()) {
+                    showSnackBar(
+                      context,
+                      widget.subscriptionFormKey,
+                    );
+                  } else {
+                    // Form validation failed, you can show a message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Form is invalid')),
+                    );
+                  }
                 },
                 y: y.value,
                 formKey: widget.subscriptionFormKey,

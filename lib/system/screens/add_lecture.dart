@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/grids/lectures/lecture_show.dart';
 import 'system_ui.dart';
-import '../widgets/dialogs/lecture.dart';
 
 class AddLecture extends StatelessWidget {
   const AddLecture({super.key});
@@ -9,8 +9,8 @@ class AddLecture extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SystemUI(
-        dialogContent: LectureDialog(),
-        buttonText: 'open lecture dialoge',
+        title: "Lectures Management",
+        child: LectureScreen(),
       ),
     );
   }

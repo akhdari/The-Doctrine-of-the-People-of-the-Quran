@@ -5,13 +5,19 @@ import 'generic_data_source.dart';
 
 class GenericDataGrid<T> extends StatefulWidget {
   final Future<List<T>> Function() dataFetcher;
-  final Future<void> Function(int id) onDelete;
+  final Future<void> Function(int id)? onDelete;
   final DataGridRow Function(T model) rowBuilder;
+  final Widget? Function(DataGridCell cell)? cellBuilder;
   final List<GridColumn> columns;
-  final String Function(DataGridRow row) idExtractor;
+  final dynamic Function(DataGridRow row) idExtractor;
   final String screenTitle;
   final String detailsTitle;
   final int rowsPerPage;
+  final SelectionMode selectionMode;
+  final bool showCheckBoxColumn;
+  final IconData infoIcon;
+  final IconData deleteIcon;
+  final Color? selectionColor;
 
   const GenericDataGrid({
     super.key,
@@ -20,9 +26,15 @@ class GenericDataGrid<T> extends StatefulWidget {
     required this.rowBuilder,
     required this.columns,
     required this.idExtractor,
+    this.cellBuilder,
     this.screenTitle = 'Data Grid',
     this.detailsTitle = 'Item Details',
     this.rowsPerPage = 10,
+    this.selectionMode = SelectionMode.singleDeselect,
+    this.showCheckBoxColumn = false,
+    this.infoIcon = Icons.info_outline,
+    this.deleteIcon = Icons.delete,
+    this.selectionColor,
   });
 
   @override
@@ -63,44 +75,78 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
       rowBuilder: widget.rowBuilder,
       idExtractor: widget.idExtractor,
       detailsTitle: widget.detailsTitle,
+      cellBuilder: widget.cellBuilder,
+      infoIcon: widget.infoIcon,
+      deleteIcon: widget.deleteIcon,
+      selectionColor: widget.selectionColor,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.screenTitle)),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _items.isEmpty
-              ? const Center(child: Text("No data found."))
-              : Column(
-                  children: [
-                    Expanded(
-                      child: SfDataGridTheme(
-                        data: const SfDataGridThemeData(
-                          selectionColor: Colors.red,
-                        ),
-                        child: SfDataGrid(
-                          controller: _controller,
-                          source: _dataSource,
-                          columns: widget.columns,
-                          columnWidthMode: ColumnWidthMode.fill,
-                          selectionMode: SelectionMode.singleDeselect,
-                          allowSorting: true,
-                          showCheckboxColumn: true,
-                          allowFiltering: true,
-                          gridLinesVisibility: GridLinesVisibility.both,
-                          headerGridLinesVisibility: GridLinesVisibility.both,
-                        ),
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _items.isEmpty
+            ? const Center(child: Text("No data found."))
+            : Column(
+                children: [
+                  Expanded(
+                    child: SfDataGridTheme(
+                      data: SfDataGridThemeData(
+                        selectionColor: widget.selectionColor ??
+                            Colors.blue.withValues(alpha: 0.1),
+                      ),
+                      child: SfDataGrid(
+                        controller: _controller,
+                        source: _dataSource,
+                        columns: widget.columns,
+                        columnWidthMode: ColumnWidthMode.fill,
+                        selectionMode: widget.selectionMode,
+                        allowSorting: true,
+                        showCheckboxColumn: widget.showCheckBoxColumn,
+                        allowFiltering: true,
+                        gridLinesVisibility: GridLinesVisibility.both,
+                        headerGridLinesVisibility: GridLinesVisibility.both,
+                        onCellTap: (DataGridCellTapDetails details) {
+                          if (details.column.columnName == 'button') {
+                            _controller.selectedIndex =
+                                details.rowColumnIndex.rowIndex;
+                          }
+                        },
                       ),
                     ),
-                  ],
-                ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _loadData,
-        child: const Icon(Icons.refresh),
-      ),
-    );
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Always show refresh button since dataFetcher is required
+                        FloatingActionButton(
+                          mini: true,
+                          onPressed: _loadData,
+                          child: const Icon(Icons.refresh),
+                        ),
+                        if (widget.onDelete != null &&
+                            _controller.selectedRows.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: FloatingActionButton(
+                              mini: true,
+                              backgroundColor: Colors.red,
+                              onPressed: () {
+                                final selectedRow =
+                                    _controller.selectedRows.first;
+                                final id = _dataSource.idExtractor(selectedRow);
+                                widget.onDelete?.call(id as int);
+                              },
+                              child: Icon(widget.deleteIcon),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
   }
 }

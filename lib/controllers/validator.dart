@@ -7,8 +7,6 @@ class Validator extends GetxController {
   final int feildCount;
   late List<TextEditingController> controllers = [];
   late List<FocusNode> focusNodes = [];
-  RxBool isAgree1 = false.obs;
-  RxBool isAgree2 = false.obs;
 
   Validator(this.feildCount) {
     controllers = List.generate(feildCount, (index) => TextEditingController());
@@ -96,16 +94,5 @@ false → String has content (e.g., "abc").
     } else {
       return false;
     }
-  }
-
-  @override
-  void onClose() {
-    for (var controller in controllers) {
-      controller.dispose();
-    }
-    for (var node in focusNodes) {
-      node.dispose();
-    }
-    super.onClose();
   }
 }
