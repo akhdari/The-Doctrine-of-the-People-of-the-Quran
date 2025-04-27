@@ -77,11 +77,51 @@ class AcheivementGrid extends StatelessWidget {
   }
 }
 
+class AttendanceController extends GetxController {
+  final RxMap<String, String?> studentAttendance = <String, String?>{}.obs;
+
+  void selectAttendance(String studentID, String type) {
+    if (studentAttendance[studentID] == type) {
+      studentAttendance[studentID] = null;
+    } else {
+      studentAttendance[studentID] = type;
+    }
+  }
+
+  void toggleAllForType(String type, bool shouldSelect) {
+    if (shouldSelect) {
+      studentAttendance.updateAll((key, value) => type);
+    } else {
+      studentAttendance.updateAll((key, value) => value == type ? null : value);
+    }
+  }
+
+  bool isAllSelectedForType(String type) {
+    if (studentAttendance.isEmpty) return false;
+    return studentAttendance.values.every((value) => value == type);
+  }
+
+  bool isAnySelectedForType(String type) {
+    return studentAttendance.values.any((value) => value == type);
+  }
+
+  @override
+  void onClose() {
+    studentAttendance.clear();
+    super.onClose();
+  }
+}
+
 class AttendanceDialog extends StatelessWidget {
   final List<Acheivement> data;
   final AttendanceController controller = Get.put(AttendanceController());
+  final ScrollController scrollController = ScrollController();
 
-  AttendanceDialog({super.key, required this.data});
+  AttendanceDialog({super.key, required this.data}) {
+    for (var student in data) {
+      controller.studentAttendance[student.studentID] = null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,115 +133,121 @@ class AttendanceDialog extends StatelessWidget {
         minWidth: 300,
       ),
       child: Dialog(
-        child: Table(
-          children: [
-            TableRow(
-              children: const [
-                Padding(padding: EdgeInsets.all(8), child: Text('Student')),
-                Padding(padding: EdgeInsets.all(8), child: Text('Present')),
-                Padding(padding: EdgeInsets.all(8), child: Text('Absent')),
-                Padding(padding: EdgeInsets.all(8), child: Text('Late')),
-                Padding(padding: EdgeInsets.all(8), child: Text('Excuse')),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(8.0),
+            controller: scrollController,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                      Text(
+                        "Attendance",
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                SizedBox(height: 10),
+                Table(
+                  border: TableBorder.all(),
+                  children: [
+                    TableRow(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            'Student',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        _buildTableHeader('Present'),
+                        _buildTableHeader('Absent'),
+                        _buildTableHeader('Late'),
+                        _buildTableHeader('Excuse'),
+                      ],
+                    ),
+                    ...data.map((student) => _buildStudentRow(student)),
+                  ],
+                ),
+                SizedBox(height: 10),
+                TextButton(onPressed: () => Get.back(), child: Text("close"))
               ],
             ),
-            ...data.map((student) => _buildStudentRow(student, controller)),
-          ],
+          ),
         ),
       ),
     );
   }
-}
 
-Widget _buildCircle(bool isFilled) {
-  return Container(
-    width: 20,
-    height: 20,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      border: Border.all(),
-      color: isFilled ? Colors.black : Colors.transparent,
-    ),
-  );
-}
-
-TableRow _buildStudentRow(
-    Acheivement student, AttendanceController controller) {
-  controller.studentAttendance.putIfAbsent(
-      student.studentID,
-      () => {
-            'present': false.obs,
-            'absent': false.obs,
-            'late': false.obs,
-            'excuse': false.obs,
-          });
-
-  final studentAttendance = controller.studentAttendance[student.studentID]!;
-
-  return TableRow(
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(student.studentName),
+  Widget _buildTableHeader(String label) {
+    final type = label.toLowerCase();
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [Text(label), _buildSelectAllCheckbox(type)],
       ),
-      // Present
-      Center(
-        child: Obx(() => GestureDetector(
-              onTap: () {
-                // Unselect others when selecting present
-                studentAttendance['present']!.value = true;
-                studentAttendance['absent']!.value = false;
-                studentAttendance['late']!.value = false;
-                studentAttendance['excuse']!.value = false;
-              },
-              child: _buildCircle(studentAttendance['present']!.value),
-            )),
-      ),
-      // Absent
-      Center(
-        child: Obx(() => GestureDetector(
-              onTap: () {
-                studentAttendance['present']!.value = false;
-                studentAttendance['absent']!.value = true;
-                studentAttendance['late']!.value = false;
-                studentAttendance['excuse']!.value = false;
-              },
-              child: _buildCircle(studentAttendance['absent']!.value),
-            )),
-      ),
-      // Late
-      Center(
-        child: Obx(() => GestureDetector(
-              onTap: () {
-                studentAttendance['present']!.value = false;
-                studentAttendance['absent']!.value = false;
-                studentAttendance['late']!.value = true;
-                studentAttendance['excuse']!.value = false;
-              },
-              child: _buildCircle(studentAttendance['late']!.value),
-            )),
-      ),
-      // Excuse
-      Center(
-        child: Obx(() => GestureDetector(
-              onTap: () {
-                studentAttendance['present']!.value = false;
-                studentAttendance['absent']!.value = false;
-                studentAttendance['late']!.value = false;
-                studentAttendance['excuse']!.value = true;
-              },
-              child: _buildCircle(studentAttendance['excuse']!.value),
-            )),
-      ),
-    ],
-  );
-}
+    );
+  }
 
-class AttendanceController extends GetxController {
-  final Map<String, Map<String, RxBool>> studentAttendance = {};
+  TableRow _buildStudentRow(Acheivement student) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(student.studentName),
+        ),
+        _buildAttendanceCell(student.studentID, 'present'),
+        _buildAttendanceCell(student.studentID, 'absent'),
+        _buildAttendanceCell(student.studentID, 'late'),
+        _buildAttendanceCell(student.studentID, 'excuse'),
+      ],
+    );
+  }
 
-  @override
-  void onClose() {
-    studentAttendance.clear();
-    super.onClose();
+  Widget _buildAttendanceCell(String studentID, String type) {
+    return Center(
+      child: GestureDetector(
+        onTap: () => controller.selectAttendance(studentID, type),
+        child: Obx(() {
+          final isSelected = controller.studentAttendance[studentID] == type;
+          return Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(),
+              color: isSelected ? Colors.black : Colors.transparent,
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildSelectAllCheckbox(String type) {
+    return Obx(() {
+      final allSelected = controller.isAllSelectedForType(type);
+      final anySelected = controller.isAnySelectedForType(type);
+
+      return Checkbox(
+        value: allSelected ? true : (anySelected ? null : false),
+        tristate: true,
+        onChanged: (value) {
+          controller.toggleAllForType(type, value ?? false);
+        },
+      );
+    });
   }
 }
