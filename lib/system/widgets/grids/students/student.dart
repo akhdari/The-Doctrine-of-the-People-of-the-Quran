@@ -4,21 +4,24 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../models/get/student_class.dart'; // Your student model
 
 class StudentGrid extends StatelessWidget {
-  final Future<List<Student>> Function() dataFetcher;
+  final List<Student> data;
   final Future<void> Function(int id) onDelete;
+  final Future<void> Function() onRefresh;
 
   const StudentGrid({
     super.key,
-    required this.dataFetcher,
+    required this.data,
     required this.onDelete,
+    required this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
     return GenericDataGrid<Student>(
-      dataFetcher: dataFetcher,
+      data: data,
       // selectionMode: SelectionMode.singleDeselect,
       onDelete: onDelete,
+      onRefresh: onRefresh,
       screenTitle: 'Students List',
       detailsTitle: 'Student Details',
       rowsPerPage: 10,

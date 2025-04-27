@@ -4,20 +4,23 @@ import '../../../models/grid/generic_data_grid.dart';
 import '../../../models/get/lecture_class.dart';
 
 class LectureGrid extends StatelessWidget {
-  final Future<List<Lecture>> Function() dataFetcher;
+  final List<Lecture> data;
   final Future<void> Function(int id) onDelete;
+  final Future<void> Function() onRefresh;
 
   const LectureGrid({
     super.key,
-    required this.dataFetcher,
+    required this.data,
     required this.onDelete,
+    required this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
     return GenericDataGrid<Lecture>(
-      dataFetcher: dataFetcher,
+      data: data,
       onDelete: onDelete,
+      onRefresh: onRefresh,
       //selectionMode: SelectionMode.singleDeselect,
       screenTitle: 'Lectures List',
       detailsTitle: 'Lecture Details',

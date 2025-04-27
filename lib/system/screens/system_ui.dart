@@ -64,6 +64,7 @@ class _SystemUIState extends State<SystemUI> {
                 ),
                 Expanded(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         onPressed: () {

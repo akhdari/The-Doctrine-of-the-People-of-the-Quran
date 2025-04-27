@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'system_ui.dart';
 import '../widgets/typehead.dart';
@@ -18,7 +19,7 @@ class AddAcheivement extends StatefulWidget {
 class _AddAcheivementState extends State<AddAcheivement> {
   final GlobalKey _anchorKey = GlobalKey();
   OverlayEntry? overlayEntry;
-  int? id;
+  RxnInt id = RxnInt(); // This allows null values for id
   DateTime? selectedDate;
 
   void showDatePickerOverlay() {
@@ -124,7 +125,7 @@ class _AddAcheivementState extends State<AddAcheivement> {
                 child: SearchFeild(
                   selectedSession: (p0) {
                     setState(() {
-                      id = p0;
+                      id.value = p0;
                       dev.log("id in acheivement: $id");
                     });
                   },
@@ -146,12 +147,11 @@ class _AddAcheivementState extends State<AddAcheivement> {
           ),
           const SizedBox(height: 10),
           const Divider(),
-          if (id != null)
-            Expanded(
-              child: AcheivementScreen(
-                id: id!,
-              ),
+          Expanded(
+            child: AcheivementScreen(
+              id: id,
             ),
+          ),
         ]),
       ),
     );

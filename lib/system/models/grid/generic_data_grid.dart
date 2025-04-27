@@ -4,7 +4,7 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'generic_data_source.dart';
 
 class GenericDataGrid<T> extends StatefulWidget {
-  final Future<List<T>> Function() dataFetcher;
+  final List<T> data; // Direct data instead of fetcher
   final Future<void> Function(int id)? onDelete;
   final DataGridRow Function(T model) rowBuilder;
   final Widget? Function(DataGridCell cell)? cellBuilder;
@@ -18,14 +18,16 @@ class GenericDataGrid<T> extends StatefulWidget {
   final IconData infoIcon;
   final IconData deleteIcon;
   final Color? selectionColor;
+  final Future<void> Function() onRefresh; // Optional refresh callback
 
   const GenericDataGrid({
     super.key,
-    required this.dataFetcher,
+    required this.data,
     required this.onDelete,
     required this.rowBuilder,
     required this.columns,
     required this.idExtractor,
+    required this.onRefresh,
     this.cellBuilder,
     this.screenTitle = 'Data Grid',
     this.detailsTitle = 'Item Details',
@@ -43,35 +45,29 @@ class GenericDataGrid<T> extends StatefulWidget {
 
 class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
   late DataGridController _controller;
-  late List<T> _items;
   late GenericDataSource<T> _dataSource;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _controller = DataGridController();
-    _loadData();
+    _initializeDataSource();
   }
 
-  Future<void> _loadData() async {
-    setState(() => _isLoading = true);
-    try {
-      _items = await widget.dataFetcher();
+  @override
+  void didUpdateWidget(GenericDataGrid<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.data != widget.data) {
       _initializeDataSource();
-    } catch (e) {
-      _items = [];
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
   void _initializeDataSource() {
     _dataSource = GenericDataSource<T>(
-      data: _items,
+      data: widget.data,
       gridController: _controller,
       onDelete: widget.onDelete,
-      onRefresh: _loadData,
+      onRefresh: widget.onRefresh,
       rowBuilder: widget.rowBuilder,
       idExtractor: widget.idExtractor,
       detailsTitle: widget.detailsTitle,
@@ -84,69 +80,62 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : _items.isEmpty
-            ? const Center(child: Text("No data found."))
-            : Column(
-                children: [
-                  Expanded(
-                    child: SfDataGridTheme(
-                      data: SfDataGridThemeData(
-                        selectionColor: widget.selectionColor ??
-                            Colors.blue.withValues(alpha: 0.1),
-                      ),
-                      child: SfDataGrid(
-                        controller: _controller,
-                        source: _dataSource,
-                        columns: widget.columns,
-                        columnWidthMode: ColumnWidthMode.fill,
-                        selectionMode: widget.selectionMode,
-                        allowSorting: true,
-                        showCheckboxColumn: widget.showCheckBoxColumn,
-                        allowFiltering: true,
-                        gridLinesVisibility: GridLinesVisibility.both,
-                        headerGridLinesVisibility: GridLinesVisibility.both,
-                        onCellTap: (DataGridCellTapDetails details) {
-                          if (details.column.columnName == 'button') {
-                            _controller.selectedIndex =
-                                details.rowColumnIndex.rowIndex;
-                          }
-                        },
-                      ),
-                    ),
+    return Column(
+      children: [
+        Expanded(
+          child: SfDataGridTheme(
+            data: SfDataGridThemeData(
+              selectionColor:
+                  widget.selectionColor ?? Colors.blue.withValues(alpha: 0.1),
+            ),
+            child: SfDataGrid(
+              controller: _controller,
+              source: _dataSource,
+              columns: widget.columns,
+              columnWidthMode: ColumnWidthMode.fill,
+              selectionMode: widget.selectionMode,
+              showCheckboxColumn: widget.showCheckBoxColumn,
+              allowSorting: true,
+              allowFiltering: true,
+              gridLinesVisibility: GridLinesVisibility.both,
+              headerGridLinesVisibility: GridLinesVisibility.both,
+              onCellTap: (DataGridCellTapDetails details) {
+                if (details.column.columnName == 'button') {
+                  _controller.selectedIndex = details.rowColumnIndex.rowIndex;
+                }
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                mini: true,
+                onPressed: widget.onRefresh,
+                child: const Icon(Icons.refresh),
+              ),
+              if (widget.onDelete != null &&
+                  _controller.selectedRows.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: FloatingActionButton(
+                    mini: true,
+                    backgroundColor: Colors.red,
+                    onPressed: () {
+                      final selectedRow = _controller.selectedRows.first;
+                      final id = _dataSource.idExtractor(selectedRow);
+                      widget.onDelete?.call(id as int);
+                    },
+                    child: Icon(widget.deleteIcon),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // Always show refresh button since dataFetcher is required
-                        FloatingActionButton(
-                          mini: true,
-                          onPressed: _loadData,
-                          child: const Icon(Icons.refresh),
-                        ),
-                        if (widget.onDelete != null &&
-                            _controller.selectedRows.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: FloatingActionButton(
-                              mini: true,
-                              backgroundColor: Colors.red,
-                              onPressed: () {
-                                final selectedRow =
-                                    _controller.selectedRows.first;
-                                final id = _dataSource.idExtractor(selectedRow);
-                                widget.onDelete?.call(id as int);
-                              },
-                              child: Icon(widget.deleteIcon),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

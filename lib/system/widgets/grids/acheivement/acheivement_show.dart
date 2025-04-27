@@ -1,31 +1,49 @@
 import 'package:flutter/material.dart';
-import '../../../models/get/acheivement_class.dart';
-import '../../../services/connect.dart';
-import 'dart:developer' as dev;
 import 'acheivement.dart';
+import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/achievement.dart';
+import 'dart:developer' as dev;
 
 const String partialUrl =
     "http://192.168.100.20/phpscript/acheivement_student_list.php?session_id=";
 
-class AcheivementScreen extends StatelessWidget {
-  final int id;
+class AcheivementScreen extends StatefulWidget {
+  final RxnInt id;
   const AcheivementScreen({super.key, required this.id});
 
-  Future<List<Acheivement>> getData() async {
-    final connect = Connect();
-    final result = await connect.get("$partialUrl$id");
-    dev.log(result.toString());
-    if (result.isSuccess && result.data != null) {
-      return result.data!.map((json) => Acheivement.fromJson(json)).toList();
-    } else {
-      throw Exception(result.errorMessage ?? 'Unknown error fetching students');
-    }
+  @override
+  State<AcheivementScreen> createState() => _AcheivementScreenState();
+}
+
+class _AcheivementScreenState extends State<AcheivementScreen> {
+  late AchievementController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<AchievementController>();
+    dev.log("id in initState: ${widget.id.value}");
+    ever(widget.id, (_) {
+      dev.log("id in ever: ${widget.id.value}");
+      controller.setLectureId(widget.id.value);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return AcheivementGrid(
-      dataFetcher: getData,
-    );
+    return Obx(() {
+      if (controller.lectureId.value == null) {
+        return const Center(child: Text('Select lecture first'));
+      }
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (controller.achievementList.isEmpty) {
+        return const Center(child: Text('No data found'));
+      }
+      return AcheivementGrid(
+        data: controller.achievementList.toList(),
+        onRefresh: () => controller.fetchData(),
+      );
+    });
   }
 }

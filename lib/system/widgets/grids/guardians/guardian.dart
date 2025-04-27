@@ -4,19 +4,22 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../models/get/guardian_class.dart';
 
 class GuardianGrid extends StatelessWidget {
-  final Future<List<Guardian>> Function() dataFetcher;
+  final List<Guardian> data;
   final Future<void> Function(int id) onDelete;
+  final Future<void> Function() onRefresh;
 
   const GuardianGrid({
     super.key,
-    required this.dataFetcher,
+    required this.data,
     required this.onDelete,
+    required this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
     return GenericDataGrid<Guardian>(
-      dataFetcher: dataFetcher,
+      data: data,
+      onRefresh: onRefresh,
       onDelete: onDelete,
       //selectionMode: SelectionMode.singleDeselect,
       screenTitle: 'Guardians List',

@@ -198,13 +198,13 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
                           headerText: "major revision",
                           headerIcon: Icons.person,
                           headreActions: [
-                            TextButton(
+                            IconButton(
                               onPressed: () {
                                 setState(() {
                                   majorRevList.addSurahAyah();
                                 });
                               },
-                              child: const Text("add"),
+                              icon: const Icon(Icons.add),
                             ),
                           ],
                           child: Column(

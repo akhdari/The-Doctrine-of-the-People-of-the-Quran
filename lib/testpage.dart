@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'controllers/validator.dart';
 import 'controllers/generate.dart';
 import 'web/widgets/subscription_information.dart';
+import 'controllers/achievement.dart';
+import 'controllers/guardian.dart';
+import 'controllers/student.dart';
+import 'controllers/lecture.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -29,6 +33,7 @@ class EmptyPage extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            Get.put(StudentController());
             Get.toNamed(
               '/add_student',
             );
@@ -42,6 +47,8 @@ class EmptyPage extends StatelessWidget {
               tag: "guardianPage",
             );
             Get.put(Generate());
+            Get.put(GuardianController());
+
             Get.toNamed(
               '/add_guardian',
             );
@@ -51,6 +58,7 @@ class EmptyPage extends StatelessWidget {
         TextButton(
           onPressed: () {
             Get.put(Validator(2), tag: "lecturePage");
+            Get.put(LectureController());
             Get.toNamed(
               '/add_lecture',
             );
@@ -59,6 +67,7 @@ class EmptyPage extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            Get.put(AchievementController());
             Get.toNamed(
               '/add_acheivement',
             );
