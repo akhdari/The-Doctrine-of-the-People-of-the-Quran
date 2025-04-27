@@ -112,20 +112,6 @@ class AttendanceDialog extends StatelessWidget {
   }
 }
 
-TableRow _buildTableRow(String name, bool column1, bool column2, bool column3) {
-  return TableRow(
-    children: [
-      Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text(name),
-      ),
-      Center(child: _buildCircle(column1)),
-      Center(child: _buildCircle(column2)),
-      Center(child: _buildCircle(column3)),
-    ],
-  );
-}
-
 Widget _buildCircle(bool isFilled) {
   return Container(
     width: 20,
@@ -210,7 +196,6 @@ TableRow _buildStudentRow(
   );
 }
 
-// Update your AttendanceController
 class AttendanceController extends GetxController {
   final Map<String, Map<String, RxBool>> studentAttendance = {};
 
@@ -220,4 +205,3 @@ class AttendanceController extends GetxController {
     super.onClose();
   }
 }
-//for each student in list add a table row with student name and attendance
