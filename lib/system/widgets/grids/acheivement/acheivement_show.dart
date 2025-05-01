@@ -9,7 +9,9 @@ const String partialUrl =
 
 class AcheivementScreen extends StatefulWidget {
   final RxnInt id;
-  const AcheivementScreen({super.key, required this.id});
+  final String date;
+
+  const AcheivementScreen({super.key, required this.id, required this.date});
 
   @override
   State<AcheivementScreen> createState() => _AcheivementScreenState();
@@ -37,11 +39,14 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-      if (controller.achievementList.isEmpty) {
+      if (controller.achievementList.isEmpty &&
+          controller.isrequestCompleted.value) {
         return const Center(child: Text('No data found'));
       }
       return AcheivementGrid(
         data: controller.achievementList.toList(),
+        date: widget.date,
+        sessionId: widget.id.value!,
         onRefresh: () => controller.fetchData(),
       );
     });

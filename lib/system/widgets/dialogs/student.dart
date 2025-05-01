@@ -1,7 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:multiple_search_selection/multiple_search_selection.dart';
 import '../timer.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
@@ -36,8 +35,8 @@ class _StudentDialogState extends State<StudentDialog> {
       dev.log('guardianAccounts: ${fetchedGuardianAccounts.toString()}');
 
       setState(() {
-        sessionNames = fetchedSessionNames;
-        guardianAccounts = fetchedGuardianAccounts;
+        sessionResult = fetchedSessionNames;
+        guardianResult = fetchedGuardianAccounts;
       });
     } catch (e) {
       dev.log("Error loading data: $e");
@@ -58,13 +57,11 @@ class _StudentDialogState extends State<StudentDialog> {
   Rx<String?> enrollmentDate = Rxn<String>();
   Rx<String?> exitDate = Rxn<String>();
 
-  late List<Map<String, dynamic>> sessionNames = [];
-  late List<Map<String, dynamic>> guardianAccounts = [];
-
-  late MultipleSearchController multiSearchController1;
-  late MultipleSearchController multiSearchController2;
+  SessionResult? sessionResult;
+  GuardianResult? guardianResult;
   //scroll conroller
   late ScrollController scrollController;
+
   //picker
   late Picker imagePicker;
   @override
@@ -87,6 +84,7 @@ class _StudentDialogState extends State<StudentDialog> {
     loadData();
   }
 
+//TODO dispose
   RxBool isComplete = true.obs;
 
   @override
@@ -152,14 +150,14 @@ class _StudentDialogState extends State<StudentDialog> {
                         CustomContainer(
                           headerIcon: Icons.book,
                           headerText: "session",
-                          child: DefaultConstructorExample(
+                          child: MultiSelect<Session>(
                             //multipleSearchController: multiSearchController1,
                             getPickedItems: (p0) {
                               studentInfo.sessions = p0;
                             },
-                            searchkey: "lecture_name_ar",
                             hintText: "search for sessions",
-                            preparedData: sessionNames,
+                            itemAsString: (p0) => p0.sessionName,
+                            preparedData: sessionResult?.sessions ?? [],
                             maxSelectedItems: null,
                           ),
                         ),
@@ -465,13 +463,13 @@ class _StudentDialogState extends State<StudentDialog> {
                           headerText: "info about guardian",
                           child: InputField(
                             inputTitle: "guardian's account",
-                            child: DefaultConstructorExample(
+                            child: MultiSelect<Guardian>(
                               //multipleSearchController: multiSearchController2,
                               getPickedItems: (c) {
                                 studentInfo.username2 = c[0];
                               },
-                              preparedData: guardianAccounts,
-                              searchkey: "username",
+                              preparedData: guardianResult?.guardians ?? [],
+                              itemAsString: (p0) => p0.username,
                               hintText: "search for guardian account",
                               maxSelectedItems: 1,
                             ),

@@ -55,7 +55,7 @@ class _SearchFeildState extends State<SearchFeild> {
         return TextField(
             controller: controller,
             focusNode: focusNode,
-            autofocus: true,
+            autofocus: false,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'session name',
@@ -66,8 +66,28 @@ class _SearchFeildState extends State<SearchFeild> {
           title: Text(lecture.sessionNameAr),
         );
       },
-      emptyBuilder: (context) => const Center(child: Text('No session found')),
-      errorBuilder: (context, error) => Center(child: Text(error.toString())),
+      emptyBuilder: (context) => const ListTile(
+        title: Text(
+          "No sessions found",
+          style: TextStyle(color: Colors.grey),
+        ),
+        subtitle: Text(
+          "Start typing to search",
+          style: TextStyle(color: Colors.grey),
+        ),
+        leading: Icon(Icons.search_off, color: Colors.grey),
+      ),
+      errorBuilder: (context, error) => const ListTile(
+        leading: Icon(Icons.error, color: Colors.redAccent),
+        title: Text(
+          "Failed to load sessions",
+          style: TextStyle(color: Colors.redAccent),
+        ),
+        subtitle: Text(
+          "Check your internet connection.",
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
       onSelected: (session) {
         dev.log('id on selected: ${session.sessionId}');
         widget.selectedSession(session.sessionId);

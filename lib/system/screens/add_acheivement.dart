@@ -19,13 +19,22 @@ class AddAcheivement extends StatefulWidget {
 class _AddAcheivementState extends State<AddAcheivement> {
   final GlobalKey _anchorKey = GlobalKey();
   OverlayEntry? overlayEntry;
-  RxnInt id = RxnInt(); // This allows null values for id
+  RxnInt id = RxnInt();
+  TextEditingController controller = TextEditingController();
   DateTime? selectedDate;
 
+  @override
+  void initState() {
+    super.initState();
+    controller.text = formatDate(DateTime.now());
+  }
+
+  String formatDate(DateTime date) {
+    return '${date.year}-${date.month}-${date.day}';
+  }
+
   void showDatePickerOverlay() {
-    // Remove any existing overlay first
     removeOverlay();
-    //It finds where the widget is on screen and how big it is.
     final RenderBox renderBox =
         _anchorKey.currentContext?.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -33,7 +42,7 @@ class _AddAcheivementState extends State<AddAcheivement> {
 
     overlayEntry = OverlayEntry(
       builder: (context) => GestureDetector(
-        onTap: removeOverlay, // Tap outside to dismiss
+        onTap: removeOverlay,
         behavior: HitTestBehavior.translucent,
         child: Material(
           color: Colors.transparent,
@@ -65,9 +74,9 @@ class _AddAcheivementState extends State<AddAcheivement> {
                       showNavigationArrow: true,
                       navigationMode: DateRangePickerNavigationMode.scroll,
                       selectionMode: DateRangePickerSelectionMode.single,
-                      initialSelectedDate: selectedDate ?? DateTime.now(),
+                      initialSelectedDate: DateTime.now(),
+                      initialDisplayDate: DateTime.now(),
                       todayHighlightColor: const Color(0xff169b88),
-                      initialDisplayDate: selectedDate ?? DateTime.now(),
                       showTodayButton: true,
                       showActionButtons: true,
                       maxDate: DateTime.now(),
@@ -79,8 +88,8 @@ class _AddAcheivementState extends State<AddAcheivement> {
                         if (args.value is DateTime) {
                           setState(() {
                             selectedDate = args.value as DateTime;
+                            controller.text = formatDate(selectedDate!);
                           });
-                          removeOverlay();
                         }
                       },
                       onSubmit: (Object? value) {
@@ -133,14 +142,11 @@ class _AddAcheivementState extends State<AddAcheivement> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: TextButton(
+                child: TextField(
+                  controller: controller,
                   key: _anchorKey,
-                  onPressed: showDatePickerOverlay,
-                  child: Text(
-                    selectedDate != null
-                        ? "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}"
-                        : "Select Date",
-                  ),
+                  readOnly: true,
+                  onTap: showDatePickerOverlay,
                 ),
               ),
             ],
@@ -149,6 +155,7 @@ class _AddAcheivementState extends State<AddAcheivement> {
           const Divider(),
           Expanded(
             child: AcheivementScreen(
+              date: controller.text,
               id: id,
             ),
           ),

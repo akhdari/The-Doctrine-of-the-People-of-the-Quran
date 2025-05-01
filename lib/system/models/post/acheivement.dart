@@ -3,13 +3,14 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_a
 import 'abstract_class.dart';
 
 class Acheivement extends AbstractClass {
-  List<SurahAyah> sessionInfo = [SurahAyah()]; // Initialize with one item
-
+  int? lectureId;
+  int? studentId;
+  String? date;
   List<SurahAyah> hifd = [];
   List<SurahAyah> quickRev = [];
   List<SurahAyah> majorRev = [];
   String? teacherNote;
-  String attendenceStatus = '';
+  String? attendanceStatus;
 
   @override
   bool get isComplete {
@@ -19,11 +20,13 @@ class Acheivement extends AbstractClass {
   @override
   Map<String, dynamic> toMap() {
     return {
-      "sessionInfo": sessionInfo.map((item) => item.toMap()).toList(),
+      "lectureId": lectureId,
+      "studentId": studentId,
+      "date": date,
       "hifd": hifd.map((item) => item.toMap()).toList(),
       "quickRev": quickRev.map((item) => item.toMap()).toList(),
       "majorRev": majorRev.map((item) => item.toMap()).toList(),
-      "attendenceStatus": attendenceStatus,
+      "attendenceStatus": attendanceStatus,
       "teacherNote": teacherNote ?? '',
     };
   }

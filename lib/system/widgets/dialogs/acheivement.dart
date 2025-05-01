@@ -10,37 +10,273 @@ import '../custom_container.dart';
 import '../../utils/const/acheivement.dart';
 import '../acheivement_block.dart';
 import '../../models/post/surah_ayah_list.dart';
+import '/controllers/latest_acheivement.dart';
 import 'dart:developer' as dev;
 
-const String url = 'http://192.168.100.20/phpscript/get_guardian.php';
+/// URL for achievement data API endpoint
+const String url = 'http://192.168.100.20/phpscript/acheivement_get_data.php';
 
+/// A dialog widget for managing student achievements
 class AcheivemtDialog extends StatefulWidget {
-  const AcheivemtDialog({super.key});
+  final int sessionId;
+  final int studentId;
+  final String date;
+
+  const AcheivemtDialog({
+    super.key,
+    required this.sessionId,
+    required this.studentId,
+    required this.date,
+  });
 
   @override
   State<AcheivemtDialog> createState() => _AcheivemtDialogState();
 }
 
 class _AcheivemtDialogState extends State<AcheivemtDialog> {
-  final GlobalKey<FormState> acheivementFormKey = GlobalKey<FormState>();
-  late ScrollController scrollController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final ScrollController _scrollController;
+  final Connect _connect = Connect();
+  final Acheivement _acheivement = Acheivement();
+  final SurahAyahList _hifdList = SurahAyahList();
+  final SurahAyahList _quickRevList = SurahAyahList();
+  final SurahAyahList _majorRevList = SurahAyahList();
 
-  final Connect connect = Connect();
-  final Acheivement acheivement = Acheivement();
-
-  final SurahAyahList sessionInfoList = SurahAyahList();
-  final SurahAyahList hifdList = SurahAyahList();
-  final SurahAyahList quickRevList = SurahAyahList();
-  final SurahAyahList majorRevList = SurahAyahList();
-
-  RxBool isComplete = true.obs;
-  BeveledRectangleBorder shape = BeveledRectangleBorder();
+  final RxBool _isComplete = true.obs;
+  final BeveledRectangleBorder _shape = const BeveledRectangleBorder();
+  late final LatestAcheivement _latestAcheivement;
+  late AcheivementTypeWrapper _latestInfo;
 
   @override
   void initState() {
-    scrollController = ScrollController();
-    sessionInfoList.surahAyahList = acheivement.sessionInfo;
     super.initState();
+    _initializeState();
+  }
+
+  void _initializeState() {
+    _scrollController = ScrollController();
+    _acheivement.lectureId = widget.sessionId;
+    _acheivement.studentId = widget.studentId;
+    _acheivement.date = widget.date;
+
+    _latestAcheivement = Get.find<LatestAcheivement>();
+    _loadLatestAchievement();
+  }
+
+  Future<void> _loadLatestAchievement() async {
+    try {
+      _latestInfo =
+          await _latestAcheivement.getData(widget.studentId, widget.sessionId);
+      if (_latestInfo.errorMessage == null) {
+        _latestAcheivement
+            .assignControllerValue(_latestAcheivement.selectedType.value);
+      } else {
+        debugPrint('Error fetching data: ${_latestInfo.errorMessage}');
+        Get.snackbar(
+            'Error', _latestInfo.errorMessage ?? 'Unknown error occurred');
+      }
+    } catch (e) {
+      debugPrint('Exception in _loadLatestAchievement: $e');
+      Get.snackbar('Error', 'Failed to load achievement data');
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _latestAcheivement.clearController();
+    super.dispose();
+  }
+
+  Future<void> _handleSubmit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    _isComplete.value = false;
+    try {
+      _acheivement.hifd = _hifdList.surahAyahList;
+      _acheivement.quickRev = _quickRevList.surahAyahList;
+      _acheivement.majorRev = _majorRevList.surahAyahList;
+
+      dev.log(_acheivement.toMap().toString());
+
+      await submitForm(
+        _formKey,
+        _connect,
+        _acheivement,
+        url,
+        _isComplete,
+      );
+
+      Get.back(result: true);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to submit achievement data');
+      debugPrint('Error submitting form: $e');
+    } finally {
+      _isComplete.value = true;
+    }
+  }
+
+  Widget _buildHeader() {
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 50,
+          color: const Color(0xFF0E9D6D),
+        ),
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ClipRRect(
+            child: Image.asset("assets/back.png", fit: BoxFit.cover),
+          ),
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSessionInfo() {
+    return CustomContainer(
+      headerText: "latest session info",
+      headerIcon: Icons.person,
+      headreActions: [
+        _buildCategoryTag(
+          "memorization",
+          const Color(0xFFe7b05d),
+          AcheivementCategory.hifd,
+        ),
+        _buildCategoryTag(
+          "quick revision",
+          const Color(0xFF67bae0),
+          AcheivementCategory.quickRev,
+        ),
+        _buildCategoryTag(
+          "major revision",
+          const Color(0xFF869456),
+          AcheivementCategory.majorRev,
+        ),
+      ],
+      child: Row(
+        children: [
+          _buildReadOnlyField("from surah", _latestAcheivement.fromSurah),
+          const SizedBox(width: 8),
+          _buildReadOnlyField("from ayah", _latestAcheivement.fromAyah),
+          const SizedBox(width: 8),
+          _buildReadOnlyField("to surah", _latestAcheivement.toSurah),
+          const SizedBox(width: 8),
+          _buildReadOnlyField("to ayah", _latestAcheivement.toAyah),
+          const SizedBox(width: 8),
+          _buildReadOnlyField("observation", _latestAcheivement.observation),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryTag(
+      String tag, Color color, AcheivementCategory category) {
+    return CreateSingleLineTag(
+      tag: tag,
+      color: color,
+      onTap: () {
+        setState(() {
+          _latestAcheivement.updateSelectedType(category);
+        });
+      },
+    );
+  }
+
+  Widget _buildReadOnlyField(String title, TextEditingController controller) {
+    return Expanded(
+      child: InputField(
+        inputTitle: title,
+        child: TextField(
+          controller: controller,
+          readOnly: true,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAchievementSection(
+    String title,
+    SurahAyahList list,
+    Function() onAdd,
+  ) {
+    return CustomContainer(
+      headerText: title,
+      headerIcon: Icons.person,
+      headreActions: [
+        IconButton(
+          onPressed: onAdd,
+          icon: const Icon(Icons.add),
+        ),
+      ],
+      child: Column(
+        children: list.surahAyahList.asMap().entries.map((e) {
+          return AcheivementBlock(
+            key: ValueKey(e.value.key),
+            surahAyah: e.value,
+            onDelete: () {
+              setState(() {
+                list.removeSurahAyah(e.key);
+              });
+            },
+            onSave: () {
+              switch (title) {
+                case "memorization":
+                  _acheivement.hifd = list.surahAyahList;
+                  break;
+                case "quick revision":
+                  _acheivement.quickRev = list.surahAyahList;
+                  break;
+                case "major revision":
+                  _acheivement.majorRev = list.surahAyahList;
+                  break;
+              }
+            },
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildOtherSection() {
+    return CustomContainer(
+      headerText: "other",
+      headerIcon: Icons.question_mark,
+      child: Row(
+        children: [
+          Expanded(
+            child: InputField(
+              inputTitle: "presence state",
+              child: DropDownWidget(
+                items: presenceState,
+                initialValue: presenceState[0],
+                onSaved: (p0) => _acheivement.attendanceStatus = p0!,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: InputField(
+              inputTitle: "teacher note",
+              child: TextFormField(
+                onSaved: (p0) => _acheivement.teacherNote = p0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -53,244 +289,52 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
         minWidth: 300,
       ),
       child: Dialog(
-        shape: shape,
+        shape: _shape,
         backgroundColor: Colors.white,
         child: Scrollbar(
-          controller: scrollController,
+          controller: _scrollController,
           child: Column(
             children: [
-              // Header
-              Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    color: const Color(0xFF0E9D6D),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ClipRRect(
-                      child: Image.asset("assets/back.png", fit: BoxFit.cover),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () => Get.back(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              // Form
+              _buildHeader(),
               Expanded(
                 child: SingleChildScrollView(
-                  controller: scrollController,
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(20),
                   child: Form(
-                    key: acheivementFormKey,
+                    key: _formKey,
                     child: Column(
                       children: [
-                        // Session Info
-                        CustomContainer(
-                          headerText: "latest session info",
-                          headerIcon: Icons.person,
-                          headreActions: [
-                            createSingleLineTag(
-                                "memorization", Color(0xFFe7b05d)),
-                            createSingleLineTag(
-                                "quick revision", Color(0xFF67bae0)),
-                            createSingleLineTag(
-                                "major revision", Color(0xFF869456)),
-                          ],
-                          child: Column(
-                            children: sessionInfoList.surahAyahList
-                                .asMap()
-                                .entries
-                                .map((e) {
-                              return AcheivementBlock(
-                                key: ValueKey(e.value.key),
-                                surahAyah: e.value,
-                                onDelete: null,
-                                onSave: null,
-                              );
-                            }).toList(),
-                          ),
+                        _buildSessionInfo(),
+                        const SizedBox(height: 10),
+                        _buildAchievementSection(
+                          "memorization",
+                          _hifdList,
+                          () => setState(() => _hifdList.addSurahAyah()),
                         ),
                         const SizedBox(height: 10),
-
-                        // Hifd
-                        CustomContainer(
-                          headerText: "memorization",
-                          headerIcon: Icons.person,
-                          headreActions: [
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  hifdList.addSurahAyah();
-                                });
-                              },
-                              icon: const Icon(Icons.add),
-                            ),
-                          ],
-                          child: Column(
-                            children:
-                                hifdList.surahAyahList.asMap().entries.map((e) {
-                              return AcheivementBlock(
-                                key: ValueKey(e.value.key),
-                                surahAyah: e.value,
-                                onDelete: () {
-                                  setState(() {
-                                    hifdList.removeSurahAyah(e.key);
-                                  });
-                                },
-                                onSave: () {
-                                  acheivement.hifd = hifdList.surahAyahList;
-                                },
-                              );
-                            }).toList(),
-                          ),
+                        _buildAchievementSection(
+                          "quick revision",
+                          _quickRevList,
+                          () => setState(() => _quickRevList.addSurahAyah()),
                         ),
                         const SizedBox(height: 10),
-
-                        // Quick Revision
-                        CustomContainer(
-                          headerText: "quick revision",
-                          headerIcon: Icons.person,
-                          headreActions: [
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  quickRevList.addSurahAyah();
-                                });
-                              },
-                              icon: const Icon(Icons.add),
-                            ),
-                          ],
-                          child: Column(
-                            children: quickRevList.surahAyahList
-                                .asMap()
-                                .entries
-                                .map((e) {
-                              return AcheivementBlock(
-                                key: ValueKey(e.value.key),
-                                surahAyah: e.value,
-                                onDelete: () {
-                                  setState(() {
-                                    quickRevList.removeSurahAyah(e.key);
-                                  });
-                                },
-                                onSave: () {
-                                  acheivement.quickRev =
-                                      quickRevList.surahAyahList;
-                                },
-                              );
-                            }).toList(),
-                          ),
+                        _buildAchievementSection(
+                          "major revision",
+                          _majorRevList,
+                          () => setState(() => _majorRevList.addSurahAyah()),
                         ),
                         const SizedBox(height: 10),
-
-                        // Major Revision
-                        CustomContainer(
-                          headerText: "major revision",
-                          headerIcon: Icons.person,
-                          headreActions: [
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  majorRevList.addSurahAyah();
-                                });
-                              },
-                              icon: const Icon(Icons.add),
-                            ),
-                          ],
-                          child: Column(
-                            children: majorRevList.surahAyahList
-                                .asMap()
-                                .entries
-                                .map((e) {
-                              return AcheivementBlock(
-                                key: ValueKey(e.value.key),
-                                surahAyah: e.value,
-                                onDelete: () {
-                                  setState(() {
-                                    majorRevList.removeSurahAyah(e.key);
-                                  });
-                                },
-                                onSave: () {
-                                  acheivement.majorRev =
-                                      majorRevList.surahAyahList;
-                                },
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Other
-                        CustomContainer(
-                          headerText: "other",
-                          headerIcon: Icons.question_mark,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: InputField(
-                                  inputTitle: "presence state",
-                                  child: DropDownWidget(
-                                    items: presenceState,
-                                    initialValue: presenceState[0],
-                                    onSaved: (p0) =>
-                                        acheivement.attendenceStatus = p0 ?? '',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: InputField(
-                                  inputTitle: "teacher note",
-                                  child: TextFormField(
-                                    onSaved: (p0) =>
-                                        acheivement.teacherNote = p0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        _buildOtherSection(),
                       ],
                     ),
                   ),
                 ),
               ),
-
-              // Submit button
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () async {
-                    isComplete.value = false;
-
-                    acheivement.sessionInfo = sessionInfoList.surahAyahList;
-                    acheivement.hifd = hifdList.surahAyahList;
-                    acheivement.quickRev = quickRevList.surahAyahList;
-                    acheivement.majorRev = majorRevList.surahAyahList;
-
-                    dev.log(acheivement.toMap().toString());
-
-                    await submitForm(
-                      acheivementFormKey,
-                      connect,
-                      acheivement,
-                      url,
-                      isComplete,
-                    );
-
-                    isComplete.value = true;
-                  },
-                  child: Obx(() => isComplete.value
+                  onPressed: _handleSubmit,
+                  child: Obx(() => _isComplete.value
                       ? const Text("Submit")
                       : const CircularProgressIndicator()),
                 ),
@@ -303,25 +347,47 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
   }
 }
 
+/// A widget that creates a single-line tag with a specific color and tap action
+class CreateSingleLineTag extends StatelessWidget {
+  final String tag;
+  final Color color;
+  final VoidCallback onTap;
+
+  const CreateSingleLineTag({
+    required this.tag,
+    required this.color,
+    required this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Chip(
+        label: Text(tag),
+        backgroundColor: color,
+        labelPadding: const EdgeInsets.all(2),
+      ),
+    );
+  }
+}
+
+/// Generates SurahAyah tags from a list of SurahAyah objects
 Widget generateSurahAyahTags(List<SurahAyah> content) {
   return Wrap(
-    spacing: 3, // space between adjacent chips
-    runSpacing: 3, // space between lines of chips
+    spacing: 3,
+    runSpacing: 3,
     children: content
         .map((e) => createMultiLineTag(e.fromSurahName!, e.toSurahName!))
         .toList(),
   );
 }
 
-Widget createSingleLineTag(String tag, Color color) => Chip(
-      label: Text(tag),
-      backgroundColor: color,
-      labelPadding: EdgeInsets.all(2),
-    );
-
+/// Creates a multi-line tag with two lines of text
 Widget createMultiLineTag(String first, String last) => Chip(
-      labelPadding: EdgeInsets.all(2),
-      backgroundColor: Color(0xff85945d),
+      labelPadding: const EdgeInsets.all(2),
+      backgroundColor: const Color(0xff85945d),
       label: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

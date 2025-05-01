@@ -46,13 +46,9 @@ class _SystemUIState extends State<SystemUI> {
             child: Column(
               children: [
                 Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        widget.title,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                  child: Text(
+                    widget.title,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(

@@ -131,7 +131,7 @@ class GenericDataSource<T> extends DataGridSource {
                   ),
                   Expanded(
                     child: Text(
-                      cell.value?.toString() ?? 'N/A',
+                      cell.value?.toString() ?? '',
                       softWrap: true,
                     ),
                   ),

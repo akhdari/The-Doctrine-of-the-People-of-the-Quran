@@ -4,16 +4,20 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../models/get/acheivement_class.dart';
 import 'package:get/get.dart';
 import '/system/widgets/dialogs/acheivement.dart';
+import '/controllers/latest_acheivement.dart';
 
 class AcheivementGrid extends StatelessWidget {
   final List<Acheivement> data;
   final Future<void> Function() onRefresh;
+  final String date;
+  final int sessionId;
 
-  const AcheivementGrid({
-    super.key,
-    required this.data,
-    required this.onRefresh,
-  });
+  const AcheivementGrid(
+      {super.key,
+      required this.data,
+      required this.onRefresh,
+      required this.date,
+      required this.sessionId});
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +36,18 @@ class AcheivementGrid extends StatelessWidget {
             columnName: 'student_id', value: acheivement.studentID),
         DataGridCell<String>(
             columnName: 'full_name', value: acheivement.studentName),
-        DataGridCell<String>(columnName: 'acheivement', value: null),
+        DataGridCell<String>(
+            columnName: 'acheivement', value: acheivement.studentID),
         DataGridCell<String>(columnName: 'attendance', value: null),
       ]),
       cellBuilder: (cell) {
         if (cell.columnName == 'acheivement') {
           return GestureDetector(
             onTap: () {
-              Get.dialog(AcheivemtDialog());
+              final studentId = int.parse(cell.value);
+              Get.put(LatestAcheivement());
+              Get.dialog(AcheivemtDialog(
+                  sessionId: sessionId, studentId: studentId, date: date));
             },
             child: const Icon(Icons.emoji_events),
           );
@@ -60,7 +68,9 @@ class AcheivementGrid extends StatelessWidget {
       columns: [
         GridColumn(columnName: 'student_id', label: _buildHeader('Student ID')),
         GridColumn(
-            columnName: 'student_name', label: _buildHeader('Student Name')),
+            columnName: 'full_name',
+            label: _buildHeader(
+                'Student Name')), // Fixed column name to match rowBuilder
         GridColumn(
             columnName: 'acheivement', label: _buildHeader('Acheivement')),
         GridColumn(columnName: 'attendance', label: _buildHeader('Attendance')),
@@ -68,11 +78,14 @@ class AcheivementGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(String title) {
+  Widget _buildHeader(String text) {
     return Container(
-      padding: const EdgeInsets.all(8),
       alignment: Alignment.center,
-      child: Text(title, overflow: TextOverflow.ellipsis),
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 }

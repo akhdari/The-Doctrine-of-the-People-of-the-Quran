@@ -1,8 +1,10 @@
 const presenceState = [
   "present",
   "absent",
-  "late"
-]; //TODO make it match whats in the database
+  "late",
+  "excuse",
+];
+
 const List<String> surah = [
   "الفاتحة",
   "البقرة",

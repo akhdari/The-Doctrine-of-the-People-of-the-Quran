@@ -11,7 +11,6 @@ import '../custom_container.dart';
 import '../input_field.dart';
 import '../custom_matrix.dart';
 import '../multiselect.dart';
-import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'dart:developer' as dev;
 
 const String url = 'http://192.168.100.20/phpscript/get_lecture.php';
@@ -31,8 +30,8 @@ class _LectureDialogState extends State<LectureDialog> {
       dev.log('teacherNames: ${fetchedTeachernNames.toString()}');
 
       setState(() {
-        teacherNames = fetchedTeachernNames;
-        dev.log('teacherNames: ${teacherNames.toString()}');
+        teacherResult = fetchedTeachernNames;
+        dev.log('teacherNames: ${teacherResult.toString()}');
       });
     } catch (e) {
       dev.log("Error loading data: $e");
@@ -44,8 +43,7 @@ class _LectureDialogState extends State<LectureDialog> {
   late Validator validator;
   final Connect connect = Connect();
   final lectureInfo = Lecture();
-  late MultipleSearchController multiSearchController;
-  late List<Map<String, dynamic>> teacherNames = [];
+  TeacherResult? teacherResult;
 
   @override
   void initState() {
@@ -60,6 +58,8 @@ class _LectureDialogState extends State<LectureDialog> {
 
     super.initState();
   }
+
+//TODO dispose
 
   RxBool isComplete = true.obs;
   @override
@@ -194,7 +194,7 @@ class _LectureDialogState extends State<LectureDialog> {
                               ),
                               InputField(
                                 inputTitle: "teachers",
-                                child: DefaultConstructorExample(
+                                child: MultiSelect<Teacher>(
                                   // multipleSearchController:
                                   // multiSearchController,
                                   getPickedItems: (p0) {
@@ -205,9 +205,8 @@ class _LectureDialogState extends State<LectureDialog> {
                                         .map((e) => int.parse(e.toString()))
                                         .toList();
                                   },
-
-                                  searchkey: "teacher_id",
-                                  preparedData: teacherNames,
+                                  preparedData: teacherResult?.teachers ?? [],
+                                  itemAsString: (Teacher p0) => p0.name,
                                   hintText: "search by teacher name",
                                   maxSelectedItems: null,
                                 ),

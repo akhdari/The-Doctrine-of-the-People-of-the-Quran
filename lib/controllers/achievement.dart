@@ -11,6 +11,7 @@ class AchievementController extends GetxController {
   RxnInt lectureId = RxnInt();
   RxList<Acheivement> achievementList = <Acheivement>[].obs;
   RxBool isLoading = true.obs;
+  RxBool isrequestCompleted = false.obs;
 
   void setLectureId(int? id) {
     if (id == null) return;
@@ -25,10 +26,12 @@ class AchievementController extends GetxController {
     dev.log(result.toString());
     if (result.isSuccess && result.data != null) {
       isLoading.value = false;
+      isrequestCompleted.value = true;
       achievementList.value =
           result.data!.map((json) => Acheivement.fromJson(json)).toList();
     } else {
       isLoading.value = false;
+      isrequestCompleted.value = true;
       throw Exception(result.errorMessage ?? 'Unknown error fetching students');
     }
   }
