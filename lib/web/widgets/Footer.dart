@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'lunch_url.dart';
+import '../../system/widgets/image.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -48,15 +49,17 @@ class FooterSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () => _launchURL(
+                onTap: () => launchURL(
                     'https://apps.apple.com/us/app/example-app/id123456789'), // Remplace par le bon lien
-                child: Image.asset('assets/footer/APP.png', height: 72),
+                child:
+                    CustomImage(imagePath: 'assets/footer/APP.png', height: 72),
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: () => _launchURL(
+                onTap: () => launchURL(
                     'https://play.google.com/store/apps/details?id=com.example.app'), // Remplace par le bon lien
-                child: Image.asset('assets/footer/google-play.png', height: 50),
+                child: CustomImage(
+                    imagePath: 'assets/footer/google-play.png', height: 50),
               ),
             ],
           ),
@@ -101,16 +104,6 @@ class FooterSection extends StatelessWidget {
             .toList(),
       ],
     );
-  }
-}
-
-// Fonction pour ouvrir un lien externe
-void _launchURL(String url) async {
-  Uri uri = Uri.parse(url);
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  } else {
-    throw 'Impossible d\'ouvrir l\'URL : $url';
   }
 }
 

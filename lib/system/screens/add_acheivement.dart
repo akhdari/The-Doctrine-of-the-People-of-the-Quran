@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'system_ui.dart';
 import '../widgets/typehead.dart';
 import '../widgets/grids/acheivement/acheivement_show.dart';
+import '../../controllers/achievement.dart';
 import 'dart:developer' as dev;
 
 const String partialUrl =
@@ -22,15 +24,19 @@ class _AddAcheivementState extends State<AddAcheivement> {
   RxnInt id = RxnInt();
   TextEditingController controller = TextEditingController();
   DateTime? selectedDate;
+  late AchievementController achievementController;
 
   @override
   void initState() {
     super.initState();
-    controller.text = formatDate(DateTime.now());
+    achievementController = Get.put(AchievementController());
+    final now = DateTime.now();
+    controller.text = formatDate(now);
+    achievementController.setDate(formatDate(now));
   }
 
   String formatDate(DateTime date) {
-    return '${date.year}-${date.month}-${date.day}';
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
   void showDatePickerOverlay() {
@@ -71,15 +77,17 @@ class _AddAcheivementState extends State<AddAcheivement> {
                       monthViewSettings: DateRangePickerMonthViewSettings(
                         firstDayOfWeek: 1,
                       ),
+                      minDate: DateTime(DateTime.now().year, 1, 1),
+                      maxDate: DateTime.now(),
                       showNavigationArrow: true,
-                      navigationMode: DateRangePickerNavigationMode.scroll,
+                      navigationMode: DateRangePickerNavigationMode.none,
                       selectionMode: DateRangePickerSelectionMode.single,
-                      initialSelectedDate: DateTime.now(),
-                      initialDisplayDate: DateTime.now(),
+                      initialSelectedDate: selectedDate ?? DateTime.now(),
+                      initialDisplayDate: selectedDate ?? DateTime.now(),
                       todayHighlightColor: const Color(0xff169b88),
                       showTodayButton: true,
                       showActionButtons: true,
-                      maxDate: DateTime.now(),
+                      enableMultiView: false,
                       viewSpacing: 5,
                       selectionColor: Color(0xff169b88),
                       selectionShape: DateRangePickerSelectionShape.rectangle,
@@ -88,7 +96,9 @@ class _AddAcheivementState extends State<AddAcheivement> {
                         if (args.value is DateTime) {
                           setState(() {
                             selectedDate = args.value as DateTime;
-                            controller.text = formatDate(selectedDate!);
+                            final formattedDate = formatDate(selectedDate!);
+                            controller.text = formattedDate;
+                            achievementController.setDate(formattedDate);
                           });
                         }
                       },
@@ -119,6 +129,7 @@ class _AddAcheivementState extends State<AddAcheivement> {
   @override
   void dispose() {
     removeOverlay();
+    controller.dispose();
     super.dispose();
   }
 
@@ -136,6 +147,7 @@ class _AddAcheivementState extends State<AddAcheivement> {
                     setState(() {
                       id.value = p0;
                       dev.log("id in acheivement: $id");
+                      achievementController.setLectureId(p0);
                     });
                   },
                 ),
@@ -147,6 +159,11 @@ class _AddAcheivementState extends State<AddAcheivement> {
                   key: _anchorKey,
                   readOnly: true,
                   onTap: showDatePickerOverlay,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Date',
+                    suffixIcon: Icon(Icons.calendar_today),
+                  ),
                 ),
               ),
             ],
@@ -155,8 +172,8 @@ class _AddAcheivementState extends State<AddAcheivement> {
           const Divider(),
           Expanded(
             child: AcheivementScreen(
-              date: controller.text,
               id: id,
+              date: controller.text,
             ),
           ),
         ]),

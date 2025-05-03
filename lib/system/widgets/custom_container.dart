@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'image.dart';
 
 class CustomContainer extends StatefulWidget {
   final String headerText;
@@ -48,12 +49,10 @@ class _CustomContainerState extends State<CustomContainer> {
                   ),
                   ClipRRect(
                     //borderRadius: BorderRadius.circular(5),
-                    child: Image.asset(
+                    //"assets/back.png"
+                    child: CustomImage(
+                      imagePath: "assets/back.png",
                       width: double.infinity,
-                      "assets/back.png",
-                      fit: BoxFit
-                          .cover, //prevent immage duplication in small containers
-                      //other options: cover, contain
                     ),
                   ),
                   Row(

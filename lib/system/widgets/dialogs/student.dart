@@ -15,6 +15,7 @@ import '../../../controllers/generate.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
 import '../picker.dart';
+import '../image.dart';
 
 const String url = 'http://192.168.100.20/phpscript/get_student.php';
 
@@ -43,7 +44,6 @@ class _StudentDialogState extends State<StudentDialog> {
     }
   }
 
-  // Controllers and keys
   final GlobalKey<FormState> studentFormKey = GlobalKey<FormState>();
 
   late Generate generate;
@@ -51,7 +51,6 @@ class _StudentDialogState extends State<StudentDialog> {
   final Connect connect = Connect();
   final StudentInfoDialog studentInfo = StudentInfoDialog();
 
-  // State variables
   bool isClicked = false;
   RxBool isExempt = false.obs;
   Rx<String?> enrollmentDate = Rxn<String>();
@@ -59,7 +58,6 @@ class _StudentDialogState extends State<StudentDialog> {
 
   SessionResult? sessionResult;
   GuardianResult? guardianResult;
-  //scroll conroller
   late ScrollController scrollController;
 
   //picker
@@ -69,26 +67,24 @@ class _StudentDialogState extends State<StudentDialog> {
     super.initState();
     generate = Get.find<Generate>();
     validator = Get.find<Validator>(tag: "studentPage");
-
     validator.controllers[9].text = generate.generatePassword();
-
-    /*multiSearchController1 = MultipleSearchController(
-      minCharsToShowItems: 1,
-      allowDuplicateSelection: false,
-    );
-    multiSearchController2 = MultipleSearchController(
-      minCharsToShowItems: 1,
-      allowDuplicateSelection: false,
-    );*/
     scrollController = ScrollController();
     loadData();
   }
 
-//TODO dispose
   RxBool isComplete = true.obs;
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    validator.dispose();
+    generate.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
@@ -98,7 +94,7 @@ class _StudentDialogState extends State<StudentDialog> {
       ),
       child: Dialog(
         shape: BeveledRectangleBorder(),
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         child: Scrollbar(
           controller: scrollController,
           child: Column(
@@ -110,26 +106,23 @@ class _StudentDialogState extends State<StudentDialog> {
                   child: Container(
                     width: double.infinity,
                     height: 50,
-                    color: const Color(0xFF0E9D6D),
+                    color: colorScheme.primary,
                   ),
                 ),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ClipRRect(
-                    child: Image.asset(
-                      "assets/back.png",
-                      fit: BoxFit.cover,
-                    ),
+                    child: CustomImage(imagePath: "assets/back.png"),
                   ),
                 ),
                 Row(
                   children: [
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: colorScheme.onSurface,
                       ),
                       onPressed: () => Get.back(),
                     ),
@@ -278,11 +271,17 @@ class _StudentDialogState extends State<StudentDialog> {
                                   Expanded(
                                     child: InputField(
                                       inputTitle: "Nationality",
-                                      child: CustomTextField(
+                                      child: DropDownWidget(
+                                        items: nationalities,
+                                        initialValue: nationalities[1],
+                                        onSaved: (p0) =>
+                                            studentInfo.nationality = p0,
+                                      ),
+                                      /*CustomTextField(
                                         controller: validator.controllers[6],
                                         onSaved: (p0) =>
                                             studentInfo.nationality = p0!,
-                                      ),
+                                      ),*/
                                     ),
                                   ),
                                   const SizedBox(width: 8),

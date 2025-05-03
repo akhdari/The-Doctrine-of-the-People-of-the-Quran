@@ -35,10 +35,14 @@ Future<String?> dateSelector(BuildContext context) async {
    using the then method does not make an asynchronous function non-asynchronous.
   */
   DateTime? time;
+  final now = DateTime.now();
+  final firstDate = DateTime(now.year, 1, 1); // First day of current year
+  final lastDate = DateTime(now.year, 12, 31); // Last day of current year
+
   await showDatePicker(
           context: context,
-          firstDate: DateTime(1900),
-          lastDate: DateTime.now(),
+          firstDate: firstDate,
+          lastDate: lastDate,
           initialDate: DateTime.now(),
           initialEntryMode: DatePickerEntryMode.calendarOnly)
       .then((value) {

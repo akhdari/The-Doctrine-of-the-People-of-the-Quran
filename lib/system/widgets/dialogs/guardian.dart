@@ -9,6 +9,7 @@ import '../../services/connect.dart';
 import '../../../controllers/validator.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
+import '../image.dart';
 
 const String url = 'http://192.168.100.20/phpscript/get_guardian.php';
 
@@ -35,9 +36,18 @@ class _GuardianDialogState extends State<GuardianDialog> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    scrollController.dispose();
+    validator.dispose();
+    generate.dispose();
+    super.dispose();
+  }
+
   RxBool isComplete = true.obs;
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
@@ -47,7 +57,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
       ),
       child: Dialog(
         shape: BeveledRectangleBorder(),
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         child: Scrollbar(
           controller: scrollController,
           child: Column(
@@ -59,26 +69,24 @@ class _GuardianDialogState extends State<GuardianDialog> {
                   child: Container(
                     width: double.infinity,
                     height: 50,
-                    color: const Color(0xFF0E9D6D),
+                    color: colorScheme.primary,
                   ),
                 ),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ClipRRect(
-                    child: Image.asset(
-                      "assets/back.png",
-                      fit: BoxFit.cover,
-                    ),
+                    //"assets/back.png"
+                    child: CustomImage(imagePath: "assets/back.png"),
                   ),
                 ),
                 Row(
                   children: [
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: colorScheme.onSurface,
                       ),
                       onPressed: () => Get.back(),
                     ),

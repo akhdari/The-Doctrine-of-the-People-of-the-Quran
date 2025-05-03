@@ -4,6 +4,7 @@ import '../models/get/typehead.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'error_illustration.dart';
 
 const String typeheadUrl = "http://192.168.100.20/phpscript/typehead.php";
 Future<List<Typehead>> getSessions(String url) async {
@@ -42,6 +43,13 @@ class _SearchFeildState extends State<SearchFeild> {
   }
 
   @override
+  void dispose() {
+    textController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TypeAheadField<Typehead>(
       controller: textController,
@@ -59,6 +67,13 @@ class _SearchFeildState extends State<SearchFeild> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'session name',
+              suffixIcon: IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                  controller.clear();
+                  suggestionsController?.refresh();
+                },
+              ),
             ));
       },
       itemBuilder: (context, lecture) {
@@ -66,31 +81,25 @@ class _SearchFeildState extends State<SearchFeild> {
           title: Text(lecture.sessionNameAr),
         );
       },
-      emptyBuilder: (context) => const ListTile(
-        title: Text(
-          "No sessions found",
-          style: TextStyle(color: Colors.grey),
-        ),
-        subtitle: Text(
-          "Start typing to search",
-          style: TextStyle(color: Colors.grey),
-        ),
-        leading: Icon(Icons.search_off, color: Colors.grey),
+      emptyBuilder: (context) => ErrorIllustration(
+        illustrationPath: 'assets/illustration/empty-box.svg',
+        title: 'No Sessions Found',
+        message: 'Start typing to search for sessions',
       ),
-      errorBuilder: (context, error) => const ListTile(
-        leading: Icon(Icons.error, color: Colors.redAccent),
-        title: Text(
-          "Failed to load sessions",
-          style: TextStyle(color: Colors.redAccent),
-        ),
-        subtitle: Text(
-          "Check your internet connection.",
-          style: TextStyle(color: Colors.grey),
-        ),
+      errorBuilder: (context, error) => ErrorIllustration(
+        illustrationPath: 'assets/illustration/bad-connection.svg',
+        title: 'Connection Error',
+        message:
+            'Failed to load sessions. Please check your internet connection.',
+        onRetry: () {
+          textController.clear();
+          suggestionsController?.refresh();
+        },
       ),
       onSelected: (session) {
         dev.log('id on selected: ${session.sessionId}');
         widget.selectedSession(session.sessionId);
+        textController.text = session.sessionNameAr;
       },
     );
   }

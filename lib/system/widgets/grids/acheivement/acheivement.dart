@@ -12,79 +12,127 @@ class AcheivementGrid extends StatelessWidget {
   final String date;
   final int sessionId;
 
-  const AcheivementGrid(
-      {super.key,
-      required this.data,
-      required this.onRefresh,
-      required this.date,
-      required this.sessionId});
+  const AcheivementGrid({
+    super.key,
+    required this.data,
+    required this.onRefresh,
+    required this.date,
+    required this.sessionId,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GenericDataGrid<Acheivement>(
       data: data,
       onRefresh: onRefresh,
       onDelete: null,
       selectionMode: SelectionMode.none,
-      screenTitle: 'Acheivements List',
-      detailsTitle: 'Acheivement Details',
+      screenTitle: 'Students List',
+      detailsTitle: 'Student Achievement Details',
       rowsPerPage: 10,
       showCheckBoxColumn: false,
-      idExtractor: (row) => row.getCells()[0].value.toString(),
-      rowBuilder: (acheivement) => DataGridRow(cells: [
+      idExtractor: (row) => int.parse(row.getCells()[0].value),
+      rowBuilder: (achievement) => DataGridRow(cells: [
         DataGridCell<String>(
-            columnName: 'student_id', value: acheivement.studentID),
+          columnName: 'student_id',
+          value: achievement.studentID,
+        ),
         DataGridCell<String>(
-            columnName: 'full_name', value: acheivement.studentName),
-        DataGridCell<String>(
-            columnName: 'acheivement', value: acheivement.studentID),
-        DataGridCell<String>(columnName: 'attendance', value: null),
+          columnName: 'full_name',
+          value: achievement.studentName,
+        ),
+        DataGridCell<Widget>(
+          columnName: 'achievement',
+          value: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                final studentId = int.parse(achievement.studentID);
+                Get.put(LatestAcheivement());
+                Get.dialog(
+                  AcheivemtDialog(
+                    sessionId: sessionId,
+                    studentId: studentId,
+                    date: date,
+                  ),
+                ).then((_) => onRefresh());
+              },
+              child: Icon(
+                Icons.emoji_events,
+                color: colorScheme.primary,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+        DataGridCell<Widget>(
+          columnName: 'attendance',
+          value: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                Get.dialog(
+                  AttendanceDialog(data: data),
+                ).then((_) => onRefresh());
+              },
+              child: Icon(
+                Icons.calendar_today,
+                color: colorScheme.primary,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
       ]),
       cellBuilder: (cell) {
-        if (cell.columnName == 'acheivement') {
-          return GestureDetector(
-            onTap: () {
-              final studentId = int.parse(cell.value);
-              Get.put(LatestAcheivement());
-              Get.dialog(AcheivemtDialog(
-                  sessionId: sessionId, studentId: studentId, date: date));
-            },
-            child: const Icon(Icons.emoji_events),
+        if (cell.columnName == 'achievement' ||
+            cell.columnName == 'attendance') {
+          return Container(
+            alignment: Alignment.center,
+            child: cell.value as Widget,
           );
         }
-        if (cell.columnName == 'attendance') {
-          return GestureDetector(
-            onTap: () {
-              Get.dialog(AttendanceDialog(
-                data: data,
-              ));
-            },
-            child: const Icon(Icons.calendar_today),
-          );
-        } else {
-          return null;
-        }
+        return null;
       },
       columns: [
-        GridColumn(columnName: 'student_id', label: _buildHeader('Student ID')),
         GridColumn(
-            columnName: 'full_name',
-            label: _buildHeader(
-                'Student Name')), // Fixed column name to match rowBuilder
+          columnName: 'student_id',
+          label: _buildHeader('Student ID'),
+          allowSorting: true,
+          allowFiltering: true,
+        ),
         GridColumn(
-            columnName: 'acheivement', label: _buildHeader('Acheivement')),
-        GridColumn(columnName: 'attendance', label: _buildHeader('Attendance')),
+          columnName: 'full_name',
+          label: _buildHeader('Student Name'),
+          allowSorting: true,
+          allowFiltering: true,
+        ),
+        GridColumn(
+          columnName: 'achievement',
+          label: _buildHeader('Achievement'),
+          allowSorting: false,
+          allowFiltering: false,
+          width: 100,
+        ),
+        GridColumn(
+          columnName: 'attendance',
+          label: _buildHeader('Attendance'),
+          allowSorting: false,
+          allowFiltering: false,
+          width: 100,
+        ),
       ],
     );
   }
 
-  Widget _buildHeader(String text) {
+  Widget _buildHeader(String title) {
     return Container(
+      padding: const EdgeInsets.all(8),
       alignment: Alignment.center,
-      padding: const EdgeInsets.all(8.0),
       child: Text(
-        text,
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        title,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -138,6 +186,7 @@ class AttendanceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
@@ -163,10 +212,15 @@ class AttendanceDialog extends StatelessWidget {
                         onPressed: () {
                           Get.back();
                         },
-                        icon: Icon(Icons.close),
+                        icon: Icon(Icons.close, color: colorScheme.onSurface),
                       ),
                       Text(
                         "Attendance",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
                       ),
                     ],
                   ),
@@ -182,7 +236,11 @@ class AttendanceDialog extends StatelessWidget {
                           padding: EdgeInsets.all(8),
                           child: Text(
                             'Student',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                            ),
                           ),
                         ),
                         _buildTableHeader('Present'),
@@ -229,7 +287,10 @@ class AttendanceDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildAttendanceCell(String studentID, String type) {
+  Widget _buildAttendanceCell(
+    String studentID,
+    String type,
+  ) {
     return Center(
       child: GestureDetector(
         onTap: () => controller.selectAttendance(studentID, type),

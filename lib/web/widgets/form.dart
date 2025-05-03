@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../controllers/validator.dart';
 import 'custom_checkbox.dart';
+import '/system/utils/const/form.dart';
 
 class CustomFormWidget extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -15,49 +16,6 @@ class CustomFormWidget extends StatefulWidget {
 
 class _CustomFormWidgetState extends State<CustomFormWidget> {
   late Validator formcontroller;
-  final List<String> countries = [
-    "أفغانستان",
-    "الجزائر",
-    "البحرين",
-    "بنغلاديش",
-    "بنين",
-    "بروناي",
-    "بوركينا فاسو",
-    "تشاد",
-    "جزر القمر",
-    "مصر",
-    "جيبوتي",
-    "إندونيسيا",
-    "إيران",
-    "العراق",
-    "الأردن",
-    "كازاخستان",
-    "الكويت",
-    "قرغيزستان",
-    "لبنان",
-    "ليبيا",
-    "مالي",
-    "موريتانيا",
-    "المغرب",
-    "عمان",
-    "باكستان",
-    "فلسطين",
-    "قطر",
-    "المملكة العربية السعودية",
-    "السنغال",
-    "سيراليون",
-    "الصومال",
-    "السودان",
-    "سوريا",
-    "طاجيكستان",
-    "تنزانيا",
-    "تونس",
-    "تركيا",
-    "تركمانستان",
-    "الإمارات العربية المتحدة",
-    "أوزبكستان",
-    "اليمن"
-  ];
 
   @override
   void initState() {

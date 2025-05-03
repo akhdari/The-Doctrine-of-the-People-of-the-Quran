@@ -8,6 +8,7 @@ class MultiSelect<T> extends StatefulWidget {
   final String hintText;
   final int? maxSelectedItems;
   final String Function(T) itemAsString;
+  final List<int>? initialSelectedIds;
 
   const MultiSelect({
     super.key,
@@ -16,6 +17,7 @@ class MultiSelect<T> extends StatefulWidget {
     required this.hintText,
     required this.maxSelectedItems,
     required this.itemAsString,
+    this.initialSelectedIds,
   });
 
   @override
@@ -23,14 +25,12 @@ class MultiSelect<T> extends StatefulWidget {
 }
 
 class _MultiSelectState<T> extends State<MultiSelect<T>> {
-  //late final TextEditingController _searchController;
   late final MultipleSearchController _multipleSearchController;
   final List<String> _pickedItems = [];
 
   @override
   void initState() {
     super.initState();
-    //_searchController = TextEditingController();
     _multipleSearchController = MultipleSearchController(
       allowDuplicateSelection: false,
       isSelectable: true,
@@ -44,6 +44,8 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         MultipleSearchSelection<T>.overlay(
@@ -77,20 +79,25 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
-                color: isPicked ? Colors.blue[100] : Colors.white,
+                color: isPicked
+                    ? colorScheme.primaryContainer
+                    : colorScheme.surface,
               ),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                child: Text(widget.itemAsString(item)),
+                child: Text(
+                  widget.itemAsString(item),
+                  style: textTheme.bodySmall,
+                ),
               ),
             ),
           ),
           pickedItemBuilder: (item) => Container(
             margin: const EdgeInsets.only(right: 4),
             decoration: BoxDecoration(
-              color: Colors.blue[50],
-              border: Border.all(color: Colors.blue[200]!),
+              color: colorScheme.primaryContainer,
+              border: Border.all(color: colorScheme.outline),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Padding(
@@ -98,9 +105,16 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(widget.itemAsString(item)),
+                  Text(
+                    widget.itemAsString(item),
+                    style: textTheme.bodySmall,
+                  ),
                   const SizedBox(width: 4),
-                  const Icon(Icons.close, size: 16),
+                  Icon(
+                    Icons.close,
+                    size: 16,
+                    color: colorScheme.onSurface,
+                  ),
                 ],
               ),
             ),
@@ -109,5 +123,28 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
         ),
       ],
     );
+  }
+
+  @override
+  void didUpdateWidget(MultiSelect<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedIds != null &&
+        widget.initialSelectedIds != oldWidget.initialSelectedIds) {
+      // Clear existing selections
+      _pickedItems.clear();
+
+      // Select initial items
+      for (var id in widget.initialSelectedIds!) {
+        final item = widget.preparedData.firstWhere(
+          (element) => element.toString() == id.toString(),
+          orElse: () => null as T,
+        );
+        if (item != null) {
+          final display = widget.itemAsString(item);
+          _pickedItems.add(display);
+        }
+      }
+      _updatePickedItems(_pickedItems);
+    }
   }
 }

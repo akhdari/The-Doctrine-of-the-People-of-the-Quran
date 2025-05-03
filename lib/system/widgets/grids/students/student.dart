@@ -26,7 +26,7 @@ class StudentGrid extends StatelessWidget {
       detailsTitle: 'Student Details',
       rowsPerPage: 10,
       showCheckBoxColumn: true,
-      idExtractor: (row) => row.getCells()[0].value.toString(),
+      idExtractor: (row) => int.parse(row.getCells()[0].value),
       rowBuilder: (student) => DataGridRow(cells: [
         DataGridCell<String>(columnName: 'id', value: student.id),
         DataGridCell<String>(

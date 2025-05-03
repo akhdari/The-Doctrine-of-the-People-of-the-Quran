@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'student.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/student.dart';
-import '/controllers/generate.dart';
-import '/controllers/validator.dart';
-import '/controllers/student.dart';
+import '../../dialogs/student.dart';
+import '../../../../controllers/validator.dart';
+import '../../../../controllers/generate.dart';
+import '../../../../controllers/student.dart';
+import 'student.dart';
+import '../../error_illustration.dart';
 
 const String fetchUrl = 'http://192.168.100.20/phpscript/student.php';
 const String deleteUrl = 'http://192.168.100.20/phpscript/delete_student.php';
@@ -27,36 +28,57 @@ class _StudentScreenState extends State<StudentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      } else if (controller.studentList.isEmpty) {
-        return const Center(child: Text('No data found'));
-      } else {
-        return Column(
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.add, color: Colors.black),
-                  onPressed: () {
-                    Get.put(Validator(16), tag: "studentPage");
-                    Get.put(Generate());
-                    Get.dialog(StudentDialog());
-                  },
-                ),
-              ],
-            ),
-            Expanded(
-              child: StudentGrid(
-                data: controller.studentList,
-                onRefresh: () => controller.getData(fetchUrl),
-                onDelete: (id) => controller.postDelete(id, deleteUrl),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.add, color: Colors.black),
+                onPressed: () {
+                  Get.put(Validator(16), tag: "studentPage");
+                  Get.put(Generate());
+                  Get.dialog(StudentDialog())
+                      .then((_) => controller.getData(fetchUrl));
+                },
               ),
-            ),
-          ],
-        );
-      }
-    });
+            ],
+          ),
+        ),
+        Expanded(
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (controller.errorMessage.value.isNotEmpty) {
+              return ErrorIllustration(
+                illustrationPath: 'assets/illustration/bad-connection.svg',
+                title: 'Connection Error',
+                message: controller.errorMessage.value,
+                onRetry: () => controller.getData(fetchUrl),
+              );
+            }
+
+            if (controller.studentList.isEmpty) {
+              return ErrorIllustration(
+                illustrationPath: 'assets/illustration/empty-box.svg',
+                title: 'No Students Found',
+                message:
+                    'There are no students registered yet. Click the add button to create one.',
+              );
+            }
+
+            return StudentGrid(
+              data: controller.studentList,
+              onRefresh: () => controller.getData(fetchUrl),
+              onDelete: (id) => controller.postDelete(id, deleteUrl),
+            );
+          }),
+        ),
+      ],
+    );
   }
 }

@@ -12,6 +12,7 @@ import '../input_field.dart';
 import '../custom_matrix.dart';
 import '../multiselect.dart';
 import 'dart:developer' as dev;
+import '../image.dart';
 
 const String url = 'http://192.168.100.20/phpscript/get_lecture.php';
 
@@ -49,23 +50,24 @@ class _LectureDialogState extends State<LectureDialog> {
   void initState() {
     validator = Get.find<Validator>(tag: "lecturePage");
     scrollController = ScrollController();
-    /*  multiSearchController = MultipleSearchController(
-      minCharsToShowItems: 1,
-      allowDuplicateSelection: false,
-    );*/
     loadData();
     Get.put(TimeCellController());
-
     super.initState();
   }
 
-//TODO dispose
+  @override
+  void dispose() {
+    scrollController.dispose();
+    validator.dispose();
+    super.dispose();
+  }
 
   RxBool isComplete = true.obs;
   @override
   Widget build(BuildContext context) {
     final TimeCellController timeCellController =
         Get.find<TimeCellController>();
+    final colorScheme = Theme.of(context).colorScheme;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
@@ -75,7 +77,7 @@ class _LectureDialogState extends State<LectureDialog> {
       ),
       child: Dialog(
         shape: BeveledRectangleBorder(),
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         child: Scrollbar(
           controller: scrollController,
           child: Column(
@@ -87,26 +89,23 @@ class _LectureDialogState extends State<LectureDialog> {
                   child: Container(
                     width: double.infinity,
                     height: 50,
-                    color: const Color(0xFF0E9D6D),
+                    color: colorScheme.primary,
                   ),
                 ),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ClipRRect(
-                    child: Image.asset(
-                      "assets/back.png",
-                      fit: BoxFit.cover,
-                    ),
+                    child: CustomImage(imagePath: "assets/back.png"),
                   ),
                 ),
                 Row(
                   children: [
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: colorScheme.onSurface,
                       ),
                       onPressed: () => Get.back(),
                     ),

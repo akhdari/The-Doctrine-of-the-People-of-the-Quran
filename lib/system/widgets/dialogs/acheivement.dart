@@ -7,6 +7,7 @@ import '../../../controllers/submit_form.dart';
 import '../../models/post/acheivement.dart';
 import '../../services/connect.dart';
 import '../custom_container.dart';
+import '../image.dart';
 import '../../utils/const/acheivement.dart';
 import '../acheivement_block.dart';
 import '../../models/post/surah_ayah_list.dart';
@@ -85,6 +86,7 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
   void dispose() {
     _scrollController.dispose();
     _latestAcheivement.clearController();
+    _latestAcheivement.dispose();
     super.dispose();
   }
 
@@ -116,19 +118,20 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
     }
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(ColorScheme colorScheme) {
     return Stack(
       children: [
         Container(
           width: double.infinity,
           height: 50,
-          color: const Color(0xFF0E9D6D),
+          color: colorScheme.primary,
         ),
         SizedBox(
           width: double.infinity,
           height: 50,
           child: ClipRRect(
-            child: Image.asset("assets/back.png", fit: BoxFit.cover),
+            //"assets/back.png"
+            child: CustomImage(imagePath: "assets/back.png"),
           ),
         ),
         Row(
@@ -281,6 +284,7 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.7,
@@ -290,12 +294,12 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
       ),
       child: Dialog(
         shape: _shape,
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         child: Scrollbar(
           controller: _scrollController,
           child: Column(
             children: [
-              _buildHeader(),
+              _buildHeader(colorScheme),
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
@@ -374,20 +378,22 @@ class CreateSingleLineTag extends StatelessWidget {
 }
 
 /// Generates SurahAyah tags from a list of SurahAyah objects
-Widget generateSurahAyahTags(List<SurahAyah> content) {
+Widget generateSurahAyahTags(List<SurahAyah> content, ColorScheme colorscheme) {
   return Wrap(
     spacing: 3,
     runSpacing: 3,
     children: content
-        .map((e) => createMultiLineTag(e.fromSurahName!, e.toSurahName!))
+        .map((e) =>
+            createMultiLineTag(e.fromSurahName!, e.toSurahName!, colorscheme))
         .toList(),
   );
 }
 
 /// Creates a multi-line tag with two lines of text
-Widget createMultiLineTag(String first, String last) => Chip(
+Widget createMultiLineTag(String first, String last, ColorScheme colorscheme) =>
+    Chip(
       labelPadding: const EdgeInsets.all(2),
-      backgroundColor: const Color(0xff85945d),
+      backgroundColor: colorscheme.primary,
       label: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

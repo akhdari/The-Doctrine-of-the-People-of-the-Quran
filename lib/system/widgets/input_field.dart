@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/style.dart';
 
 //import '/widgets/custom_text_form_feild.dart';
 class InputField extends StatelessWidget {
@@ -70,11 +69,12 @@ class CustomTextField extends StatelessWidget {
       maxLines: maxLines,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        enabledBorder: borderStyle,
-        focusedBorder: borderStyle,
+        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder,
+        hoverColor: Theme.of(context).inputDecorationTheme.hoverColor,
       ),
-      style: const TextStyle(
-        color: Color(0xffceaa63),
+      style: TextStyle(
+        color: Theme.of(context).textTheme.bodySmall?.color,
       ),
     );
   }

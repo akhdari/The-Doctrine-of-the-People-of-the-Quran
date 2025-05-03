@@ -9,9 +9,11 @@ const String partialUrl =
 
 class AchievementController extends GetxController {
   RxnInt lectureId = RxnInt();
+  RxString date = ''.obs;
   RxList<Acheivement> achievementList = <Acheivement>[].obs;
   RxBool isLoading = true.obs;
   RxBool isrequestCompleted = false.obs;
+  RxString errorMessage = ''.obs;
 
   void setLectureId(int? id) {
     if (id == null) return;
@@ -19,8 +21,13 @@ class AchievementController extends GetxController {
     fetchData();
   }
 
+  void setDate(String newDate) {
+    date.value = newDate;
+  }
+
   Future<void> fetchData() async {
-    isLoading.value = false;
+    isLoading.value = true;
+    errorMessage.value = '';
     final connect = Connect();
     final result = await connect.get("$partialUrl${lectureId.value}");
     dev.log(result.toString());
@@ -32,7 +39,8 @@ class AchievementController extends GetxController {
     } else {
       isLoading.value = false;
       isrequestCompleted.value = true;
-      throw Exception(result.errorMessage ?? 'Unknown error fetching students');
+      errorMessage.value =
+          result.errorMessage ?? 'Unknown error fetching students';
     }
   }
 }

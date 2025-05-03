@@ -12,12 +12,20 @@ Future<void> submitForm(GlobalKey<FormState> formKey, Connect connect,
       try {
         dev.log('Submitting form to $url with obj: $obj');
         final ApiResult response = await connect.post(url, obj);
-        if (response.isSuccess) {
-          dev.log(response.toString());
+        dev.log('Response data: ${response.data}');
+        dev.log('Response error: ${response.errorMessage}');
+        dev.log('Response: $response');
+
+        if (response.isSuccess &&
+            response.data != null &&
+            response.data['success'] == true) {
           Get.back(); // Close the dialog
           Get.snackbar('Success', 'Form submitted successfully');
         } else {
-          Get.snackbar(response.errorCode ?? 'Error', 'Failed to submit form');
+          final errorMessage = response.data?['message'] ??
+              response.errorMessage ??
+              'Failed to submit form';
+          Get.snackbar('Error', errorMessage);
         }
       } catch (e) {
         dev.log("Error submitting form: $e");

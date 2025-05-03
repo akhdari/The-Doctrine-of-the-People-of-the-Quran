@@ -92,25 +92,34 @@ class GenericDataSource<T> extends DataGridSource {
         );
   }
 
-  void _showDeleteDialog(DataGridRow row) {
-    Get.defaultDialog(
-      title: 'Confirm Deletion',
-      content: const Text('Are you sure you want to delete this item?'),
-      textConfirm: 'Delete',
-      textCancel: 'Cancel',
-      confirmTextColor: Colors.white,
-      onConfirm: () async {
-        try {
-          final id = idExtractor(row);
-          await onDelete?.call(id);
-          await onRefresh();
-        } catch (e) {
-          dev.log("Delete error: $e");
-          Get.snackbar('Error', 'Failed to delete item');
-        }
-        Get.back();
-      },
+  void _showDeleteDialog(DataGridRow row) async {
+    final result = await Get.dialog(
+      AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: const Text('Are you sure you want to delete this item?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
     );
+
+    if (result == true) {
+      try {
+        final id = idExtractor(row);
+        await onDelete?.call(id);
+        await onRefresh();
+      } catch (e) {
+        dev.log("Delete error: $e");
+        Get.snackbar('Error', 'Failed to delete item');
+      }
+    }
   }
 
   void _showRowDetails(DataGridRow row) {
