@@ -41,6 +41,8 @@ class _GuardianDialogState extends State<GuardianDialog> {
     scrollController.dispose();
     validator.dispose();
     generate.dispose();
+    Get.delete<Validator>(tag: "guardianPage");
+    Get.delete<Generate>();
     super.dispose();
   }
 

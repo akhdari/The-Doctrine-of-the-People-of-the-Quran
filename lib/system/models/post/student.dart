@@ -1,5 +1,6 @@
 import 'abstract_class.dart';
 
+//TODO is guardian id required
 class StudentInfoDialog extends AbstractClass {
   // Required fields (non-nullable)
   //personal ifo
@@ -15,7 +16,7 @@ class StudentInfoDialog extends AbstractClass {
 
   // Optional fields (nullable)
   //sessions
-  List<String>? sessions;
+  List<int>? sessions;
   //other personal info
   String? firstNameEN;
   String? lastNameEN;
@@ -43,6 +44,7 @@ class StudentInfoDialog extends AbstractClass {
   String? exemptionReason;
 
   //gradian info
+  int? guardianId;
   String? firstName;
   String? lastName;
   String? dateOfBirth2;
@@ -118,6 +120,7 @@ class StudentInfoDialog extends AbstractClass {
       },
       'guardian': {
         'personalInfo': {
+          'guardianId': guardianId,
           'firstName': firstName,
           'lastName': lastName,
           'dateOfBirth': dateOfBirth2,

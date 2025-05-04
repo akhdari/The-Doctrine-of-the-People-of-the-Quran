@@ -1,14 +1,51 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
+import '../services/connect.dart';
 
-class MultiSelect<T> extends StatefulWidget {
-  final List<T> preparedData;
-  final Function(List<String>) getPickedItems;
+class MultiSelectResult {
+  List<MultiSelectItem>? items;
+  String? errorMessage;
+  MultiSelectResult.onSuccess({required this.items}) : errorMessage = null;
+  MultiSelectResult.onError({required this.errorMessage}) : items = null;
+}
+
+class MultiSelectItem {
+  final int id;
+  final String name;
+
+  MultiSelectItem({required this.id, required this.name});
+
+  factory MultiSelectItem.fromJson(Map<String, dynamic> json) {
+    return MultiSelectItem(
+      id: int.parse(json['id']),
+      name: json['name'] as String,
+    );
+  }
+}
+
+Future<MultiSelectResult> getItems(String url) async {
+  Connect connect = Connect();
+  ApiResult<List<Map<String, dynamic>>> data;
+
+  List<Map<String, dynamic>> items;
+  List<MultiSelectItem> teacherList;
+  data = await connect.get(url);
+  if (data.isSuccess) {
+    items = data.data!;
+
+    teacherList = items.map((item) => MultiSelectItem.fromJson(item)).toList();
+    return MultiSelectResult.onSuccess(items: teacherList);
+  } else {
+    return MultiSelectResult.onError(errorMessage: data.errorMessage);
+  }
+}
+
+class MultiSelect extends StatefulWidget {
+  final List<MultiSelectItem> preparedData;
+  final Function(List<MultiSelectItem>) getPickedItems;
   final String hintText;
   final int? maxSelectedItems;
-  final String Function(T) itemAsString;
-  final List<int>? initialSelectedIds;
 
   const MultiSelect({
     super.key,
@@ -16,17 +53,15 @@ class MultiSelect<T> extends StatefulWidget {
     required this.preparedData,
     required this.hintText,
     required this.maxSelectedItems,
-    required this.itemAsString,
-    this.initialSelectedIds,
   });
 
   @override
-  State<MultiSelect<T>> createState() => _MultiSelectState<T>();
+  State<MultiSelect> createState() => _MultiSelectState();
 }
 
-class _MultiSelectState<T> extends State<MultiSelect<T>> {
+class _MultiSelectState extends State<MultiSelect> {
   late final MultipleSearchController _multipleSearchController;
-  final List<String> _pickedItems = [];
+  List<MultiSelectItem> _pickedItems = [];
 
   @override
   void initState() {
@@ -36,10 +71,11 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
       isSelectable: true,
       minCharsToShowItems: 1,
     );
+    dev.log('MultiSelect initialized with ${widget.preparedData.length} items');
   }
 
-  void _updatePickedItems(List<String> newPickedItems) {
-    widget.getPickedItems(newPickedItems);
+  List<MultiSelectItem> get pickedItems {
+    return _multipleSearchController.getPickedItems().cast<MultiSelectItem>();
   }
 
   @override
@@ -48,7 +84,7 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
-        MultipleSearchSelection<T>.overlay(
+        MultipleSearchSelection<MultiSelectItem>.overlay(
           controller: _multipleSearchController,
           maxSelectedItems: widget.maxSelectedItems,
           clearSearchFieldOnSelect: true,
@@ -60,19 +96,32 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
               ),
             ),
           ),
-          items: widget.preparedData,
-          fieldToCheck: (item) => widget.itemAsString(item),
+          items: widget.preparedData, // Use the data list
+          fieldToCheck: (item) => item.name, // Use 'name' to filter
+          sortPickedItems: true,
+          sortShowedItems: true,
+          onTapClearAll: () {
+            _multipleSearchController.clearSearchField();
+            dev.log(
+                'Show all items | Picked: ${_pickedItems.map((e) => e.name)}');
+          },
+          onTapSelectAll: () {
+            _multipleSearchController.selectAllItemsCallback;
+            dev.log(
+                'Show all items | Picked: ${_pickedItems.map((e) => e.name)}');
+          },
+
           onItemAdded: (item) {
-            final display = widget.itemAsString(item);
-            _pickedItems.add(display);
-            _updatePickedItems(_pickedItems);
-            dev.log('Added: $display | Picked: $_pickedItems');
+            _multipleSearchController.getPickedItemsCallback;
+
+            dev.log(
+                'Added: ${item.name} | Picked: ${_pickedItems.map((e) => e.name)}');
           },
           onItemRemoved: (item) {
-            final display = widget.itemAsString(item);
-            _pickedItems.remove(display);
-            _updatePickedItems(_pickedItems);
-            dev.log('Removed: $display | Picked: $_pickedItems');
+            _multipleSearchController.getPickedItemsCallback;
+
+            dev.log(
+                'Removed: ${item.name} | Picked: ${_pickedItems.map((e) => e.name)}');
           },
           itemBuilder: (item, index, isPicked) => Padding(
             padding: const EdgeInsets.all(6.0),
@@ -87,10 +136,24 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                 child: Text(
-                  widget.itemAsString(item),
+                  item.name, // Show the name of the item
                   style: textTheme.bodySmall,
                 ),
               ),
+            ),
+          ),
+          clearAllButton: Text(
+            'Clear All',
+            style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
+          ),
+          selectAllButton: Text(
+            'Select All',
+            style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
+          ),
+          noResultsWidget: ListTile(
+            title: Text(
+              'No results found',
+              style: TextStyle(color: colorScheme.onSurface),
             ),
           ),
           pickedItemBuilder: (item) => Container(
@@ -106,7 +169,7 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    widget.itemAsString(item),
+                    item.name,
                     style: textTheme.bodySmall,
                   ),
                   const SizedBox(width: 4),
@@ -123,28 +186,5 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
         ),
       ],
     );
-  }
-
-  @override
-  void didUpdateWidget(MultiSelect<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.initialSelectedIds != null &&
-        widget.initialSelectedIds != oldWidget.initialSelectedIds) {
-      // Clear existing selections
-      _pickedItems.clear();
-
-      // Select initial items
-      for (var id in widget.initialSelectedIds!) {
-        final item = widget.preparedData.firstWhere(
-          (element) => element.toString() == id.toString(),
-          orElse: () => null as T,
-        );
-        if (item != null) {
-          final display = widget.itemAsString(item);
-          _pickedItems.add(display);
-        }
-      }
-      _updatePickedItems(_pickedItems);
-    }
   }
 }

@@ -4,6 +4,8 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter/material.dart';
 
 class GenericDataSource<T> extends DataGridSource {
+  final List<T> data;
+  final Map<DataGridRow, T> _rowToModelMap = {};
   final DataGridController gridController;
   final Future<void> Function(int id)? onDelete;
   final Future<void> Function() onRefresh;
@@ -16,7 +18,7 @@ class GenericDataSource<T> extends DataGridSource {
   final Color? selectionColor;
 
   GenericDataSource({
-    required List<T> data,
+    required this.data,
     required this.gridController,
     required this.onDelete,
     required this.onRefresh,
@@ -45,8 +47,16 @@ class GenericDataSource<T> extends DataGridSource {
   }
 
   void buildDataGridRows() {
-    _rows = _data.map<DataGridRow>((e) => rowBuilder(e)).toList();
+    _rowToModelMap.clear(); // Clear old mappings
+    _rows = _data.map<DataGridRow>((e) {
+      final row = rowBuilder(e);
+      _rowToModelMap[row] = e; // Store mapping
+      return row;
+    }).toList();
   }
+
+  /// Get the original model T from a DataGridRow
+  T? getModelFromRow(DataGridRow row) => _rowToModelMap[row];
 
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {

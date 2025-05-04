@@ -47,8 +47,8 @@ class _GuardianScreenState extends State<GuardianScreen> {
                 onPressed: () {
                   Get.put(Validator(10), tag: "guardianPage");
                   Get.put(Generate());
-                  Get.dialog(GuardianDialog())
-                      .then((_) => controller.getData(fetchUrl));
+                  Get.dialog(GuardianDialog());
+                  // .then((_) => controller.getData(fetchUrl));
                 },
               ),
             ],

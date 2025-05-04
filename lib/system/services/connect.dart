@@ -173,4 +173,80 @@ class Connect {
           errorMessage: 'Could not connect to server. Please try again.');
     }
   }
+
+  Future<ApiResult<dynamic>> put(String url, AbstractClass obj) async {
+    try {
+      final requestBody = json.encode(obj.toMap());
+      dev.log('Sending PUT request to: $url');
+      dev.log('Request body: $requestBody');
+
+      // Create a client with connection timeout
+      final client = http.Client();
+      final request = http.Request('PUT', Uri.parse(url))
+        ..headers['Content-Type'] = 'application/json'
+        ..body = requestBody;
+
+      // Try to establish connection first
+      try {
+        await client.send(request).timeout(_connectionTimeout);
+      } catch (e) {
+        client.close();
+        dev.log('Connection failed: $e');
+        return ApiResult.failure(
+          errorMessage:
+              'Could not connect to server. Please check your connection.',
+        );
+      }
+
+      // If connection successful, make the actual request
+      final response = await client
+          .put(
+            Uri.parse(url),
+            headers: {'Content-Type': 'application/json'},
+            body: requestBody,
+          )
+          .timeout(_timeoutDuration);
+
+      client.close();
+      dev.log('Response status: ${response.statusCode}');
+      dev.log('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return ApiResult.seccess(data: json.decode(response.body));
+      } else if (response.statusCode == 400) {
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: 'Invalid request: ${response.body}',
+        );
+      } else if (response.statusCode == 500) {
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: 'Server error: ${response.body}',
+        );
+      } else {
+        return ApiResult.failure(
+          errorCode: response.statusCode.toString(),
+          errorMessage: response.body,
+        );
+      }
+    } on FormatException catch (e) {
+      dev.log('Format error: ${e.message}');
+      return ApiResult.failure(
+          errorMessage: 'Invalid response format: ${e.message}');
+    } on http.ClientException catch (e) {
+      dev.log('Network error: ${e.message}');
+      return ApiResult.failure(
+          errorMessage:
+              'Could not connect to server. Please check your connection.');
+    } on TimeoutException catch (e) {
+      dev.log('Timeout error: ${e.message}');
+      return ApiResult.failure(
+          errorMessage:
+              'Server is taking too long to respond. Please try again.');
+    } catch (e) {
+      dev.log('Unknown error: $e');
+      return ApiResult.failure(
+          errorMessage: 'Could not connect to server. Please try again.');
+    }
+  }
 }

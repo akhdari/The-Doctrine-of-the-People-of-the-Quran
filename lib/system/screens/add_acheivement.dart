@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'system_ui.dart';
 import '../widgets/typehead.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'generic_data_source.dart';
+import 'dart:developer' as dev;
 
 class GenericDataGrid<T> extends StatefulWidget {
   final List<T> data; // Direct data instead of fetcher
@@ -18,7 +19,8 @@ class GenericDataGrid<T> extends StatefulWidget {
   final IconData infoIcon;
   final IconData deleteIcon;
   final Color? selectionColor;
-  final Future<void> Function() onRefresh; // Optional refresh callback
+  final Future<void> Function() onRefresh;
+  final void Function(DataGridRow selectedRow)? onTap;
 
   const GenericDataGrid({
     super.key,
@@ -37,6 +39,7 @@ class GenericDataGrid<T> extends StatefulWidget {
     this.infoIcon = Icons.info_outline,
     this.deleteIcon = Icons.delete,
     this.selectionColor,
+    this.onTap,
   });
 
   @override
@@ -89,22 +92,36 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
                   widget.selectionColor ?? Colors.blue.withValues(alpha: 0.1),
             ),
             child: SfDataGrid(
-              controller: _controller,
-              source: _dataSource,
-              columns: widget.columns,
-              columnWidthMode: ColumnWidthMode.fill,
-              selectionMode: widget.selectionMode,
-              showCheckboxColumn: widget.showCheckBoxColumn,
-              allowSorting: true,
-              allowFiltering: true,
-              gridLinesVisibility: GridLinesVisibility.both,
-              headerGridLinesVisibility: GridLinesVisibility.both,
-              onCellTap: (DataGridCellTapDetails details) {
-                if (details.column.columnName == 'button') {
-                  _controller.selectedIndex = details.rowColumnIndex.rowIndex;
-                }
-              },
-            ),
+                controller: _controller,
+                source: _dataSource,
+                columns: widget.columns,
+                columnWidthMode: ColumnWidthMode.fill,
+                selectionMode: widget.selectionMode,
+                showCheckboxColumn: widget.showCheckBoxColumn,
+                allowSorting: true,
+                allowFiltering: true,
+                gridLinesVisibility: GridLinesVisibility.both,
+                headerGridLinesVisibility: GridLinesVisibility.both,
+                /*
+                data grid row is wrapper that wraps the data grid cells 
+                and not the original obj 
+                */
+                //Once it's in the grid, a DataGridRow doesn't have a reference back to its original T
+                //we neep a mapping between the DataGridRow and the original T
+                onCheckboxValueChanged: (details) {
+                  if (details.value == true) {
+                    final selectedRow = details.row;
+                    if (selectedRow != null) {
+                      final rowId = widget.idExtractor(selectedRow);
+                      final originalModel =
+                          _dataSource.getModelFromRow(selectedRow);
+                      dev.log('Checkbox changed for row ID: $rowId');
+                      dev.log('Original model: $originalModel');
+                    } else {
+                      dev.log('Checkbox changed for a null row.');
+                    }
+                  }
+                }),
           ),
         ),
         Padding(

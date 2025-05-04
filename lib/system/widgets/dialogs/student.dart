@@ -8,8 +8,6 @@ import '../../../controllers/validator.dart';
 import '../../models/post/student.dart';
 import '../../services/connect.dart';
 import '../multiselect.dart';
-import '../../services/get_sessions.dart';
-import '../../services/get_guardians.dart';
 import '../../utils/const/student.dart';
 import '../../../controllers/generate.dart';
 import '../drop_down.dart';
@@ -18,6 +16,8 @@ import '../picker.dart';
 import '../image.dart';
 
 const String url = 'http://192.168.100.20/phpscript/get_student.php';
+const String getSessions = 'http://192.168.100.20/phpscript/sessions.php';
+const String getGuardians = 'http://192.168.100.20/phpscript/guardians.php';
 
 class StudentDialog extends StatefulWidget {
   const StudentDialog({super.key});
@@ -29,8 +29,8 @@ class StudentDialog extends StatefulWidget {
 class _StudentDialogState extends State<StudentDialog> {
   Future<void> loadData() async {
     try {
-      final fetchedSessionNames = await getSessions();
-      final fetchedGuardianAccounts = await getGuardians();
+      final fetchedSessionNames = await getItems(getSessions);
+      final fetchedGuardianAccounts = await getItems(getGuardians);
 
       dev.log('sessionNames: ${fetchedSessionNames.toString()}');
       dev.log('guardianAccounts: ${fetchedGuardianAccounts.toString()}');
@@ -56,8 +56,8 @@ class _StudentDialogState extends State<StudentDialog> {
   Rx<String?> enrollmentDate = Rxn<String>();
   Rx<String?> exitDate = Rxn<String>();
 
-  SessionResult? sessionResult;
-  GuardianResult? guardianResult;
+  MultiSelectResult? sessionResult;
+  MultiSelectResult? guardianResult;
   late ScrollController scrollController;
 
   //picker
@@ -79,6 +79,8 @@ class _StudentDialogState extends State<StudentDialog> {
     scrollController.dispose();
     validator.dispose();
     generate.dispose();
+    Get.delete<Generate>();
+    Get.delete<Validator>(tag: "studentPage");
     super.dispose();
   }
 
@@ -143,14 +145,13 @@ class _StudentDialogState extends State<StudentDialog> {
                         CustomContainer(
                           headerIcon: Icons.book,
                           headerText: "session",
-                          child: MultiSelect<Session>(
-                            //multipleSearchController: multiSearchController1,
-                            getPickedItems: (p0) {
-                              studentInfo.sessions = p0;
+                          child: MultiSelect(
+                            getPickedItems: (pickedItems) {
+                              studentInfo.sessions =
+                                  pickedItems.map((e) => e.id).toList();
                             },
                             hintText: "search for sessions",
-                            itemAsString: (p0) => p0.sessionName,
-                            preparedData: sessionResult?.sessions ?? [],
+                            preparedData: sessionResult?.items ?? [],
                             maxSelectedItems: null,
                           ),
                         ),
@@ -462,13 +463,11 @@ class _StudentDialogState extends State<StudentDialog> {
                           headerText: "info about guardian",
                           child: InputField(
                             inputTitle: "guardian's account",
-                            child: MultiSelect<Guardian>(
-                              //multipleSearchController: multiSearchController2,
-                              getPickedItems: (c) {
-                                studentInfo.username2 = c[0];
+                            child: MultiSelect(
+                              getPickedItems: (pickedItems) {
+                                studentInfo.guardianId = pickedItems[0].id;
                               },
-                              preparedData: guardianResult?.guardians ?? [],
-                              itemAsString: (p0) => p0.username,
+                              preparedData: guardianResult?.items ?? [],
                               hintText: "search for guardian account",
                               maxSelectedItems: 1,
                             ),

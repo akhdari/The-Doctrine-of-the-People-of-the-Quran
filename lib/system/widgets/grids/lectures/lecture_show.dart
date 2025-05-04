@@ -33,8 +33,8 @@ class LectureShow extends StatelessWidget {
                 onPressed: () {
                   Get.put(Validator(10), tag: "lecturePage");
                   Get.put(Generate());
-                  Get.dialog(LectureDialog())
-                      .then((_) => controller.getData(fetchUrl));
+                  Get.dialog(LectureDialog());
+                  //.then((_) => controller.getData(fetchUrl));
                 },
               ),
             ],

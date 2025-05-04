@@ -59,9 +59,17 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
     _acheivement.lectureId = widget.sessionId;
     _acheivement.studentId = widget.studentId;
     _acheivement.date = widget.date;
-
     _latestAcheivement = Get.find<LatestAcheivement>();
     _loadLatestAchievement();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _latestAcheivement.clearController();
+    _latestAcheivement.dispose();
+    Get.delete<LatestAcheivement>();
+    super.dispose();
   }
 
   Future<void> _loadLatestAchievement() async {
@@ -80,14 +88,6 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
       debugPrint('Exception in _loadLatestAchievement: $e');
       Get.snackbar('Error', 'Failed to load achievement data');
     }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _latestAcheivement.clearController();
-    _latestAcheivement.dispose();
-    super.dispose();
   }
 
   Future<void> _handleSubmit() async {

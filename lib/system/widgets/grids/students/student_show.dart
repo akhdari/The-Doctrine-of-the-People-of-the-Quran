@@ -40,8 +40,8 @@ class _StudentScreenState extends State<StudentScreen> {
                 onPressed: () {
                   Get.put(Validator(16), tag: "studentPage");
                   Get.put(Generate());
-                  Get.dialog(StudentDialog())
-                      .then((_) => controller.getData(fetchUrl));
+                  Get.dialog(StudentDialog());
+                  // .then((_) => controller.getData(fetchUrl));
                 },
               ),
             ],

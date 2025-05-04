@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../services/get_teachers.dart';
 import '../../utils/const/lecture.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
@@ -14,7 +13,8 @@ import '../multiselect.dart';
 import 'dart:developer' as dev;
 import '../image.dart';
 
-const String url = 'http://192.168.100.20/phpscript/get_lecture.php';
+const String postLecture = 'http://192.168.100.20/phpscript/get_lecture.php';
+const getTeachers = 'http://192.168.100.20/phpscript/teachers.php';
 
 class LectureDialog extends StatefulWidget {
   const LectureDialog({super.key});
@@ -26,7 +26,7 @@ class LectureDialog extends StatefulWidget {
 class _LectureDialogState extends State<LectureDialog> {
   Future<void> loadData() async {
     try {
-      final fetchedTeachernNames = await getTeachers();
+      final fetchedTeachernNames = await getItems(getTeachers);
 
       dev.log('teacherNames: ${fetchedTeachernNames.toString()}');
 
@@ -44,7 +44,7 @@ class _LectureDialogState extends State<LectureDialog> {
   late Validator validator;
   final Connect connect = Connect();
   final lectureInfo = Lecture();
-  TeacherResult? teacherResult;
+  MultiSelectResult? teacherResult;
 
   @override
   void initState() {
@@ -59,6 +59,8 @@ class _LectureDialogState extends State<LectureDialog> {
   void dispose() {
     scrollController.dispose();
     validator.dispose();
+    Get.delete<Validator>(tag: "lecturePage");
+    Get.delete<TimeCellController>();
     super.dispose();
   }
 
@@ -193,19 +195,20 @@ class _LectureDialogState extends State<LectureDialog> {
                               ),
                               InputField(
                                 inputTitle: "teachers",
-                                child: MultiSelect<Teacher>(
-                                  // multipleSearchController:
-                                  // multiSearchController,
-                                  getPickedItems: (p0) {
+                                child: MultiSelect(
+                                  getPickedItems: (pickedItems) {
                                     dev.log(
-                                        'Updated teacherNames: ${p0.toString()}');
+                                        'Updated teacherNames: ${pickedItems.toString()}');
+                                    //here was the error bcs i was trying to int parse the teacher name and not the id
+                                    /*lectureInfo.teachersId =
+                                                  pickedItems
+                                                      .map((e) => int.parse(e))
+                                                      .toList();*/
 
-                                    lectureInfo.teachersId = p0
-                                        .map((e) => int.parse(e.toString()))
-                                        .toList();
+                                    lectureInfo.teachersId =
+                                        pickedItems.map((e) => e.id).toList();
                                   },
-                                  preparedData: teacherResult?.teachers ?? [],
-                                  itemAsString: (Teacher p0) => p0.name,
+                                  preparedData: teacherResult?.items ?? [],
                                   hintText: "search by teacher name",
                                   maxSelectedItems: null,
                                 ),
@@ -253,7 +256,7 @@ class _LectureDialogState extends State<LectureDialog> {
                       isComplete.value = false;
 
                       await submitForm(lectureFormKey, connect, lectureInfo,
-                          url, isComplete);
+                          postLecture, isComplete);
 
                       isComplete.value = true;
                     },
