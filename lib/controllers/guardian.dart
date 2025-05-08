@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import '/system/services/connect.dart';
 import '/system/models/delete/guardian.dart';
 import '/system/models/get/guardian_class.dart';
@@ -8,9 +9,8 @@ class GuardianController extends GetxController {
   RxList<Guardian> guardianList = <Guardian>[].obs;
   RxString errorMessage = ''.obs;
 
-  Future<void> getData(String fetchUrl) async {
+  Future<void> getData(String fetchUrl, {VoidCallback? onFinished}) async {
     try {
-      isLoading.value = true;
       errorMessage.value = '';
       final connect = Connect();
       final result = await connect.get(fetchUrl);
@@ -28,7 +28,7 @@ class GuardianController extends GetxController {
           'Failed to connect to server. Please check your connection.';
       guardianList.clear();
     } finally {
-      isLoading.value = false;
+      onFinished?.call();
     }
   }
 
@@ -40,6 +40,7 @@ class GuardianController extends GetxController {
 
       if (result.isSuccess) {
         Get.snackbar('Success', 'Guardian deleted successfully');
+        //TODO refresh the data after deletion await getData(deleteUrl);
       } else {
         Get.snackbar('Error', 'Failed to delete guardian ${result.errorCode}');
       }

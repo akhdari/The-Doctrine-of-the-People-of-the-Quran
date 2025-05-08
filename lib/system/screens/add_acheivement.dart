@@ -7,9 +7,6 @@ import '../widgets/grids/acheivement/acheivement_show.dart';
 import '../../controllers/achievement.dart';
 import 'dart:developer' as dev;
 
-const String partialUrl =
-    "http://192.168.100.20/phpscript/acheivement_student_list.php?session_id=";
-
 class AddAcheivement extends StatefulWidget {
   const AddAcheivement({super.key});
 
@@ -28,10 +25,17 @@ class _AddAcheivementState extends State<AddAcheivement> {
   @override
   void initState() {
     super.initState();
-    achievementController = Get.put(AchievementController());
+    achievementController = Get.find<AchievementController>();
     final now = DateTime.now();
     controller.text = formatDate(now);
     achievementController.setDate(formatDate(now));
+  }
+
+  @override
+  void dispose() {
+    removeOverlay();
+    controller.dispose();
+    super.dispose();
   }
 
   String formatDate(DateTime date) {
@@ -126,15 +130,12 @@ class _AddAcheivementState extends State<AddAcheivement> {
   }
 
   @override
-  void dispose() {
-    removeOverlay();
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
+
     return Scaffold(
+      backgroundColor: scaffoldBackgroundColor,
       body: SystemUI(
         title: "Achievement Management",
         child: Column(children: [
@@ -161,7 +162,8 @@ class _AddAcheivementState extends State<AddAcheivement> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Date',
-                    suffixIcon: Icon(Icons.calendar_today),
+                    suffixIcon: Icon(Icons.calendar_today,
+                        color: theme.iconTheme.color),
                   ),
                 ),
               ),

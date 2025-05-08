@@ -7,7 +7,10 @@ class AddStudent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: scaffoldBackgroundColor,
       body: SystemUI(
         title: "Students Management",
         child: StudentScreen(),

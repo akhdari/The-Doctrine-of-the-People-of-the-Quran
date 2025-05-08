@@ -22,17 +22,18 @@ class CustomButton extends StatefulWidget {
 class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return MouseRegion(
-      onEnter: (event) => widget.toggleAnimation(), // No need for setState here
+      onEnter: (event) => widget.toggleAnimation(),
       onExit: (event) => widget.toggleAnimation(),
       child: Transform.translate(
         offset: Offset(0, -widget.y * 5),
         child: Container(
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
-              // improving Flutter’s color system
-              //.withOpasity(0.5), => withValues(alpha: 0.5)
-              color: Colors.grey.withValues(alpha: 0.5),
+              color: colorScheme.shadow.withValues(alpha: 0.5),
               spreadRadius: 5,
               blurRadius: 7,
               offset: Offset(0, 3),
@@ -40,14 +41,15 @@ class _CustomButtonState extends State<CustomButton> {
           ]),
           child: AnimatedButton(
             text: 'تأكيد الطلب',
+            textStyle: textTheme.titleMedium ?? const TextStyle(fontSize: 16),
             textOverflow: TextOverflow.visible,
             isReverse: true,
             onPress: widget.onPressFunction,
             transitionType: TransitionType.CENTER_LR_IN,
             borderRadius: 5,
-            backgroundColor: Color(0xffBD8A36),
-            selectedBackgroundColor: Colors.blueAccent,
-            selectedTextColor: Colors.white,
+            backgroundColor: colorScheme.primary,
+            selectedBackgroundColor: colorScheme.secondary,
+            selectedTextColor: colorScheme.onSecondary,
             animationDuration: Duration(seconds: 1),
             animatedOn: AnimatedOn.onHover,
           ),

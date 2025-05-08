@@ -10,6 +10,7 @@ import '../../../controllers/validator.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../image.dart';
+import '../../../controllers/form_controller.dart' as form;
 
 const String url = 'http://192.168.100.20/phpscript/get_guardian.php';
 
@@ -24,14 +25,14 @@ class _GuardianDialogState extends State<GuardianDialog> {
   final GlobalKey<FormState> guardianFormKey = GlobalKey<FormState>();
   late ScrollController scrollController;
   late Generate generate;
-  late Validator validator;
+  late form.FormController formController;
   final Connect connect = Connect();
   final guardianInfo = Guardian();
   @override
   void initState() {
     generate = Get.find<Generate>();
-    validator = Get.find<Validator>(tag: "guardianPage");
-    validator.controllers[9].text = generate.generatePassword();
+    formController = Get.find<form.FormController>();
+    formController.controllers[9].text = generate.generatePassword();
     scrollController = ScrollController();
     super.initState();
   }
@@ -39,9 +40,9 @@ class _GuardianDialogState extends State<GuardianDialog> {
   @override
   void dispose() {
     scrollController.dispose();
-    validator.dispose();
+    formController.dispose();
     generate.dispose();
-    Get.delete<Validator>(tag: "guardianPage");
+    Get.delete<form.FormController>();
     Get.delete<Generate>();
     super.dispose();
   }
@@ -116,17 +117,19 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "First name ",
                                       child: CustomTextField(
-                                        controller: validator.controllers[0],
-                                        validator: validator.notEmptyValidator(
-                                            "يجب ادخال الاسم"),
-                                        focusNode: validator.focusNodes[0],
+                                        controller:
+                                            formController.controllers[0],
+                                        validator: (value) =>
+                                            Validator.notEmptyValidator(
+                                                value, "يجب ادخال الاسم"),
+                                        focusNode: formController.focusNodes[0],
                                         onSaved: (p0) =>
                                             guardianInfo.firstName = p0!,
-                                        onChanged: (_) =>
-                                            validator.controllers[8].text =
-                                                generate.generateUsername(
-                                                    validator.controllers[0],
-                                                    validator.controllers[1]),
+                                        onChanged: (_) => formController
+                                                .controllers[8].text =
+                                            generate.generateUsername(
+                                                formController.controllers[0],
+                                                formController.controllers[1]),
                                       ),
                                     ),
                                   ),
@@ -135,17 +138,19 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "Last name ",
                                       child: CustomTextField(
-                                        controller: validator.controllers[1],
-                                        validator: validator.notEmptyValidator(
-                                            "يجب ادخال الاسم"),
-                                        focusNode: validator.focusNodes[1],
+                                        controller:
+                                            formController.controllers[1],
+                                        validator: (value) =>
+                                            Validator.notEmptyValidator(
+                                                value, "يجب ادخال الاسم"),
+                                        focusNode: formController.focusNodes[1],
                                         onSaved: (p0) =>
                                             guardianInfo.lastName = p0!,
-                                        onChanged: (_) =>
-                                            validator.controllers[8].text =
-                                                generate.generateUsername(
-                                                    validator.controllers[0],
-                                                    validator.controllers[1]),
+                                        onChanged: (_) => formController
+                                                .controllers[8].text =
+                                            generate.generateUsername(
+                                                formController.controllers[0],
+                                                formController.controllers[1]),
                                       ),
                                     ),
                                   ),
@@ -172,7 +177,8 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "Date of Birth",
                                       child: CustomTextField(
-                                        controller: validator.controllers[3],
+                                        controller:
+                                            formController.controllers[3],
                                         onSaved: (p0) =>
                                             guardianInfo.dateOfBirth = p0,
                                       ),
@@ -190,10 +196,11 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "phone number",
                                       child: CustomTextField(
-                                        controller: validator.controllers[4],
+                                        controller:
+                                            formController.controllers[4],
                                         validator: (value) =>
-                                            validator.isValidPhoneNumber(value),
-                                        focusNode: validator.focusNodes[4],
+                                            Validator.isValidPhoneNumber(value),
+                                        focusNode: formController.focusNodes[4],
                                         onSaved: (p0) =>
                                             guardianInfo.phoneNumber = p0!,
                                       ),
@@ -204,10 +211,11 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "email address",
                                       child: CustomTextField(
-                                        controller: validator.controllers[5],
+                                        controller:
+                                            formController.controllers[5],
                                         validator: (value) =>
-                                            validator.isValidEmail(value),
-                                        focusNode: validator.focusNodes[5],
+                                            Validator.isValidEmail(value),
+                                        focusNode: formController.focusNodes[5],
                                         onSaved: (p0) =>
                                             guardianInfo.email = p0!,
                                       ),
@@ -224,7 +232,8 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "address",
                                       child: CustomTextField(
-                                        controller: validator.controllers[6],
+                                        controller:
+                                            formController.controllers[6],
                                         onSaved: (p0) =>
                                             guardianInfo.address = p0,
                                       ),
@@ -237,7 +246,8 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                     child: InputField(
                                       inputTitle: "job",
                                       child: CustomTextField(
-                                        controller: validator.controllers[7],
+                                        controller:
+                                            formController.controllers[7],
                                         onSaved: (p0) => guardianInfo.job = p0,
                                       ),
                                     ),
@@ -259,7 +269,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                 child: InputField(
                                   inputTitle: "username",
                                   child: CustomTextField(
-                                    controller: validator.controllers[8],
+                                    controller: formController.controllers[8],
                                     onSaved: (p0) =>
                                         guardianInfo.username = p0!,
                                   ),
@@ -270,7 +280,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
                                 child: InputField(
                                   inputTitle: "password",
                                   child: CustomTextField(
-                                    controller: validator.controllers[9],
+                                    controller: formController.controllers[9],
                                     onSaved: (p0) =>
                                         guardianInfo.passcode = p0!,
                                   ),

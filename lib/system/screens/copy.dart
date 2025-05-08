@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../widgets/subscription_information.dart';
-import '../widgets/form.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/image.dart';
+import '../../controllers/subscription_information.dart';
+import '../../system/widgets/form.dart';
 import 'package:flutter/gestures.dart';
-import '../widgets/footer.dart';
-import '../widgets/drawer.dart';
-import '../widgets/nav.dart';
-import '../../controllers/validator.dart';
+import '../../system/widgets/footer.dart';
+import '../../system/widgets/drawer.dart';
+import '../../system/widgets/nav.dart';
+import '../../controllers/form_controller.dart' as form;
 
 class CopyPage extends StatefulWidget {
   const CopyPage({super.key});
@@ -20,10 +21,14 @@ class _CopyPageState extends State<CopyPage> {
 
   @override
   Widget build(BuildContext context) {
-    Validator controller = Get.find<Validator>(tag: "copyPage");
+    ThemeData theme = Theme.of(context);
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
+    form.FormController formController =
+        Get.find<form.FormController>(tag: "copyPage");
     Size screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
+      key: copyPageScaffoldKey,
+      backgroundColor: scaffoldBackgroundColor,
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
@@ -32,7 +37,7 @@ class _CopyPageState extends State<CopyPage> {
               height: 200,
               child: Stack(
                 children: [
-                  Container(color: Color(0xFF0E9D6D)),
+                  Container(color: theme.appBarTheme.backgroundColor),
                   Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -60,8 +65,8 @@ class _CopyPageState extends State<CopyPage> {
                   return Column(
                     children: [
                       SubscriptionInformation(
-                        onEmptyFeild: () => controller
-                            .moveToTheFirstEmptyFeild(copyPageFormKey),
+                        onEmptyFeild: () => formController
+                            .moveToFirstEmptyField(copyPageFormKey),
                         subscriptionFormKey: copyPageFormKey,
                       ),
                       SizedBox(height: 20), // Add spacing for small screens
@@ -73,8 +78,8 @@ class _CopyPageState extends State<CopyPage> {
                     children: [
                       Expanded(
                         child: SubscriptionInformation(
-                          onEmptyFeild: () => controller
-                              .moveToTheFirstEmptyFeild(copyPageFormKey),
+                          onEmptyFeild: () => formController
+                              .moveToFirstEmptyField(copyPageFormKey),
                           subscriptionFormKey: copyPageFormKey,
                         ),
                       ),
@@ -138,7 +143,7 @@ class _InfoLinksWithImagesState extends State<InfoLinksWithImages> {
         //Use Only TextSpan for consistency
         text: TextSpan(
           children: [
-            //WidgetSpan(child: Image.asset('.../assets/1.png,')),
+            WidgetSpan(child: CustomImage(imagePath: 'page.png')),
             TextSpan(
               text: widget.text,
             ),
@@ -154,7 +159,7 @@ class _InfoLinksWithImagesState extends State<InfoLinksWithImages> {
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   setState(() {
-                    //path
+                    //TODO: Add  path
                   });
                 },
             ),

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:developer' as dev;
 import '../../dialogs/lecture.dart';
-import '../../../../controllers/validator.dart';
-import '../../../../controllers/generate.dart';
 import '../../../../controllers/lecture.dart';
-import 'lecture.dart';
+import '../../../../controllers/edit_lecture.dart';
+import '../../../../controllers/form_controller.dart' as form;
 import '../../error_illustration.dart';
+import 'lecture.dart';
+import '/system/widgets/three_bounce.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/get/lecture_class.dart';
 
-class LectureShow extends StatelessWidget {
+class LectureShow extends StatefulWidget {
   final String fetchUrl;
   final String deleteUrl;
   final LectureController controller;
@@ -18,6 +22,57 @@ class LectureShow extends StatelessWidget {
     required this.deleteUrl,
     required this.controller,
   });
+
+  @override
+  State<LectureShow> createState() => _LectureShowState();
+}
+
+class _LectureShowState extends State<LectureShow> {
+  final Rxn<Lecture> lecture = Rxn<Lecture>();
+  final Duration delay = const Duration(seconds: 5);
+  late EditLecture editLectureController;
+  final RxBool hasSelection = false.obs;
+
+  void _loadData() {
+    widget.controller.isLoading.value = true;
+
+    Future.wait([
+      Future.delayed(delay),
+      widget.controller.getData(widget.fetchUrl, onFinished: () {}),
+    ]).then((_) {
+      if (mounted) {
+        widget.controller.isLoading.value = false;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+    // Initialize EditLecture controller if not already registered
+    if (!Get.isRegistered<EditLecture>()) {
+      editLectureController = Get.put(EditLecture(
+        initialLecture: Lecture(
+          id: '',
+          lectureNameAr: '',
+          lectureNameEn: '',
+          circleType: '',
+          teacherIds: [],
+          studentCount: 0,
+        ),
+        isEdit: false,
+      ));
+    } else {
+      editLectureController = Get.find<EditLecture>();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,43 +86,73 @@ class LectureShow extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.add, color: Colors.black),
                 onPressed: () {
-                  Get.put(Validator(10), tag: "lecturePage");
-                  Get.put(Generate());
                   Get.dialog(LectureDialog());
-                  //.then((_) => controller.getData(fetchUrl));
                 },
               ),
+              Obx(() => IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: hasSelection.value ? Colors.black : Colors.grey,
+                    ),
+                    onPressed: hasSelection.value
+                        ? () {
+                            final currentLecture = lecture.value!;
+                            Get.put(form.FormController(10));
+                            editLectureController.updateLecture(currentLecture);
+                            editLectureController.isEdit = true;
+                            Get.dialog(LectureDialog());
+                          }
+                        : null,
+                  )),
             ],
           ),
         ),
         Expanded(
           child: Obx(() {
-            if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
+            if (widget.controller.isLoading.value) {
+              return Center(child: ThreeBounce());
             }
 
-            if (controller.errorMessage.value.isNotEmpty) {
+            if (widget.controller.errorMessage.value.isNotEmpty) {
               return ErrorIllustration(
                 illustrationPath: 'assets/illustration/bad-connection.svg',
                 title: 'Connection Error',
-                message: controller.errorMessage.value,
-                onRetry: () => controller.getData(fetchUrl),
+                message: widget.controller.errorMessage.value,
+                onRetry: _loadData,
               );
             }
 
-            if (controller.lectureList.isEmpty) {
+            if (widget.controller.lectureList.isEmpty) {
               return ErrorIllustration(
                 illustrationPath: 'assets/illustration/empty-box.svg',
                 title: 'No Lectures Found',
                 message:
                     'There are no lectures registered yet. Click the add button to create one.',
+                onRetry: _loadData,
               );
             }
 
             return LectureGrid(
-              data: controller.lectureList,
-              onRefresh: () => controller.getData(fetchUrl),
-              onDelete: (id) => controller.postDelete(id, deleteUrl),
+              data: widget.controller.lectureList,
+              onRefresh: () {
+                _loadData();
+                return widget.controller.getData(widget.fetchUrl);
+              },
+              onDelete: (id) =>
+                  widget.controller.postDelete(id, widget.deleteUrl),
+              onTap: (details) {
+                dev.log('Tapped on row: $details');
+                hasSelection.value = details != null;
+              },
+              getObj: (obj) {
+                if (obj != null) {
+                  dev.log('Selected lecture: ${obj.lectureNameAr}');
+                  lecture.value = obj;
+                } else {
+                  dev.log('Deselected lecture');
+                  lecture.value = null;
+                }
+              },
             );
           }),
         ),

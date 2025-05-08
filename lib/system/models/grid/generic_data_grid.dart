@@ -5,7 +5,7 @@ import 'generic_data_source.dart';
 import 'dart:developer' as dev;
 
 class GenericDataGrid<T> extends StatefulWidget {
-  final List<T> data; // Direct data instead of fetcher
+  final List<T> data;
   final Future<void> Function(int id)? onDelete;
   final DataGridRow Function(T model) rowBuilder;
   final Widget? Function(DataGridCell cell)? cellBuilder;
@@ -20,7 +20,8 @@ class GenericDataGrid<T> extends StatefulWidget {
   final IconData deleteIcon;
   final Color? selectionColor;
   final Future<void> Function() onRefresh;
-  final void Function(DataGridRow selectedRow)? onTap;
+  final void Function(DataGridRow? selectedRow)? getDataGridRow;
+  final void Function(T? obj)? getObj;
 
   const GenericDataGrid({
     super.key,
@@ -39,7 +40,8 @@ class GenericDataGrid<T> extends StatefulWidget {
     this.infoIcon = Icons.info_outline,
     this.deleteIcon = Icons.delete,
     this.selectionColor,
-    this.onTap,
+    this.getDataGridRow,
+    this.getObj,
   });
 
   @override
@@ -113,13 +115,19 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
                     final selectedRow = details.row;
                     if (selectedRow != null) {
                       final rowId = widget.idExtractor(selectedRow);
-                      final originalModel =
-                          _dataSource.getModelFromRow(selectedRow);
+                      final obj = _dataSource.getModelFromRow(selectedRow);
+                      widget.getObj?.call(obj);
+                      widget.getDataGridRow?.call(selectedRow);
                       dev.log('Checkbox changed for row ID: $rowId');
-                      dev.log('Original model: $originalModel');
+                      dev.log('Original model: $obj');
                     } else {
                       dev.log('Checkbox changed for a null row.');
+                      widget.getObj?.call(null);
+                      widget.getDataGridRow?.call(null);
                     }
+                  } else {
+                    widget.getObj?.call(null);
+                    widget.getDataGridRow?.call(null);
                   }
                 }),
           ),

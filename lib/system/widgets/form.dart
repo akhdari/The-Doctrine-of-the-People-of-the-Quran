@@ -3,8 +3,11 @@ import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../controllers/validator.dart';
+import '../../controllers/form_controller.dart' as form;
 import 'custom_checkbox.dart';
 import '/system/utils/const/form.dart';
+import '../models/post/copy.dart';
+import 'dart:developer' as dev;
 
 class CustomFormWidget extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -15,17 +18,17 @@ class CustomFormWidget extends StatefulWidget {
 }
 
 class _CustomFormWidgetState extends State<CustomFormWidget> {
-  late Validator formcontroller;
+  late form.FormController formcontroller;
+  Copy copy = Copy();
 
   @override
   void initState() {
     super.initState();
-    Get.put(Validator(6), permanent: true, tag: "copyPage");
   }
 
   @override
   Widget build(BuildContext context) {
-    formcontroller = Get.find<Validator>(tag: "copyPage");
+    formcontroller = Get.find<form.FormController>(tag: "copyPage");
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -43,23 +46,21 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                   controller: formcontroller.controllers[0],
                   focusNode: formcontroller.focusNodes[0],
                   keyboardType: TextInputType.name,
-                  validator:
-                      formcontroller.notEmptyValidator('يجب ادخال اسم المدرسة'),
+                  validator: (value) => Validator.notEmptyValidator(
+                      value, 'يجب ادخال اسم المدرسة'),
                   textAlign: TextAlign.right,
+                  onSaved: (newValue) => copy.schoolName = newValue,
                 ),
 
                 //2
                 const LabeledText(text: 'البلد'),
-                Obx(
-                  () => DropdownFlutter<String>.search(
-                    items: countries,
-                    initialItem: formcontroller.selectedCountry.value,
-                    onChanged: (country) {
-                      if (country != null) {
-                        formcontroller.selectedCountry.value = country;
-                      }
-                    },
-                  ),
+                DropdownFlutter<String>.search(
+                  items: countries,
+                  initialItem: countries[1],
+                  onChanged: (value) {
+                    copy.country = value;
+                    dev.log(copy.country.toString());
+                  },
                 ),
 
                 //3
@@ -68,9 +69,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                   controller: formcontroller.controllers[1],
                   focusNode: formcontroller.focusNodes[1],
                   keyboardType: TextInputType.name,
-                  validator: formcontroller
-                      .notEmptyValidator('يجب ادخال عنوان المدرسة'),
+                  validator: (value) => Validator.notEmptyValidator(
+                      value, 'يجب ادخال عنوان المدرسة'),
                   textAlign: TextAlign.right,
+                  onSaved: (newValue) => copy.schoolAddress = newValue,
                 ),
 
                 //4, 5
@@ -84,9 +86,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                             controller: formcontroller.controllers[3],
                             focusNode: formcontroller.focusNodes[3],
                             keyboardType: TextInputType.name,
-                            validator: formcontroller
-                                .notEmptyValidator('يجب ادخال الكنية'),
+                            validator: (value) => Validator.notEmptyValidator(
+                                value, 'يجب ادخال الكنية'),
                             textAlign: TextAlign.right,
+                            onSaved: (newValue) => copy.name = newValue,
                           ),
                         ],
                       ),
@@ -100,9 +103,11 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                             controller: formcontroller.controllers[2],
                             focusNode: formcontroller.focusNodes[2],
                             keyboardType: TextInputType.name,
-                            validator: formcontroller
-                                .notEmptyValidator('يجب ادخال اسم المشرف'),
+                            validator: (value) => Validator.notEmptyValidator(
+                                value, 'يجب ادخال اسم المشرف'),
                             textAlign: TextAlign.right,
+                            onSaved: (newValue) =>
+                                copy.supervisorName = newValue,
                           ),
                         ],
                       ),
@@ -124,9 +129,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly
                             ],
-                            validator: (v) => formcontroller.isValidPhoneNumber(
+                            validator: (v) => Validator.isValidPhoneNumber(
                                 formcontroller.controllers[5].text),
                             textAlign: TextAlign.right,
+                            onSaved: (newValue) => copy.phoneNumber = newValue,
                           ),
                         ],
                       ),
@@ -140,9 +146,10 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                             controller: formcontroller.controllers[4],
                             focusNode: formcontroller.focusNodes[4],
                             keyboardType: TextInputType.emailAddress,
-                            validator: (v) => formcontroller.isValidEmail(
+                            validator: (v) => Validator.isValidEmail(
                                 formcontroller.controllers[4].text),
                             textAlign: TextAlign.right,
+                            onSaved: (newValue) => copy.email = newValue,
                           ),
                         ],
                       ),
@@ -151,7 +158,6 @@ class _CustomFormWidgetState extends State<CustomFormWidget> {
                 ),
 
                 // Checkboxes
-
                 CheckboxFormField(
                   text: 'الشروط والاحكام',
                   errorText: 'يجب الموافقة على الشروط',

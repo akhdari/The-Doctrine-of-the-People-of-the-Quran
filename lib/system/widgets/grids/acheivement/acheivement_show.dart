@@ -4,9 +4,7 @@ import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/achievement.dart';
 import '../../error_illustration.dart';
 import 'dart:developer' as dev;
-
-const String partialUrl =
-    "http://192.168.100.20/phpscript/acheivement_student_list.php?session_id=";
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/three_bounce.dart';
 
 class AcheivementScreen extends StatefulWidget {
   final RxnInt id;
@@ -20,6 +18,21 @@ class AcheivementScreen extends StatefulWidget {
 
 class _AcheivementScreenState extends State<AcheivementScreen> {
   late AchievementController controller;
+  Duration duration = const Duration(seconds: 5);
+  bool minimumLoadTimeCompleted = false;
+
+  void _loadData() {
+    controller.isLoading.value = true;
+
+    Future.wait([
+      Future.delayed(duration),
+    ]).then((_) {
+      if (mounted) {
+        controller.isLoading.value = false;
+        controller.setLectureId(widget.id.value);
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -29,6 +42,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
     ever(widget.id, (_) {
       dev.log("id in ever: ${widget.id.value}");
       controller.setLectureId(widget.id.value);
+      _loadData();
     });
   }
 
@@ -46,7 +60,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
 
       // Show loading indicator while fetching data
       if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
+        return Center(child: ThreeBounce());
       }
 
       // Show error illustration if there's a connection error
@@ -55,7 +69,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
           illustrationPath: 'assets/illustration/bad-connection.svg',
           title: 'Connection Error',
           message: controller.errorMessage.value,
-          onRetry: () => controller.fetchData(),
+          onRetry: _loadData,
         );
       }
 
@@ -74,7 +88,10 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
         data: controller.achievementList.toList(),
         date: widget.date,
         sessionId: widget.id.value!,
-        onRefresh: () => controller.fetchData(),
+        onRefresh: () {
+          _loadData();
+          return controller.fetchData();
+        },
       );
     });
   }

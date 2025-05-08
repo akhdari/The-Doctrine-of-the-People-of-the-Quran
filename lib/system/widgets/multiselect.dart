@@ -29,13 +29,14 @@ Future<MultiSelectResult> getItems(String url) async {
   ApiResult<List<Map<String, dynamic>>> data;
 
   List<Map<String, dynamic>> items;
-  List<MultiSelectItem> teacherList;
+  List<MultiSelectItem> multiSelectItems;
   data = await connect.get(url);
   if (data.isSuccess) {
     items = data.data!;
 
-    teacherList = items.map((item) => MultiSelectItem.fromJson(item)).toList();
-    return MultiSelectResult.onSuccess(items: teacherList);
+    multiSelectItems =
+        items.map((item) => MultiSelectItem.fromJson(item)).toList();
+    return MultiSelectResult.onSuccess(items: multiSelectItems);
   } else {
     return MultiSelectResult.onError(errorMessage: data.errorMessage);
   }
@@ -46,6 +47,7 @@ class MultiSelect extends StatefulWidget {
   final Function(List<MultiSelectItem>) getPickedItems;
   final String hintText;
   final int? maxSelectedItems;
+  final List<MultiSelectItem>? initialPickedItems;
 
   const MultiSelect({
     super.key,
@@ -53,6 +55,7 @@ class MultiSelect extends StatefulWidget {
     required this.preparedData,
     required this.hintText,
     required this.maxSelectedItems,
+    this.initialPickedItems,
   });
 
   @override
@@ -68,14 +71,21 @@ class _MultiSelectState extends State<MultiSelect> {
     super.initState();
     _multipleSearchController = MultipleSearchController(
       allowDuplicateSelection: false,
-      isSelectable: true,
+      isSelectable: false,
       minCharsToShowItems: 1,
     );
     dev.log('MultiSelect initialized with ${widget.preparedData.length} items');
+    dev.log("Initial picked: ${widget.initialPickedItems?.map((e) => e.id)}");
+    dev.log("Prepared: ${widget.preparedData.map((e) => e.id)}");
   }
 
-  List<MultiSelectItem> get pickedItems {
-    return _multipleSearchController.getPickedItems().cast<MultiSelectItem>();
+  void _updatePickedItems() {
+    setState(() {
+      _pickedItems =
+          _multipleSearchController.getPickedItems().cast<MultiSelectItem>();
+    });
+    // Call the callback to notify parent widget
+    widget.getPickedItems(_pickedItems);
   }
 
   @override
@@ -88,6 +98,14 @@ class _MultiSelectState extends State<MultiSelect> {
           controller: _multipleSearchController,
           maxSelectedItems: widget.maxSelectedItems,
           clearSearchFieldOnSelect: true,
+          //use a set?
+          initialPickedItems: widget.initialPickedItems != null
+              ? widget.preparedData
+                  .where((item) => widget.initialPickedItems!
+                      .map((e) => e.id)
+                      .contains(item.id))
+                  .toList()
+              : [],
           searchField: TextField(
             decoration: InputDecoration(
               hintText: widget.hintText,
@@ -101,27 +119,26 @@ class _MultiSelectState extends State<MultiSelect> {
           sortPickedItems: true,
           sortShowedItems: true,
           onTapClearAll: () {
+            _multipleSearchController.clearAllPickedItemsCallback;
             _multipleSearchController.clearSearchField();
-            dev.log(
-                'Show all items | Picked: ${_pickedItems.map((e) => e.name)}');
+            _updatePickedItems();
+            dev.log('Cleared all items');
           },
           onTapSelectAll: () {
-            _multipleSearchController.selectAllItemsCallback;
+            _multipleSearchController.selectAllItems();
+            _updatePickedItems();
             dev.log(
-                'Show all items | Picked: ${_pickedItems.map((e) => e.name)}');
+                'Selected all items | Picked: ${_pickedItems.map((e) => e.name).join(", ")}');
           },
-
           onItemAdded: (item) {
-            _multipleSearchController.getPickedItemsCallback;
-
+            _updatePickedItems();
             dev.log(
-                'Added: ${item.name} | Picked: ${_pickedItems.map((e) => e.name)}');
+                'Added: ${item.name} | Picked: ${_pickedItems.map((e) => e.name).join(", ")}');
           },
           onItemRemoved: (item) {
-            _multipleSearchController.getPickedItemsCallback;
-
+            _updatePickedItems();
             dev.log(
-                'Removed: ${item.name} | Picked: ${_pickedItems.map((e) => e.name)}');
+                'Removed: ${item.name} | Picked: ${_pickedItems.map((e) => e.name).join(", ")}');
           },
           itemBuilder: (item, index, isPicked) => Padding(
             padding: const EdgeInsets.all(6.0),

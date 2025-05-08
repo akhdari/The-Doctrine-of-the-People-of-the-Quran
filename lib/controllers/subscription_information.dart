@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'dotted_border_button.dart';
-import 'custom_button.dart';
-import './snackbar.dart';
+import '../system/widgets/dotted_border_button.dart';
+import '../system/widgets/custom_button.dart';
+import '../system/widgets/snackbar.dart';
 
 class SubscriptionInformationController extends GetxController {
   RxInt totalPrice = 0.obs;

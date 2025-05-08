@@ -14,6 +14,7 @@ import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
 import '../picker.dart';
 import '../image.dart';
+import '../../../controllers/form_controller.dart' as form;
 
 const String url = 'http://192.168.100.20/phpscript/get_student.php';
 const String getSessions = 'http://192.168.100.20/phpscript/sessions.php';
@@ -47,7 +48,7 @@ class _StudentDialogState extends State<StudentDialog> {
   final GlobalKey<FormState> studentFormKey = GlobalKey<FormState>();
 
   late Generate generate;
-  late Validator validator;
+  late form.FormController formController;
   final Connect connect = Connect();
   final StudentInfoDialog studentInfo = StudentInfoDialog();
 
@@ -66,8 +67,8 @@ class _StudentDialogState extends State<StudentDialog> {
   void initState() {
     super.initState();
     generate = Get.find<Generate>();
-    validator = Get.find<Validator>(tag: "studentPage");
-    validator.controllers[9].text = generate.generatePassword();
+    formController = Get.find<form.FormController>();
+    formController.controllers[9].text = generate.generatePassword();
     scrollController = ScrollController();
     loadData();
   }
@@ -77,10 +78,10 @@ class _StudentDialogState extends State<StudentDialog> {
   @override
   void dispose() {
     scrollController.dispose();
-    validator.dispose();
+    formController.dispose();
     generate.dispose();
     Get.delete<Generate>();
-    Get.delete<Validator>(tag: "studentPage");
+    Get.delete<form.FormController>(tag: "studentPage");
     super.dispose();
   }
 
@@ -171,10 +172,12 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "First name in Arabic",
                                       child: CustomTextField(
-                                        controller: validator.controllers[1],
-                                        validator: validator.notEmptyValidator(
-                                            "يجب ادخال الاسم"),
-                                        focusNode: validator.focusNodes[1],
+                                        controller:
+                                            formController.controllers[1],
+                                        validator: (value) =>
+                                            Validator.notEmptyValidator(
+                                                value, "يجب ادخال الاسم"),
+                                        focusNode: formController.focusNodes[1],
                                         onSaved: (p0) =>
                                             studentInfo.firstNameAR = p0!,
                                       ),
@@ -185,10 +188,12 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "Last name in Arabic",
                                       child: CustomTextField(
-                                        controller: validator.controllers[2],
-                                        validator: validator.notEmptyValidator(
-                                            "يجب ادخال الاسم"),
-                                        focusNode: validator.focusNodes[2],
+                                        controller:
+                                            formController.controllers[2],
+                                        validator: (value) =>
+                                            Validator.notEmptyValidator(
+                                                value, "يجب ادخال الاسم"),
+                                        focusNode: formController.focusNodes[2],
                                         onSaved: (p0) =>
                                             studentInfo.lastNameAR = p0!,
                                       ),
@@ -205,13 +210,14 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "First name in Latin",
                                       child: CustomTextField(
-                                        controller: validator.controllers[3],
+                                        controller:
+                                            formController.controllers[3],
                                         textDirection: TextDirection.ltr,
-                                        onChanged: (_) =>
-                                            validator.controllers[8].text =
-                                                generate.generateUsername(
-                                                    validator.controllers[3],
-                                                    validator.controllers[4]),
+                                        onChanged: (_) => formController
+                                                .controllers[8].text =
+                                            generate.generateUsername(
+                                                formController.controllers[3],
+                                                formController.controllers[4]),
                                         onSaved: (p0) =>
                                             studentInfo.firstNameEN = p0,
                                       ),
@@ -222,13 +228,14 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "Last name in Latin",
                                       child: CustomTextField(
-                                        controller: validator.controllers[4],
+                                        controller:
+                                            formController.controllers[4],
                                         textDirection: TextDirection.ltr,
-                                        onChanged: (_) =>
-                                            validator.controllers[8].text =
-                                                generate.generateUsername(
-                                                    validator.controllers[3],
-                                                    validator.controllers[4]),
+                                        onChanged: (_) => formController
+                                                .controllers[8].text =
+                                            generate.generateUsername(
+                                                formController.controllers[3],
+                                                formController.controllers[4]),
                                         onSaved: (p0) =>
                                             studentInfo.lastNameEN = p0,
                                       ),
@@ -256,7 +263,8 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "Date of Birth",
                                       child: CustomTextField(
-                                        controller: validator.controllers[5],
+                                        controller:
+                                            formController.controllers[5],
                                         onSaved: (p0) =>
                                             studentInfo.dateOfBirth = p0,
                                       ),
@@ -290,7 +298,8 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "Address",
                                       child: CustomTextField(
-                                        controller: validator.controllers[7],
+                                        controller:
+                                            formController.controllers[7],
                                         onSaved: (p0) =>
                                             studentInfo.address = p0,
                                       ),
@@ -313,7 +322,7 @@ class _StudentDialogState extends State<StudentDialog> {
                                 child: InputField(
                                   inputTitle: "username",
                                   child: CustomTextField(
-                                    controller: validator.controllers[8],
+                                    controller: formController.controllers[8],
                                     onSaved: (p0) => studentInfo.username = p0!,
                                   ),
                                 ),
@@ -323,7 +332,7 @@ class _StudentDialogState extends State<StudentDialog> {
                                 child: InputField(
                                   inputTitle: "password",
                                   child: CustomTextField(
-                                    controller: validator.controllers[9],
+                                    controller: formController.controllers[9],
                                     onSaved: (p0) => studentInfo.password = p0!,
                                   ),
                                 ),
@@ -366,7 +375,7 @@ class _StudentDialogState extends State<StudentDialog> {
                                 child: InputField(
                                   inputTitle: "disease causes",
                                   child: CustomTextField(
-                                    controller: validator.controllers[10],
+                                    controller: formController.controllers[10],
                                     onSaved: (p0) =>
                                         studentInfo.diseaseCauses = p0,
                                   ),
@@ -377,7 +386,7 @@ class _StudentDialogState extends State<StudentDialog> {
                                 child: InputField(
                                   inputTitle: "allergies",
                                   child: CustomTextField(
-                                    controller: validator.controllers[10],
+                                    controller: formController.controllers[10],
                                     onSaved: (p0) => studentInfo.allergies = p0,
                                   ),
                                 ),
@@ -397,10 +406,10 @@ class _StudentDialogState extends State<StudentDialog> {
                                 child: InputField(
                                   inputTitle: "phone number",
                                   child: CustomTextField(
-                                    controller: validator.controllers[11],
+                                    controller: formController.controllers[11],
                                     validator: (value) =>
-                                        validator.isValidPhoneNumber(value),
-                                    focusNode: validator.focusNodes[11],
+                                        Validator.isValidPhoneNumber(value),
+                                    focusNode: formController.focusNodes[11],
                                     onSaved: (p0) =>
                                         studentInfo.phoneNumber = p0!,
                                   ),
@@ -411,10 +420,10 @@ class _StudentDialogState extends State<StudentDialog> {
                                 child: InputField(
                                   inputTitle: "email address",
                                   child: CustomTextField(
-                                    controller: validator.controllers[12],
+                                    controller: formController.controllers[12],
                                     validator: (value) =>
-                                        validator.isValidEmail(value),
-                                    focusNode: validator.focusNodes[12],
+                                        Validator.isValidEmail(value),
+                                    focusNode: formController.focusNodes[12],
                                     onSaved: (p0) =>
                                         studentInfo.emailAddress = p0!,
                                   ),
@@ -465,7 +474,8 @@ class _StudentDialogState extends State<StudentDialog> {
                             inputTitle: "guardian's account",
                             child: MultiSelect(
                               getPickedItems: (pickedItems) {
-                                studentInfo.guardianId = pickedItems[0].id;
+                                studentInfo.guardianId = pickedItems[0]
+                                    .id; // Assuming only one guardian is selected
                               },
                               preparedData: guardianResult?.items ?? [],
                               hintText: "search for guardian account",
@@ -571,7 +581,8 @@ class _StudentDialogState extends State<StudentDialog> {
                                   child: InputField(
                                     inputTitle: "exit reason",
                                     child: CustomTextField(
-                                      controller: validator.controllers[14],
+                                      controller:
+                                          formController.controllers[14],
                                       onSaved: (p0) =>
                                           studentInfo.exitReason = p0,
                                       maxLines: 3,
@@ -608,7 +619,8 @@ class _StudentDialogState extends State<StudentDialog> {
                                     child: InputField(
                                       inputTitle: "school name",
                                       child: CustomTextField(
-                                        controller: validator.controllers[15],
+                                        controller:
+                                            formController.controllers[15],
                                         onSaved: (p0) =>
                                             studentInfo.schoolName = p0,
                                       ),

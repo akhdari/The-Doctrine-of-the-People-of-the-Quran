@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import '/system/services/network/api_endpoints.dart';
 import '/system/services/connect.dart';
 import '/system/models/delete/lecture.dart';
 import '/system/models/get/lecture_class.dart';
@@ -8,15 +10,8 @@ class LectureController extends GetxController {
   RxList<Lecture> lectureList = <Lecture>[].obs;
   RxString errorMessage = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    getData('http://192.168.100.20/phpscript/lecture.php');
-  }
-
-  Future<void> getData(String fetchUrl) async {
+  Future<void> getData(String fetchUrl, {VoidCallback? onFinished}) async {
     try {
-      isLoading.value = true;
       errorMessage.value = '';
       final connect = Connect();
       final result = await connect.get(fetchUrl);
@@ -34,7 +29,7 @@ class LectureController extends GetxController {
           'Failed to connect to server. Please check your connection.';
       lectureList.clear();
     } finally {
-      isLoading.value = false;
+      onFinished?.call();
     }
   }
 
@@ -46,8 +41,7 @@ class LectureController extends GetxController {
 
       if (result.isSuccess) {
         Get.snackbar('Success', 'Lecture deleted successfully');
-        getData(
-            'http://192.168.100.20/phpscript/lecture.php'); // Refresh the list after deletion
+        await getData(ApiEndpoints.getLecture); // optional: auto-refresh
       } else {
         Get.snackbar('Error', 'Failed to delete lecture ${result.errorCode}');
       }

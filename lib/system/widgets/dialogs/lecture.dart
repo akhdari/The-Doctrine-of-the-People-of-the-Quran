@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import '../../utils/const/lecture.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
 import '../../models/post/lecture.dart';
 import '../../services/connect.dart';
 import '../../../controllers/validator.dart';
+import '../../../controllers/edit_lecture.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../custom_matrix.dart';
 import '../multiselect.dart';
 import 'dart:developer' as dev;
 import '../image.dart';
-
-const String postLecture = 'http://192.168.100.20/phpscript/get_lecture.php';
-const getTeachers = 'http://192.168.100.20/phpscript/teachers.php';
+import '../../../../controllers/generate.dart';
+import '../../../controllers/form_controller.dart' as form;
 
 class LectureDialog extends StatefulWidget {
-  const LectureDialog({super.key});
+  const LectureDialog({
+    super.key,
+  });
 
   @override
   State<LectureDialog> createState() => _LectureDialogState();
@@ -26,7 +29,7 @@ class LectureDialog extends StatefulWidget {
 class _LectureDialogState extends State<LectureDialog> {
   Future<void> loadData() async {
     try {
-      final fetchedTeachernNames = await getItems(getTeachers);
+      final fetchedTeachernNames = await getItems(ApiEndpoints.getTeachers);
 
       dev.log('teacherNames: ${fetchedTeachernNames.toString()}');
 
@@ -41,26 +44,41 @@ class _LectureDialogState extends State<LectureDialog> {
 
   final GlobalKey<FormState> lectureFormKey = GlobalKey<FormState>();
   late ScrollController scrollController;
-  late Validator validator;
+  late form.FormController formController;
   final Connect connect = Connect();
   final lectureInfo = Lecture();
   MultiSelectResult? teacherResult;
+  EditLecture? editLecture;
 
   @override
   void initState() {
-    validator = Get.find<Validator>(tag: "lecturePage");
+    super.initState();
+    if (!Get.isRegistered<form.FormController>()) {
+      Get.put(form.FormController(10));
+    }
+    Get.put(Generate());
+    if (Get.isRegistered<EditLecture>()) {
+      editLecture = Get.find<EditLecture>();
+    } else {
+      editLecture = null;
+    }
+    formController = Get.find<form.FormController>();
     scrollController = ScrollController();
     loadData();
-    Get.put(TimeCellController());
-    super.initState();
+    if (!Get.isRegistered<TimeCellController>()) {
+      Get.put(TimeCellController());
+    }
   }
 
   @override
   void dispose() {
     scrollController.dispose();
-    validator.dispose();
-    Get.delete<Validator>(tag: "lecturePage");
-    Get.delete<TimeCellController>();
+    if (Get.isRegistered<form.FormController>()) {
+      Get.delete<form.FormController>();
+    }
+    if (Get.isRegistered<TimeCellController>()) {
+      Get.delete<TimeCellController>();
+    }
     super.dispose();
   }
 
@@ -135,10 +153,13 @@ class _LectureDialogState extends State<LectureDialog> {
                                     child: InputField(
                                       inputTitle: "lecture name in arabic",
                                       child: CustomTextField(
-                                        controller: validator.controllers[0],
-                                        validator: validator.notEmptyValidator(
-                                            "يجب ادخال الاسم"),
-                                        focusNode: validator.focusNodes[0],
+                                        controller: editLecture != null
+                                            ? editLecture!.lectureNameAr
+                                            : formController.controllers[0],
+                                        validator: (value) =>
+                                            Validator.notEmptyValidator(
+                                                value, "يجب ادخال الاسم"),
+                                        focusNode: formController.focusNodes[0],
                                         onSaved: (p0) =>
                                             lectureInfo.lectureNameAr = p0!,
                                       ),
@@ -149,10 +170,13 @@ class _LectureDialogState extends State<LectureDialog> {
                                     child: InputField(
                                       inputTitle: "lecture name in english",
                                       child: CustomTextField(
-                                        controller: validator.controllers[1],
-                                        validator: validator.notEmptyValidator(
-                                            "يجب ادخال الاسم"),
-                                        focusNode: validator.focusNodes[1],
+                                        controller: editLecture != null
+                                            ? editLecture!.lectureNameEn
+                                            : formController.controllers[1],
+                                        validator: (value) =>
+                                            Validator.notEmptyValidator(
+                                                value, "يجب ادخال الاسم"),
+                                        focusNode: formController.focusNodes[1],
                                         onSaved: (p0) =>
                                             lectureInfo.lectureNameEn = p0!,
                                       ),
@@ -168,9 +192,14 @@ class _LectureDialogState extends State<LectureDialog> {
                                   Expanded(
                                     child: InputField(
                                       inputTitle: "lecture type",
-                                      child: DropDownWidget(
+                                      child: DropDownWidget<String>(
                                         items: type,
                                         initialValue: type[0],
+                                        /*
+                                        editLecture != null
+                                            ? editLecture!.lectureType
+                                            : type[0],
+                                        */
                                         onSaved: (p0) =>
                                             lectureInfo.circleType = p0!,
                                       ),
@@ -199,18 +228,20 @@ class _LectureDialogState extends State<LectureDialog> {
                                   getPickedItems: (pickedItems) {
                                     dev.log(
                                         'Updated teacherNames: ${pickedItems.toString()}');
-                                    //here was the error bcs i was trying to int parse the teacher name and not the id
-                                    /*lectureInfo.teachersId =
-                                                  pickedItems
-                                                      .map((e) => int.parse(e))
-                                                      .toList();*/
-
                                     lectureInfo.teachersId =
                                         pickedItems.map((e) => e.id).toList();
                                   },
                                   preparedData: teacherResult?.items ?? [],
                                   hintText: "search by teacher name",
                                   maxSelectedItems: null,
+                                  initialPickedItems: editLecture != null &&
+                                          teacherResult?.items != null
+                                      ? teacherResult!.items!
+                                          .where((element) => editLecture!
+                                              .teacherIds
+                                              .contains(element.id.toString()))
+                                          .toList()
+                                      : null,
                                 ),
                               ),
                               const SizedBox(
@@ -254,9 +285,13 @@ class _LectureDialogState extends State<LectureDialog> {
                       lectureInfo.schedule =
                           timeCellController.getSelectedDays();
                       isComplete.value = false;
-
-                      await submitForm(lectureFormKey, connect, lectureInfo,
-                          postLecture, isComplete);
+                      if (editLecture!.isEdit) {
+                        await submitForm(lectureFormKey, connect, lectureInfo,
+                            ApiEndpoints.updateLecture, isComplete);
+                      } else {
+                        await submitForm(lectureFormKey, connect, lectureInfo,
+                            ApiEndpoints.postLecture, isComplete);
+                      }
 
                       isComplete.value = true;
                     },

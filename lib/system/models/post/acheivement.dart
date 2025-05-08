@@ -1,5 +1,4 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
-
+import '/system/models/post/surah_ayah.dart';
 import 'abstract_class.dart';
 
 class Acheivement extends AbstractClass {

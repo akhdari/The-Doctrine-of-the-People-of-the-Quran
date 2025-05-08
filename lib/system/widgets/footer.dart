@@ -8,17 +8,16 @@ class FooterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
-      color: Colors.white,
+      color: colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Description seulement (sans logo)
-
           const SizedBox(height: 20),
-
-          // Liens rapides avec l'ordre inversé
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -43,65 +42,62 @@ class FooterSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 60),
-
-          // Boutons de téléchargement avec redirection
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: () => launchURL(
-                    'https://apps.apple.com/us/app/example-app/id123456789'), // Remplace par le bon lien
+                    'https://apps.apple.com/us/app/example-app/id123456789'),
                 child:
                     CustomImage(imagePath: 'assets/footer/APP.png', height: 72),
               ),
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () => launchURL(
-                    'https://play.google.com/store/apps/details?id=com.example.app'), // Remplace par le bon lien
+                    'https://play.google.com/store/apps/details?id=com.example.app'),
                 child: CustomImage(
                     imagePath: 'assets/footer/google-play.png', height: 50),
               ),
             ],
           ),
           const SizedBox(height: 50),
-
-          // Icônes des réseaux sociaux
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 30),
-              SizedBox(width: 10),
-              FaIcon(FontAwesomeIcons.facebook, color: Colors.blue, size: 30),
-              SizedBox(width: 10),
+            children: [
+              FaIcon(FontAwesomeIcons.whatsapp,
+                  color: colorScheme.primary, size: 30),
+              const SizedBox(width: 10),
+              FaIcon(FontAwesomeIcons.facebook,
+                  color: colorScheme.secondary, size: 30),
+              const SizedBox(width: 10),
               FaIcon(FontAwesomeIcons.twitter,
-                  color: Colors.lightBlue, size: 30),
+                  color: colorScheme.tertiary, size: 30),
             ],
           ),
           const SizedBox(height: 30),
-
-          // Copyright
-          const Text(
+          Text(
             "جميع الحقوق محفوظة © نظام أهل القرآن",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+            style: textTheme.bodySmall
+                ?.copyWith(color: colorScheme.onSurfaceVariant),
           ),
         ],
       ),
     );
   }
 
-  // Générer une colonne de liens
   Widget _buildLinkColumn(
       BuildContext context, String title, List<Map<String, String>> links) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style:
+                textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 20),
-        ...links
-            .map((link) => AnimatedNavigationText(
-                text: link["title"]!, routeName: link["route"]!))
-            .toList(),
+        ...links.map((link) => AnimatedNavigationText(
+            text: link["title"]!, routeName: link["route"]!))
       ],
     );
   }
@@ -162,6 +158,9 @@ class _AnimatedNavigationTextState extends State<AnimatedNavigationText>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => toggleAnimation(true),
@@ -174,12 +173,11 @@ class _AnimatedNavigationTextState extends State<AnimatedNavigationText>
           offset: Offset(_animation.value, 0),
           child: Text(
             widget.text,
-            style: TextStyle(
-              fontSize: 18,
+            style: textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: isHovered
-                  ? const Color(0xFF0E9D6D)
-                  : Colors.grey.withValues(alpha: 0.7),
+                  ? colorScheme.primary
+                  : colorScheme.onSurfaceVariant,
             ),
           ),
         ),

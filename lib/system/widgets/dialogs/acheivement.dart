@@ -79,6 +79,7 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
       if (_latestInfo.errorMessage == null) {
         _latestAcheivement
             .assignControllerValue(_latestAcheivement.selectedType.value);
+        Get.snackbar('Success', 'Achievement data loaded successfully');
       } else {
         debugPrint('Error fetching data: ${_latestInfo.errorMessage}');
         Get.snackbar(

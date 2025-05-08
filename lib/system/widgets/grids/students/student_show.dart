@@ -1,14 +1,14 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import '../../dialogs/student.dart';
-import '../../../../controllers/validator.dart';
 import '../../../../controllers/generate.dart';
 import '../../../../controllers/student.dart';
 import 'student.dart';
 import '../../error_illustration.dart';
-
-const String fetchUrl = 'http://192.168.100.20/phpscript/student.php';
-const String deleteUrl = 'http://192.168.100.20/phpscript/delete_student.php';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/three_bounce.dart';
+import '/controllers/form_controller.dart' as form;
 
 class StudentScreen extends StatefulWidget {
   const StudentScreen({super.key});
@@ -18,12 +18,37 @@ class StudentScreen extends StatefulWidget {
 }
 
 class _StudentScreenState extends State<StudentScreen> {
+  Duration duration = const Duration(seconds: 5);
+  bool minimumLoadTimeCompleted = false;
   late StudentController controller;
+
   @override
   void initState() {
     super.initState();
     controller = Get.find<StudentController>();
-    controller.getData(fetchUrl);
+    _loadData();
+  }
+
+  void _loadData() {
+    controller.isLoading.value = true;
+
+    Future.wait([
+      Future.delayed(duration),
+      controller.getData(ApiEndpoints.getStudent),
+    ]).then((_) {
+      if (mounted) {
+        //why check if mounted? bcs the method is being called in the init state method + the future method
+        // and bcs it is async by the time the 2 future methods are completed the widget might be disposed
+        controller.isLoading.value = false;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    Get.delete<StudentController>();
+    super.dispose();
   }
 
   @override
@@ -38,10 +63,9 @@ class _StudentScreenState extends State<StudentScreen> {
               IconButton(
                 icon: const Icon(Icons.add, color: Colors.black),
                 onPressed: () {
-                  Get.put(Validator(16), tag: "studentPage");
+                  Get.put(form.FormController(16));
                   Get.put(Generate());
                   Get.dialog(StudentDialog());
-                  // .then((_) => controller.getData(fetchUrl));
                 },
               ),
             ],
@@ -50,7 +74,7 @@ class _StudentScreenState extends State<StudentScreen> {
         Expanded(
           child: Obx(() {
             if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: ThreeBounce());
             }
 
             if (controller.errorMessage.value.isNotEmpty) {
@@ -58,7 +82,7 @@ class _StudentScreenState extends State<StudentScreen> {
                 illustrationPath: 'assets/illustration/bad-connection.svg',
                 title: 'Connection Error',
                 message: controller.errorMessage.value,
-                onRetry: () => controller.getData(fetchUrl),
+                onRetry: _loadData,
               );
             }
 
@@ -73,8 +97,12 @@ class _StudentScreenState extends State<StudentScreen> {
 
             return StudentGrid(
               data: controller.studentList,
-              onRefresh: () => controller.getData(fetchUrl),
-              onDelete: (id) => controller.postDelete(id, deleteUrl),
+              onRefresh: () {
+                _loadData();
+                return controller.getData(ApiEndpoints.getStudent);
+              },
+              onDelete: (id) =>
+                  controller.postDelete(id, ApiEndpoints.deleteStudent),
             );
           }),
         ),

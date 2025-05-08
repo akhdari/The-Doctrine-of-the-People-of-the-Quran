@@ -34,6 +34,4 @@ class Student {
       username: map['username'] ?? '',
     );
   }
-
-  // Add setters?
 }

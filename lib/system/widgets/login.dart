@@ -6,18 +6,22 @@ class LogIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final iconTheme = Theme.of(context).iconTheme;
+
     return Center(
       child: Container(
         padding: const EdgeInsets.all(20),
         width: 350,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(15),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Colors.black26,
+              color: colorScheme.shadow.withValues(alpha: 0.2),
               blurRadius: 10,
-              offset: Offset(0, 5),
+              offset: const Offset(0, 5),
             ),
           ],
         ),
@@ -25,37 +29,51 @@ class LogIn extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const Center(
+            Center(
               child: Text(
                 "تسجيل الدخول",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 15),
-            const Text("اسم المستخدم"),
+            Text(
+              "اسم المستخدم",
+              style: textTheme.bodyMedium,
+            ),
             Input(
               hintText: "ادخل اسم المستخدم",
-              icon: const Icon(Icons.email_outlined),
+              icon: Icon(Icons.email_outlined, color: iconTheme.color),
             ),
             const SizedBox(height: 16),
-            const Text("كلمة المرور"),
+            Text(
+              "كلمة المرور",
+              style: textTheme.bodyMedium,
+            ),
             Input(
-                hintText: "ادخل كلمة المرور",
-                ispassword: true,
-                icon: const Icon(Icons.password)),
+              hintText: "ادخل كلمة المرور",
+              ispassword: true,
+              icon: Icon(Icons.password, color: iconTheme.color),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD4A05E),
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
               ),
-              child: const Text("تسجيل الدخول",
-                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              child: Text(
+                "تسجيل الدخول",
+                style: textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onPrimary,
+                ),
+              ),
             ),
           ],
         ),

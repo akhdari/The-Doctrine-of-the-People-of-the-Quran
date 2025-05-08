@@ -18,13 +18,17 @@ class ResponsiveHide extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width; // Get screen width
     bool showRightSide = screenWidth > breakpoint;
+    ThemeData theme = Theme.of(context);
+    Color scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
+    Color backgroundColor = theme.colorScheme.surface;
     return Scaffold(
+      backgroundColor: scaffoldBackgroundColor,
       body: Row(
         children: [
           Expanded(
             flex: 1,
             child: ColoredBox(
-              color: Color(0xff1D6167),
+              color: backgroundColor,
               child: Center(
                 child: leftChild,
               ),

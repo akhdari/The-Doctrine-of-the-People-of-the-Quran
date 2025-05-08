@@ -31,6 +31,9 @@ class _DottedBorderButtonState extends State<DottedBorderButton> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: GestureDetector(
@@ -53,16 +56,13 @@ class _DottedBorderButtonState extends State<DottedBorderButton> {
                   borderRadius:
                       BorderRadius.circular(10), // Match DottedBorder's radius
                   child: ColoredBox(
-                    color: isOn
-                        ? Color(0xff1D6176)
-                        //.withOpacity() to add transparency
-                        : Colors.transparent,
+                    color: isOn ? colorScheme.primary : Colors.transparent,
                   ),
                 ),
               ),
               // DottedBorder
               DottedBorder(
-                color: Colors.greenAccent,
+                color: colorScheme.secondary,
                 radius: Radius.circular(10),
                 borderType: BorderType.RRect,
                 dashPattern: const [5, 2], // Dashed border pattern
@@ -76,18 +76,18 @@ class _DottedBorderButtonState extends State<DottedBorderButton> {
                     children: [
                       Text(
                         widget.serviceName,
-                        style: TextStyle(
+                        style: textTheme.bodyMedium?.copyWith(
                           color: isOn
-                              ? Colors.white
-                              : Colors.black, // Dynamic text color
+                              ? colorScheme.onPrimary
+                              : colorScheme.onSurface,
                         ),
                       ),
                       SizedBox(height: 10),
                       Icon(
                         widget.serviceIcone,
                         color: isOn
-                            ? Colors.white
-                            : Colors.black, // Dynamic icon color
+                            ? colorScheme.onPrimary
+                            : colorScheme.onSurface,
                       ),
                     ],
                   ),

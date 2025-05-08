@@ -93,12 +93,10 @@ class TimeCellController extends GetxController {
 
         if (fromTime.isEmpty || toTime.isEmpty) {
           Get.snackbar(
-            'Error',
-            'Please specify both start and end time for $day',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white,
-          );
+              'Error', 'Please specify both start and end time for $day',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.redAccent,
+              colorText: Colors.white);
           continue;
         }
 
@@ -108,7 +106,10 @@ class TimeCellController extends GetxController {
         };
       }
     }
-
+/*
+    Get.snackbar('Success', 'Matrix saved successfully',
+        snackPosition: SnackPosition.BOTTOM);
+*/
     return result;
   }
 }

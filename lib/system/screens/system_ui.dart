@@ -6,7 +6,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '/controllers/theme.dart';
 import '../widgets/image.dart';
-import '../../web/widgets/lunch_url.dart';
+import '../../system/widgets/lunch_url.dart';
 
 class SystemUI extends StatefulWidget {
   final String title;
@@ -36,16 +36,22 @@ class _SystemUIState extends State<SystemUI> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final appBarTheme = theme.appBarTheme;
+    final textTheme = theme.textTheme;
+    final iconTheme = theme.iconTheme;
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
+    final dividerColor = theme.dividerColor;
 
     return Scaffold(
       key: systemUiScaffoldKey,
-      endDrawer: customEndDrawer(),
+      backgroundColor: scaffoldBackgroundColor,
+      endDrawer: CustomEndDrawer(),
       drawerEnableOpenDragGesture: true,
       body: Column(
         children: [
           Container(
-            color: Theme.of(context).appBarTheme.backgroundColor,
+            color: appBarTheme.backgroundColor,
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Column(
@@ -87,7 +93,7 @@ class _SystemUIState extends State<SystemUI> {
                 ),
                 const SizedBox(height: 8),
                 DottedLine(
-                  dashColor: Theme.of(context).dividerColor,
+                  dashColor: dividerColor,
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -101,13 +107,13 @@ class _SystemUIState extends State<SystemUI> {
                       },
                       icon: Icon(
                         Icons.nightlight_round,
-                        color: Theme.of(context).iconTheme.color,
+                        color: iconTheme.color,
                       ),
                     ),
                     IconButton(
                       icon: Icon(
                         Icons.menu,
-                        color: Theme.of(context).iconTheme.color,
+                        color: iconTheme.color,
                       ),
                       onPressed: () =>
                           systemUiScaffoldKey.currentState?.openEndDrawer(),

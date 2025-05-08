@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/abstract_class.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
 import '/system/services/connect.dart';
-
-const String url = 'http://192.168.100.20/phpscript/get_latest_acheivement.php';
+import '/system/services/network/api_endpoints.dart';
 
 class LatestAcheivementModel extends AbstractClass {
   int? studentId;
@@ -62,8 +61,6 @@ class LatestAcheivement extends GetxController {
   }
 
   void clearController() {
-    //TODO use
-    //when dispose is called
     fromSurah.clear();
     toSurah.clear();
     fromAyah.clear();
@@ -84,12 +81,11 @@ class LatestAcheivement extends GetxController {
     observation.text = surahAyah.observation ?? '';
   }
 
-//do i have to clear the controller value before i update it?
   Future<AcheivementTypeWrapper> getData(int studentId, int lectureId) async {
     final connect = Connect();
     AcheivementType acheivement;
     final result = await connect.post(
-      url,
+      ApiEndpoints.getLatestAchievement,
       LatestAcheivementModel(
         studentId: studentId,
         lectureId: lectureId,

@@ -1,12 +1,11 @@
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import '../models/get/typehead.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer' as dev;
-import 'error_illustration.dart';
 
-const String typeheadUrl = "http://192.168.100.20/phpscript/typehead.php";
 Future<List<Typehead>> getSessions(String url) async {
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
@@ -57,7 +56,7 @@ class _SearchFeildState extends State<SearchFeild> {
       suggestionsController: suggestionsController,
       hideOnEmpty: true,
       suggestionsCallback: (String pattern) async {
-        return await getSessions(typeheadUrl);
+        return await getSessions(ApiEndpoints.typehead);
       },
       builder: (context, controller, focusNode) {
         return TextField(
@@ -81,20 +80,13 @@ class _SearchFeildState extends State<SearchFeild> {
           title: Text(lecture.sessionNameAr),
         );
       },
-      emptyBuilder: (context) => ErrorIllustration(
-        illustrationPath: 'assets/illustration/empty-box.svg',
-        title: 'No Sessions Found',
-        message: 'Start typing to search for sessions',
-      ),
-      errorBuilder: (context, error) => ErrorIllustration(
-        illustrationPath: 'assets/illustration/bad-connection.svg',
-        title: 'Connection Error',
-        message:
-            'Failed to load sessions. Please check your internet connection.',
-        onRetry: () {
-          textController.clear();
-          suggestionsController?.refresh();
-        },
+      emptyBuilder: (context) {
+        return const ListTile(
+          title: Text('No results found'),
+        );
+      },
+      errorBuilder: (context, error) => const ListTile(
+        title: Text('Error fetching data'),
       ),
       onSelected: (session) {
         dev.log('id on selected: ${session.sessionId}');

@@ -2,15 +2,15 @@ import 'package:get/get.dart';
 import '/system/services/connect.dart';
 import '/system/models/delete/student.dart';
 import '/system/models/get/student_class.dart';
+import 'package:flutter/material.dart';
 
 class StudentController extends GetxController {
   RxBool isLoading = true.obs;
   RxList<Student> studentList = <Student>[].obs;
   RxString errorMessage = ''.obs;
 
-  Future<void> getData(String fetchUrl) async {
+  Future<void> getData(String fetchUrl, {VoidCallback? onFinished}) async {
     try {
-      isLoading.value = true;
       errorMessage.value = '';
       final connect = Connect();
       final result = await connect.get(fetchUrl);
@@ -28,7 +28,7 @@ class StudentController extends GetxController {
           'Failed to connect to server. Please check your connection.';
       studentList.clear();
     } finally {
-      isLoading.value = false;
+      onFinished?.call(); // Wait for timer before turning off loading
     }
   }
 
@@ -40,6 +40,7 @@ class StudentController extends GetxController {
 
       if (result.isSuccess) {
         Get.snackbar('Success', 'Student deleted successfully');
+        //TODO refresh the data after deletion await getData(deleteUrl);
       } else {
         Get.snackbar('Error', 'Failed to delete student ${result.errorCode}');
       }

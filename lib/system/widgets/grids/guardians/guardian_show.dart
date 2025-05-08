@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'guardian.dart'; // path to your GuardianGrid
 import 'package:get/get.dart';
-import '/controllers/validator.dart';
 import '/controllers/generate.dart';
 import '/controllers/guardian.dart';
+import '/controllers/form_controller.dart' as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/guardian.dart';
 import '../../error_illustration.dart';
-
-const String fetchUrl = 'http://192.168.100.20/phpscript/guardian.php';
-const String deleteUrl = 'http://192.168.100.20/phpscript/delete_guardian.php';
+import 'dart:async';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/three_bounce.dart';
 
 class GuardianScreen extends StatefulWidget {
   const GuardianScreen({super.key});
@@ -19,12 +19,27 @@ class GuardianScreen extends StatefulWidget {
 
 class _GuardianScreenState extends State<GuardianScreen> {
   late GuardianController controller;
+  Duration duration = const Duration(seconds: 5);
+  bool minimumLoadTimeCompleted = false;
+
+  void _loadData() {
+    controller.isLoading.value = true;
+
+    Future.wait([
+      Future.delayed(duration),
+      controller.getData(ApiEndpoints.getGuardian),
+    ]).then((_) {
+      if (mounted) {
+        controller.isLoading.value = false;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     controller = Get.find<GuardianController>();
-    controller.getData(fetchUrl);
+    _loadData();
   }
 
   @override
@@ -45,7 +60,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
               IconButton(
                 icon: const Icon(Icons.add, color: Colors.black),
                 onPressed: () {
-                  Get.put(Validator(10), tag: "guardianPage");
+                  Get.put(form.FormController(10));
                   Get.put(Generate());
                   Get.dialog(GuardianDialog());
                   // .then((_) => controller.getData(fetchUrl));
@@ -57,7 +72,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
         Expanded(
           child: Obx(() {
             if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: ThreeBounce());
             }
 
             if (controller.errorMessage.value.isNotEmpty) {
@@ -65,7 +80,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
                 illustrationPath: 'assets/illustration/bad-connection.svg',
                 title: 'Connection Error',
                 message: controller.errorMessage.value,
-                onRetry: () => controller.getData(fetchUrl),
+                onRetry: _loadData,
               );
             }
 
@@ -75,13 +90,18 @@ class _GuardianScreenState extends State<GuardianScreen> {
                 title: 'No Guardians Found',
                 message:
                     'There are no guardians registered yet. Click the add button to create one.',
+                onRetry: _loadData,
               );
             }
 
             return GuardianGrid(
               data: controller.guardianList,
-              onRefresh: () => controller.getData(fetchUrl),
-              onDelete: (id) => controller.postDelete(id, deleteUrl),
+              onRefresh: () {
+                _loadData();
+                return controller.getData(ApiEndpoints.getGuardian);
+              },
+              onDelete: (id) =>
+                  controller.postDelete(id, ApiEndpoints.deleteGuardian),
             );
           }),
         ),

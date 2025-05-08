@@ -13,13 +13,16 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           inputTitle,
-          style: const TextStyle(
-            color: Color(0xff169b88),
+          style: textTheme.titleSmall?.copyWith(
+            color: colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),

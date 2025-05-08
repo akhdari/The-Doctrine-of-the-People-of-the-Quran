@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../models/grid/generic_data_grid.dart';
 import '../../../models/get/lecture_class.dart';
+import 'dart:developer' as dev;
 
 class LectureGrid extends StatelessWidget {
   final List<Lecture> data;
   final Future<void> Function(int id) onDelete;
   final Future<void> Function() onRefresh;
+  final void Function(DataGridRow?)? onTap;
+  final void Function(Lecture?)? getObj;
 
   const LectureGrid({
     super.key,
     required this.data,
     required this.onDelete,
     required this.onRefresh,
+    this.onTap,
+    this.getObj,
   });
 
   @override
@@ -21,7 +26,16 @@ class LectureGrid extends StatelessWidget {
       data: data,
       onDelete: onDelete,
       onRefresh: onRefresh,
-      //selectionMode: SelectionMode.singleDeselect,
+      getDataGridRow: (row) {
+        if (onTap != null) onTap!(row);
+      },
+      getObj: (obj) {
+        if (getObj != null) {
+          dev.log('Selected lecture: ${obj?.lectureNameAr}');
+          getObj!(obj);
+        }
+      },
+      selectionMode: SelectionMode.singleDeselect,
       screenTitle: 'Lectures List',
       detailsTitle: 'Lecture Details',
       rowsPerPage: 10,

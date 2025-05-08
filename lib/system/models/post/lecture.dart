@@ -7,7 +7,7 @@ class Lecture extends AbstractClass {
   late String lectureNameEn;
   late String circleType;
   late List<int> teachersId;
-  late int showOnwebsite;
+  late int showOnwebsite; //TODO bool
   late String category; //drop down
 
   //lecture schedule

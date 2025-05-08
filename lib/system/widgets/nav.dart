@@ -15,6 +15,9 @@ class NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final iconTheme = theme.iconTheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isLargeScreen = constraints.maxWidth > 800;
@@ -22,14 +25,14 @@ class NavBarState extends State<NavBar> {
         return isLargeScreen
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: _navItems(),
+                children: _navItems(theme),
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 20.0, left: 20.0),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
-                    icon: Icon(Icons.menu, color: Colors.white),
+                    icon: Icon(Icons.menu, color: iconTheme.color),
                     onPressed: () {
                       widget.scaffoldKey.currentState?.openDrawer();
                     },
@@ -40,8 +43,7 @@ class NavBarState extends State<NavBar> {
     );
   }
 
-  /// Liste des éléments du menu avec animation de survol et flou en arrière-plan
-  List<Widget> _navItems() {
+  List<Widget> _navItems(ThemeData theme) {
     List<String> titles = [
       'الرئيسية',
       'الأسعار',
@@ -58,39 +60,36 @@ class NavBarState extends State<NavBar> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            /// Effet de flou ajusté dynamiquement à la taille du texte
             if (isHovered[index])
               LayoutBuilder(builder: (context, constraints) {
                 double textWidth = _calculateTextWidth(titles[index]);
 
                 return ClipRRect(
-                  // widget that clips its child using rounded rectangle borders.
                   borderRadius: BorderRadius.circular(10),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
-                      width: textWidth + 24, // Ajuste selon la taille du texte
+                      width: textWidth + 24,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: theme.colorScheme.surface.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
                 );
               }),
-
-            /// Texte animé avec changement de couleur et zoom
             AnimatedContainer(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               transform: isHovered[index]
                   ? Matrix4.diagonal3Values(1.1, 1.1, 1)
                   : Matrix4.identity(),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Text(
                 titles[index],
                 style: TextStyle(
-                  color: isHovered[index] ? Colors.orange : Colors.white,
+                  color:
+                      isHovered[index] ? Color(0xFFC78D20) : Color(0xFF8D9440),
                   fontWeight: titles[index] == 'تسجيل الدخول'
                       ? FontWeight.w900
                       : FontWeight.w600,
@@ -104,18 +103,18 @@ class NavBarState extends State<NavBar> {
     });
   }
 
-  /// Fonction pour calculer dynamiquement la largeur du texte
+//
   double _calculateTextWidth(String text) {
+    const style = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    );
+
     final TextPainter textPainter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      text: TextSpan(text: text, style: style),
       textDirection: TextDirection.rtl,
     )..layout();
+
     return textPainter.width;
   }
 }
