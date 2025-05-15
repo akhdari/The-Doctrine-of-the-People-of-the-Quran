@@ -95,26 +95,34 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
     if (!_formKey.currentState!.validate()) return;
 
     _isComplete.value = false;
+
     try {
+      // Assign SurahAyah lists to the Acheivement model
       _acheivement.hifd = _hifdList.surahAyahList;
       _acheivement.quickRev = _quickRevList.surahAyahList;
       _acheivement.majorRev = _majorRevList.surahAyahList;
 
+      // Log form data for debugging
       dev.log(_acheivement.toMap().toString());
 
-      await submitForm(
+      // Submit form and get result
+      final success = await submitForm(
         _formKey,
         _connect,
         _acheivement,
         url,
-        _isComplete,
       );
 
-      Get.back(result: true);
+      // Close dialog only on success
+      if (success) {
+        Get.back(result: true);
+      }
     } catch (e) {
+      // Show error if any exception occurs
       Get.snackbar('Error', 'Failed to submit achievement data');
       debugPrint('Error submitting form: $e');
     } finally {
+      // Re-enable submit button
       _isComplete.value = true;
     }
   }

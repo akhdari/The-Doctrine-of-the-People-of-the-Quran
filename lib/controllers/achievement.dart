@@ -28,8 +28,8 @@ class AchievementController extends GetxController {
     final connect = Connect();
 
     try {
-      final result =
-          await connect.get("${ApiEndpoints.partialUrl}${lectureId.value}");
+      final result = await connect
+          .get(ApiEndpoints.getStudentsByLecture(lectureId.value!));
       dev.log(result.toString());
 
       if (result.isSuccess && result.data != null) {

@@ -22,18 +22,25 @@ class Guardian {
   });
 
   factory Guardian.fromJson(Map<String, dynamic> map) {
+    // Handle children: empty string → empty list or null
+    List<String>? parsedChildren;
+    final rawChildren = map['children'];
+    if (rawChildren != null &&
+        rawChildren is String &&
+        rawChildren.trim().isNotEmpty) {
+      parsedChildren = rawChildren.split(',').map((e) => e.trim()).toList();
+    }
+
     return Guardian(
-      id: map['guardian_id'],
-      lastName: map['last_name'],
-      firstName: map['first_name'],
-      dateOfBirth: map['date_of_birth'],
-      relationship: map['relationship'],
-      phoneNumber: map['phone_number'],
-      email: map['email'],
+      id: map['guardian_id'].toString(),
+      lastName: map['last_name'] ?? '',
+      firstName: map['first_name'] ?? '',
+      dateOfBirth: map['date_of_birth'] ?? '',
+      relationship: map['relationship'] ?? '',
+      phoneNumber: map['phone_number'] ?? '',
+      email: map['email'] ?? '',
       guardianAccount: map['guardian_account'],
-      children: map['children'] != null
-          ? (map['children'] as String).split(',').map((e) => e.trim()).toList()
-          : null,
+      children: parsedChildren,
     );
   }
 }

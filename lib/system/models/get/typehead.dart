@@ -5,7 +5,6 @@ class Typehead {
 
   factory Typehead.fromJson(Map<String, dynamic> json) {
     return Typehead(
-        sessionId: int.parse(json['lecture_id']),
-        sessionNameAr: json['lecture_name_ar']);
+        sessionId: int.parse(json['id']), sessionNameAr: json['name']);
   }
 }

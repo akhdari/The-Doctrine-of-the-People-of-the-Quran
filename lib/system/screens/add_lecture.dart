@@ -18,7 +18,7 @@ class AddLecture extends StatelessWidget {
       body: SystemUI(
         title: "Lectures Management",
         child: LectureShow(
-          fetchUrl: ApiEndpoints.getLecture,
+          fetchUrl: ApiEndpoints.getLectures,
           deleteUrl: ApiEndpoints.deleteLecture,
           controller: controller,
         ),

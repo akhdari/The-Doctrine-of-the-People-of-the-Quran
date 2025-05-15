@@ -85,7 +85,7 @@ class LatestAcheivement extends GetxController {
     final connect = Connect();
     AcheivementType acheivement;
     final result = await connect.post(
-      ApiEndpoints.getLatestAchievement,
+      ApiEndpoints.getLatestAchievements,
       LatestAcheivementModel(
         studentId: studentId,
         lectureId: lectureId,

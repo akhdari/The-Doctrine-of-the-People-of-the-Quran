@@ -56,7 +56,7 @@ class _SearchFeildState extends State<SearchFeild> {
       suggestionsController: suggestionsController,
       hideOnEmpty: true,
       suggestionsCallback: (String pattern) async {
-        return await getSessions(ApiEndpoints.typehead);
+        return await getSessions(ApiEndpoints.getLectureIdName);
       },
       builder: (context, controller, focusNode) {
         return TextField(

@@ -41,7 +41,7 @@ class LectureController extends GetxController {
 
       if (result.isSuccess) {
         Get.snackbar('Success', 'Lecture deleted successfully');
-        await getData(ApiEndpoints.getLecture); // optional: auto-refresh
+        await getData(ApiEndpoints.getLectures); // optional: auto-refresh
       } else {
         Get.snackbar('Error', 'Failed to delete lecture ${result.errorCode}');
       }

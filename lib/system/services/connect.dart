@@ -23,29 +23,13 @@ class Connect {
   String? errorMessage;
   String? errorCode;
 
-  List<Map<String, dynamic>> parseJsonList(http.Response response) {
-    try {
-      final List<dynamic> jsonResponse =
-          json.decode(response.body) as List<dynamic>;
-      final List<Map<String, dynamic>> listOfMaps = jsonResponse
-          .cast<Map<String, dynamic>>()
-          .map((map) => map.map((key, value) => MapEntry(key, value ?? '')))
-          .toList();
-      return listOfMaps;
-    } catch (e) {
-      dev.log('Error parsing JSON: $e');
-      throw FormatException('Failed to parse response data');
-    }
-  }
-
   Future<ApiResult<List<Map<String, dynamic>>>> get(String url) async {
     try {
       dev.log('Fetching data from: $url');
 
-      // Create a client with connection timeout
       final client = http.Client();
       final request = http.Request('GET', Uri.parse(url))
-        ..headers['Accept'] = 'application/json';
+        ..headers['Accept'] = 'application/json; charset=utf-8';
 
       // Try to establish connection first
       try {
@@ -59,10 +43,9 @@ class Connect {
         );
       }
 
-      // If connection successful, make the actual request
       final response = await client.get(
         Uri.parse(url),
-        headers: {'Accept': 'application/json'},
+        headers: {'Accept': 'application/json; charset=utf-8'},
       ).timeout(_timeoutDuration);
 
       client.close();
@@ -70,7 +53,34 @@ class Connect {
       dev.log("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
-        return ApiResult.seccess(data: parseJsonList(response));
+        try {
+          final responseBody = utf8.decode(response.bodyBytes);
+          final Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+          if (jsonResponse['success'] == true) {
+            // Get the data list from the response
+            final List<dynamic> dataList =
+                jsonResponse['data'] as List<dynamic>;
+
+            // Convert and handle null values
+            final List<Map<String, dynamic>> listOfMaps = dataList
+                .cast<Map<String, dynamic>>()
+                .map((map) =>
+                    map.map((key, value) => MapEntry(key, value ?? '')))
+                .toList();
+
+            return ApiResult.seccess(data: listOfMaps);
+          } else {
+            return ApiResult.failure(
+              errorMessage: jsonResponse['message'] ?? 'Request failed',
+            );
+          }
+        } catch (e) {
+          dev.log('Error parsing JSON: $e');
+          return ApiResult.failure(
+            errorMessage: 'Failed to parse response data',
+          );
+        }
       } else {
         return ApiResult.failure(
           errorCode: response.statusCode.toString(),

@@ -11,8 +11,7 @@ import '../custom_container.dart';
 import '../input_field.dart';
 import '../image.dart';
 import '../../../controllers/form_controller.dart' as form;
-
-const String url = 'http://192.168.100.20/phpscript/get_guardian.php';
+import '../../../system/services/network/api_endpoints.dart';
 
 class GuardianDialog extends StatefulWidget {
   const GuardianDialog({super.key});
@@ -308,16 +307,22 @@ class _GuardianDialogState extends State<GuardianDialog> {
                   child: ElevatedButton(
                     onPressed: () async {
                       isComplete.value = false;
-
-                      await submitForm(guardianFormKey, connect, guardianInfo,
-                          url, isComplete);
-
+                      final success = await submitForm(
+                        guardianFormKey,
+                        connect,
+                        guardianInfo,
+                        ApiEndpoints.createGuardian,
+                      );
+                      if (success) {
+                        Get.back(); // Close the dialog
+                      }
                       isComplete.value = true;
                     },
                     child: Obx(() => isComplete.value
                         ? Text('Submit')
                         : CircularProgressIndicator()),
                   )),
+              //
             ],
           ),
         ),

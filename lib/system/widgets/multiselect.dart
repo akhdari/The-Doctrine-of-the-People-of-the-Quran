@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import '../services/connect.dart';
+import 'package:get/get.dart';
 
 class MultiSelectResult {
   List<MultiSelectItem>? items;
@@ -18,7 +19,7 @@ class MultiSelectItem {
 
   factory MultiSelectItem.fromJson(Map<String, dynamic> json) {
     return MultiSelectItem(
-      id: int.parse(json['id']),
+      id: json['id'] as int,
       name: json['name'] as String,
     );
   }
@@ -39,6 +40,28 @@ Future<MultiSelectResult> getItems(String url) async {
     return MultiSelectResult.onSuccess(items: multiSelectItems);
   } else {
     return MultiSelectResult.onError(errorMessage: data.errorMessage);
+  }
+}
+
+class MultiSelectController extends GetxController {
+  var pickedItems = <MultiSelectItem>[].obs;
+
+  void addItem(MultiSelectItem item) {
+    if (!pickedItems.any((e) => e.id == item.id)) {
+      pickedItems.add(item);
+    }
+  }
+
+  void removeItem(MultiSelectItem item) {
+    pickedItems.removeWhere((e) => e.id == item.id);
+  }
+
+  void clearItems() {
+    pickedItems.clear();
+  }
+
+  void setAllItems(List<MultiSelectItem> all) {
+    pickedItems.assignAll(all);
   }
 }
 
@@ -64,41 +87,33 @@ class MultiSelect extends StatefulWidget {
 
 class _MultiSelectState extends State<MultiSelect> {
   late final MultipleSearchController _multipleSearchController;
-  List<MultiSelectItem> _pickedItems = [];
+  final MultiSelectController multiSelectController =
+      Get.put(MultiSelectController());
 
   @override
   void initState() {
     super.initState();
+
     _multipleSearchController = MultipleSearchController(
       allowDuplicateSelection: false,
       isSelectable: false,
       minCharsToShowItems: 1,
     );
-    dev.log('MultiSelect initialized with ${widget.preparedData.length} items');
-    dev.log("Initial picked: ${widget.initialPickedItems?.map((e) => e.id)}");
-    dev.log("Prepared: ${widget.preparedData.map((e) => e.id)}");
-  }
 
-  void _updatePickedItems() {
-    setState(() {
-      _pickedItems =
-          _multipleSearchController.getPickedItems().cast<MultiSelectItem>();
-    });
-    // Call the callback to notify parent widget
-    widget.getPickedItems(_pickedItems);
+    dev.log('MultiSelect initialized with ${widget.preparedData.length} items');
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+
     return Column(
       children: [
         MultipleSearchSelection<MultiSelectItem>.overlay(
           controller: _multipleSearchController,
           maxSelectedItems: widget.maxSelectedItems,
           clearSearchFieldOnSelect: true,
-          //use a set?
           initialPickedItems: widget.initialPickedItems != null
               ? widget.preparedData
                   .where((item) => widget.initialPickedItems!
@@ -109,37 +124,38 @@ class _MultiSelectState extends State<MultiSelect> {
           searchField: TextField(
             decoration: InputDecoration(
               hintText: widget.hintText,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
             ),
           ),
-          items: widget.preparedData, // Use the data list
-          fieldToCheck: (item) => item.name, // Use 'name' to filter
+          items: widget.preparedData,
+          fieldToCheck: (item) => item.name,
           sortPickedItems: true,
           sortShowedItems: true,
+
+          // 🔥 GetX integration here
+          onItemAdded: (item) {
+            multiSelectController.addItem(item);
+            widget.getPickedItems(multiSelectController.pickedItems);
+            dev.log('Added: ${item.name}');
+          },
+          onItemRemoved: (item) {
+            multiSelectController.removeItem(item);
+            widget.getPickedItems(multiSelectController.pickedItems);
+            dev.log('Removed: ${item.name}');
+          },
           onTapClearAll: () {
-            _multipleSearchController.clearAllPickedItemsCallback;
+            _multipleSearchController.clearAllPickedItemsCallback?.call();
             _multipleSearchController.clearSearchField();
-            _updatePickedItems();
-            dev.log('Cleared all items');
+            multiSelectController.clearItems();
+            widget.getPickedItems([]);
           },
           onTapSelectAll: () {
             _multipleSearchController.selectAllItems();
-            _updatePickedItems();
-            dev.log(
-                'Selected all items | Picked: ${_pickedItems.map((e) => e.name).join(", ")}');
+            multiSelectController.setAllItems(widget.preparedData);
+            widget.getPickedItems(widget.preparedData);
           },
-          onItemAdded: (item) {
-            _updatePickedItems();
-            dev.log(
-                'Added: ${item.name} | Picked: ${_pickedItems.map((e) => e.name).join(", ")}');
-          },
-          onItemRemoved: (item) {
-            _updatePickedItems();
-            dev.log(
-                'Removed: ${item.name} | Picked: ${_pickedItems.map((e) => e.name).join(", ")}');
-          },
+
           itemBuilder: (item, index, isPicked) => Padding(
             padding: const EdgeInsets.all(6.0),
             child: Container(
@@ -152,27 +168,11 @@ class _MultiSelectState extends State<MultiSelect> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                child: Text(
-                  item.name, // Show the name of the item
-                  style: textTheme.bodySmall,
-                ),
+                child: Text(item.name, style: textTheme.bodySmall),
               ),
             ),
           ),
-          clearAllButton: Text(
-            'Clear All',
-            style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
-          ),
-          selectAllButton: Text(
-            'Select All',
-            style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
-          ),
-          noResultsWidget: ListTile(
-            title: Text(
-              'No results found',
-              style: TextStyle(color: colorScheme.onSurface),
-            ),
-          ),
+
           pickedItemBuilder: (item) => Container(
             margin: const EdgeInsets.only(right: 4),
             decoration: BoxDecoration(
@@ -185,18 +185,26 @@ class _MultiSelectState extends State<MultiSelect> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    item.name,
-                    style: textTheme.bodySmall,
-                  ),
+                  Text(item.name, style: textTheme.bodySmall),
                   const SizedBox(width: 4),
-                  Icon(
-                    Icons.close,
-                    size: 16,
-                    color: colorScheme.onSurface,
-                  ),
+                  Icon(Icons.close, size: 16, color: colorScheme.onSurface),
                 ],
               ),
+            ),
+          ),
+
+          clearAllButton: Text(
+            'Clear All',
+            style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
+          ),
+          selectAllButton: Text(
+            'Select All',
+            style: textTheme.bodySmall?.copyWith(color: colorScheme.primary),
+          ),
+          noResultsWidget: ListTile(
+            title: Text(
+              'No results found',
+              style: TextStyle(color: colorScheme.onSurface),
             ),
           ),
           maximumShowItemsHeight: 200,

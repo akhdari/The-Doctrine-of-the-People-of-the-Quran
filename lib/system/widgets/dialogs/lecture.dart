@@ -279,26 +279,63 @@ class _LectureDialogState extends State<LectureDialog> {
               ),
               // Submit button
               Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      lectureInfo.schedule =
-                          timeCellController.getSelectedDays();
-                      isComplete.value = false;
-                      if (editLecture!.isEdit) {
-                        await submitForm(lectureFormKey, connect, lectureInfo,
-                            ApiEndpoints.updateLecture, isComplete);
-                      } else {
-                        await submitForm(lectureFormKey, connect, lectureInfo,
-                            ApiEndpoints.postLecture, isComplete);
-                      }
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    debugPrint(
+                        'Form valid: ${lectureFormKey.currentState?.validate()}');
+                    debugPrint(
+                        'Fields: ${formController.controllers.map((c) => c.text)}');
+                    debugPrint('Teachers: ${lectureInfo.teachersId}');
 
+                    lectureInfo.schedule = timeCellController.getSelectedDays();
+                    isComplete.value = false;
+
+                    if (lectureFormKey.currentState?.validate() ?? false) {
+                      // Save the form data
+                      lectureFormKey.currentState?.save();
+                      debugPrint('Form saved: ${lectureInfo.toMap()}');
+
+                      try {
+                        // Depending on whether it's an edit or a new submission, call the appropriate endpoint
+                        final bool success = await submitForm(
+                          lectureFormKey,
+                          connect,
+                          lectureInfo,
+                          editLecture?.isEdit == true
+                              ? ApiEndpoints.updateLecture
+                              : ApiEndpoints.createLecture,
+                        );
+
+                        // Handle result based on success
+                        if (success) {
+                          Get.back(result: true);
+                        } else {
+                          // Show error message if submission failed
+                          Get.snackbar(
+                              'Error', 'Failed to submit lecture data');
+                        }
+                      } catch (e) {
+                        // Handle any errors during submission
+                        Get.snackbar('Error',
+                            'An error occurred while submitting the form');
+                        debugPrint('Error submitting form: $e');
+                      } finally {
+                        // Ensure to re-enable the submit button
+                        isComplete.value = true;
+                      }
+                    } else {
+                      // If form is invalid, show an error message
+                      Get.snackbar(
+                          'Error', 'Please fill out all required fields');
                       isComplete.value = true;
-                    },
-                    child: Obx(() => isComplete.value
-                        ? Text('Submit')
-                        : CircularProgressIndicator()),
-                  )),
+                    }
+                  },
+                  child: Obx(() => isComplete.value
+                      ? Text('Submit')
+                      : CircularProgressIndicator()),
+                ),
+              )
             ],
           ),
         ),

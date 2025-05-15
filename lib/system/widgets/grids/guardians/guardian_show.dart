@@ -27,7 +27,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
 
     Future.wait([
       Future.delayed(duration),
-      controller.getData(ApiEndpoints.getGuardian),
+      controller.getData(ApiEndpoints.getGuardians),
     ]).then((_) {
       if (mounted) {
         controller.isLoading.value = false;
@@ -98,7 +98,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
               data: controller.guardianList,
               onRefresh: () {
                 _loadData();
-                return controller.getData(ApiEndpoints.getGuardian);
+                return controller.getData(ApiEndpoints.getGuardians);
               },
               onDelete: (id) =>
                   controller.postDelete(id, ApiEndpoints.deleteGuardian),

@@ -7,7 +7,7 @@ import 'routes/app_screens.dart';
 import 'bindings/theme.dart';
 
 void main() {
-  Get.put(ThemeController()); //globally accessible
+  Get.put(ThemeController());
   runApp(MyApp());
 }
 

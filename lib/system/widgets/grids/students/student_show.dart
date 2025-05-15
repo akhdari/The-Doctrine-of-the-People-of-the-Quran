@@ -34,7 +34,7 @@ class _StudentScreenState extends State<StudentScreen> {
 
     Future.wait([
       Future.delayed(duration),
-      controller.getData(ApiEndpoints.getStudent),
+      controller.getData(ApiEndpoints.getStudents),
     ]).then((_) {
       if (mounted) {
         //why check if mounted? bcs the method is being called in the init state method + the future method
@@ -63,7 +63,7 @@ class _StudentScreenState extends State<StudentScreen> {
               IconButton(
                 icon: const Icon(Icons.add, color: Colors.black),
                 onPressed: () {
-                  Get.put(form.FormController(16));
+                  Get.put(form.FormController(14));
                   Get.put(Generate());
                   Get.dialog(StudentDialog());
                 },
@@ -99,7 +99,7 @@ class _StudentScreenState extends State<StudentScreen> {
               data: controller.studentList,
               onRefresh: () {
                 _loadData();
-                return controller.getData(ApiEndpoints.getStudent);
+                return controller.getData(ApiEndpoints.getStudents);
               },
               onDelete: (id) =>
                   controller.postDelete(id, ApiEndpoints.deleteStudent),
