@@ -121,7 +121,7 @@ class Connect {
         ..body = requestBody;
 
       // Try to establish connection first
-      try {
+      /*try {
         await client.send(request).timeout(_connectionTimeout);
       } catch (e) {
         client.close();
@@ -130,7 +130,7 @@ class Connect {
           errorMessage:
               'Could not connect to server. Please check your connection.',
         );
-      }
+      }*/
 
       // If connection successful, make the actual request
       final response = await client
