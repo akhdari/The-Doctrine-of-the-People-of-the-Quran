@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '/system/services/connect.dart';
-import '/system/models/delete/guardian.dart';
+import '/system/services/network/api_endpoints.dart';
 import '/system/models/get/guardian_class.dart';
 import 'dart:developer' as dev;
 
@@ -37,16 +37,10 @@ class GuardianController extends GetxController {
   }
 
 //
-  Future<void> postDelete(int id, String deleteUrl) async {
+  Future<void> postDelete(int id) async {
     try {
-      dev.log('Attempting to delete guardian with ID: $id');
-      dev.log('Using URL: $deleteUrl');
-
       final connect = Connect();
-      final request = GuardianDeleteRequest(id);
-      dev.log('Request body: ${request.toMap()}');
-
-      final result = await connect.post(deleteUrl, request);
+      final result = await connect.delete(ApiEndpoints.getGuardianById(id));
       dev.log('Response: ${result.toString()}');
 
       if (result.isSuccess) {

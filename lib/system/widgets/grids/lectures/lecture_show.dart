@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'dart:async';
 import 'dart:developer' as dev;
 import '../../dialogs/lecture.dart';
@@ -12,14 +13,10 @@ import '/system/widgets/three_bounce.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/get/lecture_class.dart';
 
 class LectureShow extends StatefulWidget {
-  final String fetchUrl;
-  final String deleteUrl;
   final LectureController controller;
 
   const LectureShow({
     super.key,
-    required this.fetchUrl,
-    required this.deleteUrl,
     required this.controller,
   });
 
@@ -38,7 +35,7 @@ class _LectureShowState extends State<LectureShow> {
 
     Future.wait([
       Future.delayed(delay),
-      widget.controller.getData(widget.fetchUrl, onFinished: () {}),
+      widget.controller.getData(ApiEndpoints.getLectures, onFinished: () {}),
     ]).then((_) {
       if (mounted) {
         widget.controller.isLoading.value = false;
@@ -136,10 +133,9 @@ class _LectureShowState extends State<LectureShow> {
               data: widget.controller.lectureList,
               onRefresh: () {
                 _loadData();
-                return widget.controller.getData(widget.fetchUrl);
+                return widget.controller.getData(ApiEndpoints.getLectures);
               },
-              onDelete: (id) =>
-                  widget.controller.postDelete(id, widget.deleteUrl),
+              onDelete: (id) => widget.controller.postDelete(id),
               onTap: (details) {
                 dev.log('Tapped on row: $details');
                 hasSelection.value = details != null;

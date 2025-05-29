@@ -311,7 +311,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
                         guardianFormKey,
                         connect,
                         guardianInfo,
-                        ApiEndpoints.createGuardian,
+                        ApiEndpoints.getGuardians,
                       );
                       if (success) {
                         Get.back(); // Close the dialog

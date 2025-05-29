@@ -298,14 +298,8 @@ class _LectureDialogState extends State<LectureDialog> {
 
                       try {
                         // Depending on whether it's an edit or a new submission, call the appropriate endpoint
-                        final bool success = await submitForm(
-                          lectureFormKey,
-                          connect,
-                          lectureInfo,
-                          editLecture?.isEdit == true
-                              ? ApiEndpoints.updateLecture
-                              : ApiEndpoints.createLecture,
-                        );
+                        final bool success = await submitForm(lectureFormKey,
+                            connect, lectureInfo, ApiEndpoints.getLectures);
 
                         // Handle result based on success
                         if (success) {

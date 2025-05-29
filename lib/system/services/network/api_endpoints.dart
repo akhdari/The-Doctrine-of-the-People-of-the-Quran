@@ -1,57 +1,109 @@
 class ApiEndpoints {
   static const String baseUrl =
-      'http://192.168.100.50/quran/ahl_quran_backend/routes';
+      'http://192.168.100.50/quran/ahl_quran_backend/api/v1';
 
-  // Achievement endpoints
-  static String getStudentsByLecture(int sessionId) =>
-      '$baseUrl/achievement_route.php?action=get_students_by_lecture&session_id=$sessionId';
+  // AccountInfo endpoints
+  static const String getAccountInfos = '$baseUrl/accountinfos';
+  static String getAccountInfoById(int id) => '$baseUrl/accountinfos/$id';
 
-  static const String getLatestAchievements =
-      '$baseUrl/achievement_route.php?action=get_latest_achievements';
+  // Appreciation endpoints
+  static const String getAppreciations = '$baseUrl/appreciations';
+  static String getAppreciationById(int id) => '$baseUrl/appreciations/$id';
 
-  // Lecture endpoints
-  static const String getLectures =
-      '$baseUrl/lecture_route.php?action=get_lecture_info';
+  // ContactInfo endpoints
+  static const String getContactInfos = '$baseUrl/contactinfos';
+  static String getContactInfoById(int id) => '$baseUrl/contactinfos/$id';
 
-  static String getLectureById(int id) =>
-      '$baseUrl/lecture_route.php?action=get_lecture_by_id&id=$id';
+  // Exam endpoints
+  static const String getExams = '$baseUrl/exams';
+  static String getExamById(int id) => '$baseUrl/exams/$id';
 
-  static const String deleteLecture =
-      '$baseUrl/lecture_route.php?action=delete_lecture';
+  // ExamLevel endpoints
+  static const String getExamLevels = '$baseUrl/examlevels';
+  static String getExamLevelById(int id) => '$baseUrl/examlevels/$id';
 
-  static const String getLectureIdName =
-      '$baseUrl/lecture_route.php?action=get_lecture_id_name';
+  // ExamStudent endpoints
+  static const String getExamStudents = '$baseUrl/examstudents';
+  static String getExamStudentById(int examId, int studentId) =>
+      '$baseUrl/examstudents/exams/$examId/students/$studentId';
 
-  static const String createLecture =
-      '$baseUrl/lecture_route.php?action=create_lecture';
+  // ExamTeacher endpoints
+  static const String getExamTeachers = '$baseUrl/examteachers';
+  static String getExamTeacherById(int examId, int teacherId) =>
+      '$baseUrl/examteachers/exams/$examId/teachers/$teacherId';
 
-  static const String updateLecture =
-      '$baseUrl/lecture_route.php?action=update_lecture';
+  // FormalEducationInfo endpoints
+  static const String getFormalEducationInfos = '$baseUrl/formaleducationinfos';
+  static String getFormalEducationInfoById(int id) =>
+      '$baseUrl/formaleducationinfos/$id';
+
+  // GoldenRecord endpoints
+  static const String getGoldenRecords = '$baseUrl/goldenrecords';
+  static String getGoldenRecordById(int id) => '$baseUrl/goldenrecords/$id';
 
   // Guardian endpoints
-  static const String getGuardians =
-      '$baseUrl/guardian_route.php?action=get_guardian_info';
+  static const String getGuardians = '$baseUrl/guardians';
+  static String getGuardianById(int id) => '$baseUrl/guardians/$id';
 
-  static const String deleteGuardian =
-      '$baseUrl/guardian_route.php?action=delete_guardian';
+  // LectureContent endpoints
+  static const String getLectureContents = '$baseUrl/lecturecontents';
+  static String getLectureContentById(int id) => '$baseUrl/lecturecontents/$id';
 
-  static const String getGuardianAccounts =
-      '$baseUrl/guardian_route.php?action=get_guardian_accounts';
+  // Lecture endpoints
+  static const String getLectures = '$baseUrl/lectures';
+  static String getLectureById(int id) => '$baseUrl/lectures/$id';
 
-  static const String createGuardian =
-      '$baseUrl/guardian_route.php?action=create_guardian';
+  // LectureStudent endpoints
+  static const String getLectureStudents = '$baseUrl/lecturestudents';
+  static String getLectureStudentById(int lectureId, int studentId) =>
+      '$baseUrl/lecturestudents/lectures/$lectureId/students/$studentId';
+
+  // LectureTeacher endpoints
+  static const String getLectureTeachers = '$baseUrl/lectureteachers';
+  static String getLectureTeacherById(int lectureId, int teacherId) =>
+      '$baseUrl/lectureteachers/lectures/$lectureId/teachers/$teacherId';
+
+  // MedicalInfo endpoints
+  static const String getMedicalInfos = '$baseUrl/medicalinfos';
+  static String getMedicalInfoById(int id) => '$baseUrl/medicalinfos/$id';
+
+  // PersonalInfo endpoints
+  static const String getPersonalInfos = '$baseUrl/personalinfos';
+  static String getPersonalInfoById(int id) => '$baseUrl/personalinfos/$id';
+
+  // RequestCopy endpoints
+  static const String getRequestCopys = '$baseUrl/requestcopys';
+  static String getRequestCopyById(int id) => '$baseUrl/requestcopys/$id';
 
   // Student endpoints
-  static const String getStudents =
-      '$baseUrl/student_route.php?action=get_student_info';
+  static const String getStudents = '$baseUrl/students';
+  static String getStudentById(int id) => '$baseUrl/students/$id';
 
-  static const String createStudent =
-      '$baseUrl/student_route.php?action=create_student';
+  // SubscriptionInfo endpoints
+  static const String getSubscriptionInfos = '$baseUrl/subscriptioninfos';
+  static String getSubscriptionInfoById(int id) =>
+      '$baseUrl/subscriptioninfos/$id';
 
-  static const String deleteStudent =
-      '$baseUrl/student_route.php?action=delete_student';
+  // Supervisor endpoints
+  static const String getSupervisors = '$baseUrl/supervisors';
+  static String getSupervisorById(int id) => '$baseUrl/supervisors/$id';
 
   // Teacher endpoints
-  static const String getTeachers =
-      '$baseUrl/teacher_route.php?action=get_teachers';
+  static const String getTeachers = '$baseUrl/teachers';
+  static String getTeacherById(int id) => '$baseUrl/teachers/$id';
+
+  // TeamAccomplishment endpoints
+  static const String getTeamAccomplishments = '$baseUrl/teamaccomplishments';
+  static String getTeamAccomplishmentById(int id) =>
+      '$baseUrl/teamaccomplishments/$id';
+
+  // TeamAccomplishmentStudent endpoints
+  static const String getTeamAccomplishmentStudents =
+      '$baseUrl/teamaccomplishmentstudents';
+  static String getTeamAccomplishmentStudentById(int teamId, int studentId) =>
+      '$baseUrl/teamaccomplishmentstudents/teamaccomplishments/$teamId/students/$studentId';
+
+  // WeeklySchedule endpoints
+  static const String getWeeklySchedules = '$baseUrl/weeklyschedules';
+  static String getWeeklyScheduleById(int id) => '$baseUrl/weeklyschedules/$id';
 }

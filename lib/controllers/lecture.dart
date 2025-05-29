@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '/system/services/network/api_endpoints.dart';
 import '/system/services/connect.dart';
-import '/system/models/delete/lecture.dart';
 import '/system/models/get/lecture_class.dart';
 
 class LectureController extends GetxController {
@@ -33,11 +32,10 @@ class LectureController extends GetxController {
     }
   }
 
-  Future<void> postDelete(int id, String deleteUrl) async {
+  Future<void> postDelete(int id) async {
     try {
       final connect = Connect();
-      final request = LectureDeleteRequest(id);
-      final result = await connect.post(deleteUrl, request);
+      final result = await connect.delete(ApiEndpoints.getLectureById(id));
 
       if (result.isSuccess) {
         Get.snackbar('Success', 'Lecture deleted successfully');

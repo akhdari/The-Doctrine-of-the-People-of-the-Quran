@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import '/system/services/connect.dart';
-import '/system/models/delete/student.dart';
 import '/system/models/get/student_class.dart';
 import 'package:flutter/material.dart';
 
@@ -32,15 +32,14 @@ class StudentController extends GetxController {
     }
   }
 
-  Future<void> postDelete(int id, String deleteUrl) async {
+  Future<void> postDelete(int id) async {
     try {
       final connect = Connect();
-      final request = StudentDeleteRequest(id);
-      final result = await connect.post(deleteUrl, request);
+
+      final result = await connect.delete(ApiEndpoints.getStudentById(id));
 
       if (result.isSuccess) {
         Get.snackbar('Success', 'Student deleted successfully');
-        //TODO refresh the data after deletion await getData(deleteUrl);
       } else {
         Get.snackbar('Error', 'Failed to delete student ${result.errorCode}');
       }

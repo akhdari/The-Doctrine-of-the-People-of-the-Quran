@@ -100,8 +100,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
                 _loadData();
                 return controller.getData(ApiEndpoints.getGuardians);
               },
-              onDelete: (id) =>
-                  controller.postDelete(id, ApiEndpoints.deleteGuardian),
+              onDelete: (id) => controller.postDelete(id),
             );
           }),
         ),

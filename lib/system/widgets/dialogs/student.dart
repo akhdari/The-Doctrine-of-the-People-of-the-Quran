@@ -27,8 +27,7 @@ class StudentDialog extends StatefulWidget {
 class _StudentDialogState extends State<StudentDialog> {
   Future<void> loadData() async {
     try {
-      final fetchedSessionNames = await getItems(ApiEndpoints
-          .getLectureIdName); // Assuming this is the correct endpoint
+      final fetchedSessionNames = await getItems(ApiEndpoints.getLectureIdName);
       final fetchedGuardianAccounts =
           await getItems(ApiEndpoints.getGuardianAccounts);
 
@@ -684,7 +683,7 @@ class _StudentDialogState extends State<StudentDialog> {
                         studentFormKey,
                         connect,
                         studentInfo,
-                        ApiEndpoints.createStudent,
+                        ApiEndpoints.getStudents,
                       );
                       if (success) {
                         Get.back(); // Close the dialog

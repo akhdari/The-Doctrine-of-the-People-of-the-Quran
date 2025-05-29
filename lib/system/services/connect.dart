@@ -8,236 +8,140 @@ class ApiResult<T> {
   final String? errorMessage;
   final String? errorCode;
   final T? data;
-  ApiResult.seccess({required this.data})
+
+  ApiResult.success({required this.data})
       : errorMessage = null,
         errorCode = null;
+
   ApiResult.failure({this.errorCode, this.errorMessage}) : data = null;
-  bool get isSuccess {
-    return data != null;
-  }
+
+  bool get isSuccess => data != null;
 }
 
 class Connect {
   static const Duration _timeoutDuration = Duration(seconds: 8);
   static const Duration _connectionTimeout = Duration(seconds: 5);
-  String? errorMessage;
-  String? errorCode;
 
   Future<ApiResult<List<Map<String, dynamic>>>> get(String url) async {
+    final result = await _sendRequest(
+      url,
+      'GET',
+      headers: {'Accept': 'application/json; charset=utf-8'},
+    );
+
+    if (!result.isSuccess) {
+      return ApiResult.failure(
+        errorCode: result.errorCode,
+        errorMessage: result.errorMessage,
+      );
+    }
+
     try {
-      dev.log('Fetching data from: $url');
+      final responseBody = utf8.decode(json.encode(result.data).codeUnits);
+      final Map<String, dynamic> jsonResponse = json.decode(responseBody);
 
-      final client = http.Client();
-      final request = http.Request('GET', Uri.parse(url))
-        ..headers['Accept'] = 'application/json; charset=utf-8';
+      if (jsonResponse['success'] == true) {
+        final List<dynamic> dataList = jsonResponse['data'] as List<dynamic>;
 
-      // Try to establish connection first
-      try {
-        await client.send(request).timeout(_connectionTimeout);
-      } catch (e) {
-        client.close();
-        dev.log('Connection failed: $e');
-        return ApiResult.failure(
-          errorMessage:
-              'Could not connect to server. Please check your connection.',
-        );
-      }
+        final List<Map<String, dynamic>> listOfMaps = dataList
+            .cast<Map<String, dynamic>>()
+            .map((map) => map.map((key, value) => MapEntry(key, value ?? '')))
+            .toList();
 
-      final response = await client.get(
-        Uri.parse(url),
-        headers: {'Accept': 'application/json; charset=utf-8'},
-      ).timeout(_timeoutDuration);
-
-      client.close();
-      dev.log("Response status: ${response.statusCode}");
-      dev.log("Response body: ${response.body}");
-
-      if (response.statusCode == 200) {
-        try {
-          final responseBody = utf8.decode(response.bodyBytes);
-          final Map<String, dynamic> jsonResponse = json.decode(responseBody);
-
-          if (jsonResponse['success'] == true) {
-            // Get the data list from the response
-            final List<dynamic> dataList =
-                jsonResponse['data'] as List<dynamic>;
-
-            // Convert and handle null values
-            final List<Map<String, dynamic>> listOfMaps = dataList
-                .cast<Map<String, dynamic>>()
-                .map((map) =>
-                    map.map((key, value) => MapEntry(key, value ?? '')))
-                .toList();
-
-            return ApiResult.seccess(data: listOfMaps);
-          } else {
-            return ApiResult.failure(
-              errorMessage: jsonResponse['message'] ?? 'Request failed',
-            );
-          }
-        } catch (e) {
-          dev.log('Error parsing JSON: $e');
-          return ApiResult.failure(
-            errorMessage: 'Failed to parse response data',
-          );
-        }
+        return ApiResult.success(data: listOfMaps);
       } else {
         return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: response.body,
+          errorMessage: jsonResponse['message'] ?? 'Request failed',
         );
       }
-    } on FormatException catch (e) {
-      dev.log('Format error: ${e.message}');
-      return ApiResult.failure(
-          errorMessage: 'Invalid response format: ${e.message}');
-    } on http.ClientException catch (e) {
-      dev.log('Network error: ${e.message}');
-      return ApiResult.failure(
-          errorMessage:
-              'Could not connect to server. Please check your connection.');
-    } on TimeoutException catch (e) {
-      dev.log('Timeout error: ${e.message}');
-      return ApiResult.failure(
-          errorMessage:
-              'Server is taking too long to respond. Please try again.');
     } catch (e) {
-      dev.log('Unknown error: $e');
-      return ApiResult.failure(
-          errorMessage: 'Could not connect to server. Please try again.');
+      dev.log('Error parsing JSON in GET: $e');
+      return ApiResult.failure(errorMessage: 'Failed to parse response data');
     }
   }
 
   Future<ApiResult<dynamic>> post(String url, AbstractClass obj) async {
-    try {
-      final requestBody = json.encode(obj.toMap());
-      dev.log('Sending POST request to: $url');
-      dev.log('Request body: $requestBody');
-
-      // Create a client with connection timeout
-      final client = http.Client();
-      final request = http.Request('POST', Uri.parse(url))
-        ..headers['Content-Type'] = 'application/json'
-        ..body = requestBody;
-
-      // Try to establish connection first
-      try {
-        await client.send(request).timeout(_connectionTimeout);
-      } catch (e) {
-        client.close();
-        dev.log('Connection failed: $e');
-        return ApiResult.failure(
-          errorMessage:
-              'Could not connect to server. Please check your connection.',
-        );
-      }
-
-      // If connection successful, make the actual request
-      final response = await client
-          .post(
-            Uri.parse(url),
-            headers: {'Content-Type': 'application/json'},
-            body: requestBody,
-          )
-          .timeout(_timeoutDuration);
-
-      client.close();
-      dev.log('Response status: ${response.statusCode}');
-      dev.log('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        return ApiResult.seccess(data: json.decode(response.body));
-      } else if (response.statusCode == 400) {
-        return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: 'Invalid request: ${response.body}',
-        );
-      } else if (response.statusCode == 500) {
-        return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: 'Server error: ${response.body}',
-        );
-      } else {
-        return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: response.body,
-        );
-      }
-    } on FormatException catch (e) {
-      dev.log('Format error: ${e.message}');
-      return ApiResult.failure(
-          errorMessage: 'Invalid response format: ${e.message}');
-    } on http.ClientException catch (e) {
-      dev.log('Network error: ${e.message}');
-      return ApiResult.failure(
-          errorMessage:
-              'Could not connect to server. Please check your connection.');
-    } on TimeoutException catch (e) {
-      dev.log('Timeout error: ${e.message}');
-      return ApiResult.failure(
-          errorMessage:
-              'Server is taking too long to respond. Please try again.');
-    } catch (e) {
-      dev.log('Unknown error: $e');
-      return ApiResult.failure(
-          errorMessage: 'Could not connect to server. Please try again.');
-    }
+    return await _sendRequest(
+      url,
+      'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: obj.toMap(),
+    );
   }
 
   Future<ApiResult<dynamic>> put(String url, AbstractClass obj) async {
+    return await _sendRequest(
+      url,
+      'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: obj.toMap(),
+    );
+  }
+
+  Future<ApiResult<dynamic>> delete(String url) async {
+    return await _sendRequest(
+      url,
+      'DELETE',
+      headers: {'Accept': 'application/json; charset=utf-8'},
+    );
+  }
+
+  Future<ApiResult<dynamic>> _sendRequest(
+    String url,
+    String method, {
+    Map<String, String>? headers,
+    Object? body,
+  }) async {
+    final client = http.Client();
     try {
-      final requestBody = json.encode(obj.toMap());
-      dev.log('Sending PUT request to: $url');
-      dev.log('Request body: $requestBody');
+      final request = http.Request(method, Uri.parse(url));
+      if (headers != null) request.headers.addAll(headers);
+      if (body != null) request.body = json.encode(body);
 
-      // Create a client with connection timeout
-      final client = http.Client();
-      final request = http.Request('PUT', Uri.parse(url))
-        ..headers['Content-Type'] = 'application/json'
-        ..body = requestBody;
-
-      // Try to establish connection first
       try {
         await client.send(request).timeout(_connectionTimeout);
       } catch (e) {
-        client.close();
         dev.log('Connection failed: $e');
         return ApiResult.failure(
-          errorMessage:
-              'Could not connect to server. Please check your connection.',
-        );
+            errorMessage:
+                'Could not connect to server. Please check your connection.');
       }
 
-      // If connection successful, make the actual request
-      final response = await client
-          .put(
-            Uri.parse(url),
-            headers: {'Content-Type': 'application/json'},
-            body: requestBody,
-          )
-          .timeout(_timeoutDuration);
+      http.Response response;
+      switch (method) {
+        case 'GET':
+          response = await client
+              .get(Uri.parse(url), headers: headers)
+              .timeout(_timeoutDuration);
+          break;
+        case 'POST':
+          response = await client
+              .post(Uri.parse(url), headers: headers, body: request.body)
+              .timeout(_timeoutDuration);
+          break;
+        case 'PUT':
+          response = await client
+              .put(Uri.parse(url), headers: headers, body: request.body)
+              .timeout(_timeoutDuration);
+          break;
+        case 'DELETE':
+          response = await client
+              .delete(Uri.parse(url), headers: headers)
+              .timeout(_timeoutDuration);
+          break;
+        default:
+          throw UnsupportedError('Unsupported HTTP method');
+      }
 
-      client.close();
       dev.log('Response status: ${response.statusCode}');
       dev.log('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        return ApiResult.seccess(data: json.decode(response.body));
-      } else if (response.statusCode == 400) {
-        return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: 'Invalid request: ${response.body}',
-        );
-      } else if (response.statusCode == 500) {
-        return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: 'Server error: ${response.body}',
-        );
+        return ApiResult.success(data: json.decode(response.body));
       } else {
         return ApiResult.failure(
-          errorCode: response.statusCode.toString(),
-          errorMessage: response.body,
-        );
+            errorCode: response.statusCode.toString(),
+            errorMessage: response.body);
       }
     } on FormatException catch (e) {
       dev.log('Format error: ${e.message}');
@@ -257,6 +161,8 @@ class Connect {
       dev.log('Unknown error: $e');
       return ApiResult.failure(
           errorMessage: 'Could not connect to server. Please try again.');
+    } finally {
+      client.close();
     }
   }
 }

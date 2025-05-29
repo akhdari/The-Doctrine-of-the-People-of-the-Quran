@@ -5,12 +5,30 @@ import 'system/utils/theme.dart';
 import 'controllers/theme.dart';
 import 'routes/app_screens.dart';
 import 'bindings/theme.dart';
+import 'controllers/attendance.dart';
 
 void main() {
   Get.put(ThemeController());
-  runApp(MyApp());
+  //runApp(MyApp());
+  runApp(const TestAttendance());
 }
 
+class TestAttendance extends StatefulWidget {
+  const TestAttendance({super.key});
+
+  @override
+  State<TestAttendance> createState() => _TestAttendanceState();
+}
+
+class _TestAttendanceState extends State<TestAttendance> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Attendance(),
+    );
+  }
+}
+/*
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -33,5 +51,6 @@ class _MyAppState extends State<MyApp> {
         ));
   }
 }
+*/
 
 // https://rydmike.com/flexcolorscheme/themesplayground-latest/

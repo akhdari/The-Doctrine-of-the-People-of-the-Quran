@@ -101,8 +101,7 @@ class _StudentScreenState extends State<StudentScreen> {
                 _loadData();
                 return controller.getData(ApiEndpoints.getStudents);
               },
-              onDelete: (id) =>
-                  controller.postDelete(id, ApiEndpoints.deleteStudent),
+              onDelete: (id) => controller.postDelete(id),
             );
           }),
         ),
