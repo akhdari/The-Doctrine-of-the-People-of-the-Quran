@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '/system/services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '/system/models/get/acheivement_class.dart';
 import 'dart:developer' as dev;
 import '/system/services/network/api_endpoints.dart';

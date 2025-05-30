@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/abstract_class.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
-import '/system/services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '/system/services/network/api_endpoints.dart';
 
 class LatestAcheivementModel extends AbstractClass {

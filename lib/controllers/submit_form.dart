@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import '../system/services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '../system/models/post/abstract_class.dart';
 
 Future<bool> submitForm(

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
-import '/system/services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '/system/models/get/student_class.dart';
 import 'package:flutter/material.dart';
 

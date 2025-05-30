@@ -43,6 +43,12 @@ class TestPage extends StatelessWidget {
           },
           child: Text('acheivement management'),
         ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(Routes.Attendance);
+          },
+          child: Text('attendance management'),
+        ),
       ]),
     );
   }

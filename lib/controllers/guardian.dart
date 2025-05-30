@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '/system/services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '/system/services/network/api_endpoints.dart';
 import '/system/models/get/guardian_class.dart';
 import 'dart:developer' as dev;

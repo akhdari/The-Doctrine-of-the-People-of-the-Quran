@@ -7,7 +7,7 @@ import '../custom_container.dart';
 import '../input_field.dart';
 import '../../../controllers/validator.dart';
 import '../../models/post/student.dart';
-import '../../services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '../multiselect.dart';
 import '../../utils/const/student.dart';
 import '../../../controllers/generate.dart';

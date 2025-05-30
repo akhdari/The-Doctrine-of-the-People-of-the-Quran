@@ -5,7 +5,7 @@ import '../../utils/const/lecture.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
 import '../../models/post/lecture.dart';
-import '../../services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import '../../../controllers/validator.dart';
 import '../../../controllers/edit_lecture.dart';
 import '../custom_container.dart';

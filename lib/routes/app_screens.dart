@@ -12,6 +12,8 @@ import '../bindings/acheivement.dart';
 import '../testpage.dart';
 import '../bindings/theme.dart';
 import '../system/screens/login.dart';
+import '../system/widgets/attendance/attendance.dart';
+import '../bindings/attendance.dart';
 
 class Routes {
   static const test = '/test';
@@ -21,6 +23,7 @@ class Routes {
   static const addGuardian = '/add_guardian';
   static const addLecture = '/add_lecture';
   static const addAcheivement = '/add_acheivement';
+  static const Attendance = '/Attendance';
 }
 
 class AppScreens {
@@ -64,6 +67,11 @@ class AppScreens {
       name: Routes.logIn,
       page: () => LogInPage(),
       //  binding:,
+    ),
+    GetPage(
+      name: Routes.Attendance,
+      page: () => AttendanceScreen(),
+      binding: AttendanceBinding(),
     ),
   ];
 }

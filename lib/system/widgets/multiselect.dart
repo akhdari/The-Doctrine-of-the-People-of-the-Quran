@@ -1,7 +1,7 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
-import '../services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
 import 'package:get/get.dart';
 
 class MultiSelectResult {
