@@ -9,6 +9,7 @@ import 'controllers/attendance.dart';
 
 void main() {
   Get.put(ThemeController());
+  Get.put(AttendanceController());
   //runApp(MyApp());
   runApp(const TestAttendance());
 }

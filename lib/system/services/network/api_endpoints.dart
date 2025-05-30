@@ -105,5 +105,14 @@ class ApiEndpoints {
 
   // WeeklySchedule endpoints
   static const String getWeeklySchedules = '$baseUrl/weeklyschedules';
+
+  static String getLatestAchievements = '$baseUrl/achievements/latest';
+
+  static String getGuardianAccounts = '$baseUrl/guardians';
+
+  static String getLectureIdName = '$baseUrl/lectures/ar_name-and-id';
   static String getWeeklyScheduleById(int id) => '$baseUrl/weeklyschedules/$id';
+
+  static String getStudentsByLecture(int idLecture) =>
+      '$baseUrl/lecturestudents/lectures/$idLecture/students';
 }
