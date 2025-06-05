@@ -188,7 +188,8 @@ class AttendanceController extends GetxController {
 }
 
 class AttendanceScreen extends StatelessWidget {
-  final AttendanceController controller = Get.put(AttendanceController());
+  //final AttendanceController controller = Get.put(AttendanceController());
+  final AttendanceController controller = Get.find<AttendanceController>();
 
   AttendanceScreen({super.key});
 
@@ -275,13 +276,12 @@ class AttendanceScreen extends StatelessWidget {
                     labelText: 'اختر الحلقة',
                     border: OutlineInputBorder(),
                   ),
-                  items:
-                      controller.dummyLectures.map((lecture) {
-                        return DropdownMenuItem<Lecture>(
-                          value: lecture,
-                          child: Text(lecture.name),
-                        );
-                      }).toList(),
+                  items: controller.dummyLectures.map((lecture) {
+                    return DropdownMenuItem<Lecture>(
+                      value: lecture,
+                      child: Text(lecture.name),
+                    );
+                  }).toList(),
                   onChanged: (Lecture? newValue) {
                     if (newValue != null) {
                       controller.updateLecture(newValue);
@@ -313,47 +313,45 @@ class AttendanceScreen extends StatelessWidget {
                   ...AttendanceStatus.values
                       .where((s) => s != AttendanceStatus.none)
                       .map((status) {
-                        return Expanded(
-                          flex: 1,
-                          child: Column(
-                            // Use Column to stack checkbox and text
-                            children: [
-                              Obx(
-                                () => Checkbox(
-                                  value: _getHeaderCheckboxRx(status).value,
-                                  onChanged: (bool? newValue) {
-                                    controller.toggleHeaderCheckbox(
-                                      status,
-                                      newValue,
-                                    );
-                                  },
-                                  fillColor: WidgetStateProperty.resolveWith<
-                                    Color
-                                  >((Set<WidgetState> states) {
-                                    if (states.contains(WidgetState.selected)) {
-                                      return Colors
-                                          .white; // Checkbox color when selected
-                                    }
-                                    return Colors
-                                        .white; // Checkbox border color when not selected
-                                  }),
-                                  checkColor:
-                                      Colors.teal, // Color of the check mark
-                                ),
-                              ),
-                              Text(
-                                _statusLabel(status),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
+                    return Expanded(
+                      flex: 1,
+                      child: Column(
+                        // Use Column to stack checkbox and text
+                        children: [
+                          Obx(
+                            () => Checkbox(
+                              value: _getHeaderCheckboxRx(status).value,
+                              onChanged: (bool? newValue) {
+                                controller.toggleHeaderCheckbox(
+                                  status,
+                                  newValue,
+                                );
+                              },
+                              fillColor: WidgetStateProperty.resolveWith<Color>(
+                                  (Set<WidgetState> states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return Colors
+                                      .white; // Checkbox color when selected
+                                }
+                                return Colors
+                                    .white; // Checkbox border color when not selected
+                              }),
+                              checkColor:
+                                  Colors.teal, // Color of the check mark
+                            ),
                           ),
-                        );
-                      })
-                      .toList(),
+                          Text(
+                            _statusLabel(status),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ],
               ),
             ),
@@ -378,26 +376,25 @@ class AttendanceScreen extends StatelessWidget {
                           ...AttendanceStatus.values
                               .where((s) => s != AttendanceStatus.none)
                               .map((status) {
-                                return Expanded(
-                                  flex: 1,
-                                  child: Obx(
-                                    () => Radio<AttendanceStatus>(
-                                      value: status,
-                                      groupValue: student.status.value,
-                                      onChanged: (newValue) {
-                                        if (newValue != null) {
-                                          controller.updateStatus(
-                                            index,
-                                            newValue,
-                                          );
-                                        }
-                                      },
-                                      activeColor: Colors.teal,
-                                    ),
-                                  ),
-                                );
-                              })
-                              .toList(),
+                            return Expanded(
+                              flex: 1,
+                              child: Obx(
+                                () => Radio<AttendanceStatus>(
+                                  value: status,
+                                  groupValue: student.status.value,
+                                  onChanged: (newValue) {
+                                    if (newValue != null) {
+                                      controller.updateStatus(
+                                        index,
+                                        newValue,
+                                      );
+                                    }
+                                  },
+                                  activeColor: Colors.teal,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ],
                       ),
                     );
