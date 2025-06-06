@@ -175,7 +175,7 @@ class _StudentDialogState extends State<StudentDialog> {
                   width: double.infinity,
                   height: 50,
                   child: ClipRRect(
-                    child: CustomImage(imagePath: "assets/back.png"),
+                    child: CustomAssetImage(assetPath: "assets/back.png"),
                   ),
                 ),
                 Row(

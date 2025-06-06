@@ -144,7 +144,7 @@ class _GuardianScreenState extends State<GuardianScreen> {
                   _loadData();
                   return controller.getData(ApiEndpoints.getSpecialGuardians);
                 },
-                onDelete: (id) => controller.postDelete(id),
+                onDelete: (id) => controller.postDelete(id, context),
                 getObj: (obj) {
                   if (obj != null) {
                     dev.log('Selected lecture: $obj');

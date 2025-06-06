@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../system/widgets/dotted_border_button.dart';
 import '../system/widgets/custom_button.dart';
-import '../system/widgets/snackbar.dart';
+import '../system/utils/snackbar_helper.dart';
 
 class SubscriptionInformationController extends GetxController {
   RxInt totalPrice = 0.obs;
@@ -274,14 +274,15 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
 
                   // Now validate the form along with the checkboxes.
                   if (widget.subscriptionFormKey.currentState!.validate()) {
-                    showSnackBar(
+                    showSuccessSnackbar(
                       context,
-                      widget.subscriptionFormKey,
+                      'تم تأكيد الطلب بنجاح',
                     );
                   } else {
                     // Form validation failed, you can show a message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Form is invalid')),
+                    showErrorSnackbar(
+                      context,
+                      'يرجى ملء جميع الحقول المطلوبة',
                     );
                   }
                 },

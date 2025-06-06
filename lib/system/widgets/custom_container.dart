@@ -50,8 +50,8 @@ class _CustomContainerState extends State<CustomContainer> {
                   ClipRRect(
                     //borderRadius: BorderRadius.circular(5),
                     //"assets/back.png"
-                    child: CustomImage(
-                      imagePath: "assets/back.png",
+                    child: CustomAssetImage(
+                      assetPath: "assets/back.png",
                       width: double.infinity,
                     ),
                   ),

@@ -130,7 +130,7 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
           height: 50,
           child: ClipRRect(
             //"assets/back.png"
-            child: CustomImage(imagePath: "assets/back.png"),
+            child: CustomAssetImage(assetPath: "assets/back.png"),
           ),
         ),
         Row(

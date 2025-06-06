@@ -1,8 +1,8 @@
 import 'dart:developer' as dev;
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/utils/snackbar_helper.dart';
 
 class GenericDataSource<T> extends DataGridSource {
   final List<T> data;
@@ -25,7 +25,7 @@ class GenericDataSource<T> extends DataGridSource {
     required this.onRefresh,
     required this.rowBuilder,
     required this.idExtractor,
-    this.detailsTitle = 'Item Details',
+    this.detailsTitle = 'تفاصيل العنصر',
     this.cellBuilder,
     this.infoIcon = Icons.info_outline,
     this.deleteIcon = Icons.delete,
@@ -41,22 +41,24 @@ class GenericDataSource<T> extends DataGridSource {
   @override
   List<DataGridRow> get rows => _rows;
 
+  /// Refresh the data source with new data
   void updateDataSource(List<T> newData) {
     _data = newData;
     buildDataGridRows();
     notifyListeners();
   }
 
+  /// Build rows from the given model list
   void buildDataGridRows() {
-    _rowToModelMap.clear(); // Clear old mappings
+    _rowToModelMap.clear();
     _rows = _data.map<DataGridRow>((e) {
       final row = rowBuilder(e);
-      _rowToModelMap[row] = e; // Store mapping
+      _rowToModelMap[row] = e;
       return row;
     }).toList();
   }
 
-  /// Get the original model T from a DataGridRow
+  /// Get model object from a specific row
   T? getModelFromRow(DataGridRow row) => _rowToModelMap[row];
 
   @override
@@ -65,12 +67,11 @@ class GenericDataSource<T> extends DataGridSource {
     final cells = row.getCells();
 
     return DataGridRowAdapter(
-      color: isSelected
-          ? (selectionColor ?? Colors.blue.withValues(alpha: 0.1))
-          : null,
+      color:
+          isSelected ? (selectionColor ?? Colors.blue.withOpacity(0.1)) : null,
       cells: cells.map<Widget>((cell) {
         if (cell.columnName == 'button') {
-          return _buildActionCell(isSelected, row);
+          return _buildActionCell(row);
         } else {
           return _buildDataCell(cell);
         }
@@ -78,7 +79,8 @@ class GenericDataSource<T> extends DataGridSource {
     );
   }
 
-  Widget _buildActionCell(bool isSelected, DataGridRow row) {
+  /// Cell with action icon (info)
+  Widget _buildActionCell(DataGridRow row) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: GestureDetector(
@@ -88,6 +90,7 @@ class GenericDataSource<T> extends DataGridSource {
     );
   }
 
+  /// Normal data cell
   Widget _buildDataCell(DataGridCell cell) {
     return cellBuilder?.call(cell) ??
         Container(
@@ -101,19 +104,23 @@ class GenericDataSource<T> extends DataGridSource {
         );
   }
 
+  /// Confirm and delete row item
   void _showDeleteDialog(DataGridRow row) async {
     final result = await Get.dialog(
       AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: const Text('Are you sure you want to delete this item?'),
+        title: const Text('تأكيد الحذف'),
+        content: const Text('هل أنت متأكد أنك تريد حذف هذا العنصر؟'),
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: const Text('Cancel'),
+            child: const Text('إلغاء'),
           ),
           TextButton(
             onPressed: () => Get.back(result: true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'حذف',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -124,38 +131,42 @@ class GenericDataSource<T> extends DataGridSource {
         final id = idExtractor(row);
         await onDelete?.call(id);
         await onRefresh();
+        showSuccessSnackbar(Get.context!, 'تم حذف العنصر بنجاح');
       } catch (e) {
         dev.log("Delete error: $e");
-        Get.snackbar('Error', 'Failed to delete item');
+        showErrorSnackbar(Get.context!, 'فشل في حذف العنصر');
       }
     }
   }
 
+  /// Show full row details in dialog
   void _showRowDetails(DataGridRow row) {
     final details = row
         .getCells()
         .where((c) => c.columnName != 'button')
-        .map((cell) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 120,
-                    child: Text(
-                      '${cell.columnName}:',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+        .map(
+          (cell) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    '${cell.columnName}:',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Expanded(
-                    child: Text(
-                      cell.value?.toString() ?? '',
-                      softWrap: true,
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    cell.value?.toString() ?? '',
+                    softWrap: true,
                   ),
-                ],
-              ),
-            ))
+                ),
+              ],
+            ),
+          ),
+        )
         .toList();
 
     Get.dialog(
@@ -171,7 +182,7 @@ class GenericDataSource<T> extends DataGridSource {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Close'),
+            child: const Text('إغلاق'),
           ),
         ],
       ),

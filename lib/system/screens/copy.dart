@@ -143,7 +143,7 @@ class _InfoLinksWithImagesState extends State<InfoLinksWithImages> {
         //Use Only TextSpan for consistency
         text: TextSpan(
           children: [
-            WidgetSpan(child: CustomImage(imagePath: 'page.png')),
+            WidgetSpan(child: CustomAssetImage(assetPath: 'page.png')),
             TextSpan(
               text: widget.text,
             ),

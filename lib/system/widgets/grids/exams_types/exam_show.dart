@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_exam_types.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exam_types.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/edit_exam_types.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/exam_types.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/exam.dart';

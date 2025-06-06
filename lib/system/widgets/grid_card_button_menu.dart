@@ -2,39 +2,33 @@ import 'package:flutter/material.dart';
 
 class GridCardButtonMenu extends StatelessWidget {
   final List<Widget> children;
-  final int numberColumns;
 
   const GridCardButtonMenu({
     super.key,
     required this.children,
-    this.numberColumns = 2,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Card(
-          margin: const EdgeInsets.all(20.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: GridView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: numberColumns,
-                mainAxisSpacing: 40.0,
-                crossAxisSpacing: 40.0,
-                childAspectRatio: 6,
-              ),
-              children: children,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int columns = 2;
+
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columns,
+              mainAxisSpacing: 20.0,
+              crossAxisSpacing: 20.0,
+              childAspectRatio: 6,
             ),
+            children: children,
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -53,12 +47,14 @@ class GridCardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff169b88),
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.all(40.0),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
@@ -66,9 +62,17 @@ class GridCardButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(title, style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 16),
-          Icon(icon, size: 40),
+          Flexible(
+            child: Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onPrimary,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Icon(icon, size: 32, color: theme.colorScheme.onSecondary),
         ],
       ),
     );

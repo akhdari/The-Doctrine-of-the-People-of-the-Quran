@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/grid_card_button_menu.dart';
-import 'system_ui.dart';
+import 'base_layout.dart';
 
 class ExamPage extends StatefulWidget {
   const ExamPage({super.key});
@@ -31,7 +31,7 @@ class _ExamPageState extends State<ExamPage> {
 
     return Scaffold(
         backgroundColor: scaffoldBackgroundColor,
-        body: SystemUI(
+        body: BaseLayout(
             title: "Exam Management",
             child: GridCardButtonMenu(children: [
               GridCardButton(

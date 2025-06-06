@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_exam_teachers.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/edit_exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/exam_teachers.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_teachers.dart';
@@ -45,7 +45,7 @@ class _ExamTeachersScreenState extends State<ExamTeachersScreen> {
 
     Future.wait([
       Future.delayed(duration),
-      controller.getData(ApiEndpoints.getSpecialExamsTeachers),
+      controller.fetchExamTeachers(ApiEndpoints.getSpecialExamsTeachers),
     ]).then((_) {
       if (mounted) {
         //why check if mounted? bcs the method is being called in the init state method + the future method
@@ -132,9 +132,9 @@ class _ExamTeachersScreenState extends State<ExamTeachersScreen> {
                 onRefresh: () {
                   _loadData();
                   return controller
-                      .getData(ApiEndpoints.getSpecialExamsTeachers);
+                      .fetchExamTeachers(ApiEndpoints.getSpecialExamsTeachers);
                 },
-                onDelete: (id) => controller.postDelete(id),
+                onDelete: (id) => controller.deleteExamTeacher(id),
                 getObj: (obj) {
                   if (obj != null) {
                     dev.log('Selected lecture: $obj');

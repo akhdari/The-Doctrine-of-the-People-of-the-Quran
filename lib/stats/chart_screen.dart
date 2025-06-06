@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../controllers/chart_config_controller.dart';
-import '../controllers/chart_filter_controller.dart';
-import '../system/utils/chart_utils.dart';
-import '../system/utils/snackbar_helper.dart';
-import '../system/utils/chart_download_utils.dart';
-import '../system/models/chart_data_models.dart';
-import './stats/download_button.dart';
+import '../controllers/charts/chart_config_controller.dart';
+import '../controllers/charts/chart_filter_controller.dart';
+import '../../system/utils/chart_utils.dart';
+import '../../system/utils/snackbar_helper.dart';
+import '../../system/utils/chart_download_utils.dart';
+import '../../system/models/chart_data_models.dart';
+import 'download_button.dart';
 
 class ChartScreen<T> extends StatelessWidget {
   final String title;

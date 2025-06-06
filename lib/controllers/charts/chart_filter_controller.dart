@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../stats/date_picker.dart'; // Import the custom date picker
 import 'dart:developer' as dev;
 
+import '../../system/widgets/date_picker.dart'; // Custom date picker
+import '../../system/utils/snackbar_helper.dart'; // Snackbar helper for showing messages
+
+/// Controller for managing filters in chart/report view
 class ChartFilterController extends GetxController {
   final String tag;
+
+  /// Input controllers
   final lectureNameController = TextEditingController();
   final studentNameController = TextEditingController();
 
+  /// Filter state
   final fromDate = Rxn<DateTime>();
   final toDate = Rxn<DateTime>();
   final isFilterApplied = false.obs;
@@ -19,54 +25,51 @@ class ChartFilterController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _setDefaultDates();
+    _setDefaultDates(); // Initialize with previous month's range
   }
 
+  /// Set default date range to previous month
   void _setDefaultDates() {
     final now = DateTime.now();
     final previousMonth = now.month == 1 ? 12 : now.month - 1;
     final year = now.month == 1 ? now.year - 1 : now.year;
 
-    fromDate.value = DateTime(
-      year,
-      previousMonth,
-      1,
-    ); // First day of previous month
-    toDate.value = DateTime(
-      year,
-      previousMonth + 1,
-      0,
-    ); // Last day of previous month
+    fromDate.value = DateTime(year, previousMonth, 1);
+    toDate.value = DateTime(year, previousMonth + 1, 0); // Last day of month
   }
 
+  /// Validate that both dates are selected and correct
   bool canApply() {
     if (fromDate.value == null || toDate.value == null) {
-      Get.snackbar('Error', "Please select both date ranges");
+      showErrorSnackbar(Get.context!, 'يرجى تحديد تاريخ البداية والنهاية');
       return false;
     }
 
     if (fromDate.value!.isAfter(toDate.value!)) {
-      Get.snackbar('Error', "Start date must be before end date");
+      showErrorSnackbar(Get.context!, 'تاريخ البداية يجب أن يكون قبل النهاية');
       return false;
     }
 
     return true;
   }
 
-  Future<void> pickDate(BuildContext context, {required bool isFrom}) async {
+  /// Show date picker for from/to dates
+  Future<void> pickDate(
+    BuildContext context, {
+    required bool isFrom,
+  }) async {
     final initialDate =
         (isFrom ? fromDate.value : toDate.value) ?? DateTime.now();
-    final firstDate = DateTime(2000);
-    final lastDate = DateTime(2030);
 
     final selectedDate = await showCustomDatePicker(
       context: context,
       initialDate: initialDate,
-      firstDate: isFrom ? firstDate : (fromDate.value ?? firstDate),
-      lastDate: isFrom ? (toDate.value ?? lastDate) : lastDate,
+      firstDate: isFrom ? DateTime(2000) : (fromDate.value ?? DateTime(2000)),
+      lastDate: isFrom ? (toDate.value ?? DateTime(2030)) : DateTime(2030),
     );
 
     dev.log("Selected date: $selectedDate");
+
     if (selectedDate != null) {
       if (isFrom) {
         fromDate.value = selectedDate;
@@ -76,12 +79,14 @@ class ChartFilterController extends GetxController {
     }
   }
 
+  /// Apply current filters if valid
   void applyFilters() {
     if (canApply()) {
       isFilterApplied.value = true;
     }
   }
 
+  /// Reset all filters and inputs to default
   void resetFilters() {
     lectureNameController.clear();
     studentNameController.clear();
@@ -89,15 +94,15 @@ class ChartFilterController extends GetxController {
     isFilterApplied.value = false;
   }
 
-  String get formattedFromDate =>
-      fromDate.value != null
-          ? DateFormat('yyyy-MM-dd').format(fromDate.value!)
-          : '';
+  /// Format fromDate for display
+  String get formattedFromDate => fromDate.value != null
+      ? DateFormat('yyyy-MM-dd').format(fromDate.value!)
+      : '';
 
-  String get formattedToDate =>
-      fromDate.value != null
-          ? DateFormat('yyyy-MM-dd').format(toDate.value!)
-          : '';
+  /// Format toDate for display
+  String get formattedToDate => toDate.value != null
+      ? DateFormat('yyyy-MM-dd').format(toDate.value!)
+      : '';
 
   @override
   void onClose() {

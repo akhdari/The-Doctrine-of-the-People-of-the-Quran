@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/system_ui.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/grids/exams_teachers/exam_show.dart';
 
 class ExamTeachers extends StatelessWidget {
@@ -11,7 +11,7 @@ class ExamTeachers extends StatelessWidget {
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     return Scaffold(
         backgroundColor: scaffoldBackgroundColor,
-        body: SystemUI(
+        body: BaseLayout(
             title: "Exam Teachers Management", child: ExamTeachersScreen()));
   }
 }

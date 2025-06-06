@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_exam_records.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/edit_exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/exam_records.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_records.dart';
@@ -44,7 +44,7 @@ class _ExamRecordsScreenState extends State<ExamRecordsScreen> {
 
     Future.wait([
       Future.delayed(duration),
-      controller.getData(ApiEndpoints.getSpecialExamRecords),
+      controller.fetchExamRecords(ApiEndpoints.getSpecialExamRecords),
     ]).then((_) {
       if (mounted) {
         //why check if mounted? bcs the method is being called in the init state method + the future method
@@ -130,9 +130,10 @@ class _ExamRecordsScreenState extends State<ExamRecordsScreen> {
                 data: controller.recordsList,
                 onRefresh: () {
                   _loadData();
-                  return controller.getData(ApiEndpoints.getSpecialExamRecords);
+                  return controller
+                      .fetchExamRecords(ApiEndpoints.getSpecialExamRecords);
                 },
-                onDelete: (id) => controller.postDelete(id),
+                onDelete: (id) => controller.deleteExamRecord(id),
                 getObj: (obj) {
                   if (obj != null) {
                     dev.log('Selected lecture: $obj');

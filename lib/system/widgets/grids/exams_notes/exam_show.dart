@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_exam_notes.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exam_notes.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/edit_exam_notes.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/exam_notes.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/appreciation.dart';
@@ -45,7 +45,7 @@ class _ExamNotesScreenState extends State<ExamNotesScreen> {
 
     Future.wait([
       Future.delayed(duration),
-      controller.getData(ApiEndpoints.getAppreciations),
+      controller.fetchExamNotes(ApiEndpoints.getAppreciations),
     ]).then((_) {
       if (mounted) {
         //why check if mounted? bcs the method is being called in the init state method + the future method
@@ -118,7 +118,7 @@ class _ExamNotesScreenState extends State<ExamNotesScreen> {
               );
             }
 
-            if (controller.notesList.isEmpty) {
+            if (controller.examNotes.isEmpty) {
               return ErrorIllustration(
                 illustrationPath: 'assets/illustration/empty-box.svg',
                 title: 'No Students Found',
@@ -128,12 +128,13 @@ class _ExamNotesScreenState extends State<ExamNotesScreen> {
             }
 
             return NotesGrid(
-                data: controller.notesList,
+                data: controller.examNotes,
                 onRefresh: () {
                   _loadData();
-                  return controller.getData(ApiEndpoints.getAppreciations);
+                  return controller
+                      .fetchExamNotes(ApiEndpoints.getAppreciations);
                 },
-                onDelete: (id) => controller.postDelete(id),
+                onDelete: (id) => controller.deleteExamNote(id),
                 getObj: (obj) {
                   if (obj != null) {
                     dev.log('Selected lecture: $obj');

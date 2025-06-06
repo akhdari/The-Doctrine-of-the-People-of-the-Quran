@@ -1,6 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
-import '../widgets/end_drawer.dart';
+import '../widgets/custom_drawer.dart';
 import 'package:get/get.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,22 +8,22 @@ import '/controllers/theme.dart';
 import '../widgets/image.dart';
 import '../../system/widgets/lunch_url.dart';
 
-class SystemUI extends StatefulWidget {
+class BaseLayout extends StatefulWidget {
   final String title;
   final Widget child;
 
-  const SystemUI({
+  const BaseLayout({
     super.key,
     required this.title,
     required this.child,
   });
 
   @override
-  State<SystemUI> createState() => _SystemUIState();
+  State<BaseLayout> createState() => _BaseLayoutState();
 }
 
-class _SystemUIState extends State<SystemUI> {
-  final GlobalKey<ScaffoldState> systemUiScaffoldKey =
+class _BaseLayoutState extends State<BaseLayout> {
+  final GlobalKey<ScaffoldState> baseLayoutScaffoldKey =
       GlobalKey<ScaffoldState>();
   bool isClicked = false;
   late ThemeController themeController;
@@ -44,9 +44,9 @@ class _SystemUIState extends State<SystemUI> {
     final dividerColor = theme.dividerColor;
 
     return Scaffold(
-      key: systemUiScaffoldKey,
+      key: baseLayoutScaffoldKey,
       backgroundColor: scaffoldBackgroundColor,
-      endDrawer: CustomEndDrawer(),
+      endDrawer: CustomDrawer(),
       drawerEnableOpenDragGesture: true,
       body: Column(
         children: [
@@ -60,7 +60,7 @@ class _SystemUIState extends State<SystemUI> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomImage(imagePath: "assets/logo.png", height: 50),
+                    CustomAssetImage(assetPath: "assets/logo.png", height: 50),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
@@ -84,8 +84,8 @@ class _SystemUIState extends State<SystemUI> {
                         GestureDetector(
                           onTap: () => launchURL(
                               'https://play.google.com/store/apps/details?id=com.example.app'),
-                          child: CustomImage(
-                              imagePath: 'assets/googleplay.png', height: 50),
+                          child: CustomAssetImage(
+                              assetPath: 'assets/googleplay.png', height: 50),
                         ),
                       ],
                     ),
@@ -116,7 +116,7 @@ class _SystemUIState extends State<SystemUI> {
                         color: iconTheme.color,
                       ),
                       onPressed: () =>
-                          systemUiScaffoldKey.currentState?.openEndDrawer(),
+                          baseLayoutScaffoldKey.currentState?.openEndDrawer(),
                     ),
                   ],
                 ),
@@ -124,6 +124,19 @@ class _SystemUIState extends State<SystemUI> {
             ),
           ),
           Expanded(child: widget.child),
+          Container(
+            color: Theme.of(context).colorScheme.surface,
+            padding: const EdgeInsets.all(8),
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: Text(
+              'جميع الحقوق محفوظة © 2025 نظام أهل القرآن',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ),
         ],
       ),
     );

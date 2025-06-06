@@ -1,7 +1,7 @@
 import 'package:pdf/widgets.dart' as pw;
 
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/reports/pdf_generator.dart'
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/pdf_generator.dart'
     as pdf_generator;
 
 class FontController extends GetxController {

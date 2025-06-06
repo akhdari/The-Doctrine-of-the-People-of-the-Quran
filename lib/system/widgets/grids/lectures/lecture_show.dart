@@ -136,7 +136,7 @@ class _LectureShowState extends State<LectureShow> {
                 _loadData();
                 return widget.controller.getData(ApiEndpoints.getLectures);
               },
-              onDelete: (id) => widget.controller.postDelete(id),
+              onDelete: (id) => widget.controller.postDelete(id, context),
               onTap: (details) {
                 dev.log('Tapped on row: $details');
                 hasSelection.value = details != null;

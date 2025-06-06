@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import '../widgets/grids/students/student_show.dart';
-import 'system_ui.dart';
+import '../widgets/grids/guardians/guardian_show.dart';
+import 'base_layout.dart';
 
-class AddStudent extends StatelessWidget {
-  const AddStudent({super.key});
+class AddGuardian extends StatelessWidget {
+  const AddGuardian({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
+
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
-      body: SystemUI(
-        title: "Students Management",
-        child: StudentScreen(),
+      body: BaseLayout(
+        title: "Guardians Management",
+        child: GuardianScreen(),
       ),
     );
   }

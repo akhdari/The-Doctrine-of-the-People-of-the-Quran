@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/grids/lectures/lecture_show.dart';
-import 'system_ui.dart';
+import 'base_layout.dart';
 import '../../controllers/lecture.dart';
 
 class AddLecture extends StatelessWidget {
@@ -14,7 +14,7 @@ class AddLecture extends StatelessWidget {
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
-      body: SystemUI(
+      body: BaseLayout(
         title: "Lectures Management",
         child: LectureShow(
           controller: controller,

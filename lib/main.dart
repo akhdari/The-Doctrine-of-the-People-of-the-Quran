@@ -6,50 +6,33 @@ import 'package:get/get.dart';
 import 'system/utils/theme.dart';
 import 'controllers/theme.dart';
 import 'routes/app_screens.dart';
-import 'bindings/theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'bindings/starter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env"); // Load .env file
   dev.log('Environment variables loaded: ${dotenv.env}');
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('ar');
+  WidgetsFlutterBinding.ensureInitialized();
   Get.put(ThemeController());
   runApp(MyApp());
 }
 
-/*
-class TestAttendance extends StatefulWidget {
-  const TestAttendance({super.key});
-
-  @override
-  State<TestAttendance> createState() => _TestAttendanceState();
-}
-
-class _TestAttendanceState extends State<TestAttendance> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Attendance(),
-    );
-  }
-}
-*/
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  ThemeController themeController = Get.find<ThemeController>();
-  @override
   Widget build(BuildContext context) {
+    final ThemeController themeController = Get.find<ThemeController>();
+
     return Obx(() => GetMaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: themeController.mode.value,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          initialBinding: ThemeBinding(),
+          initialBinding: StarterBinding(),
           getPages: AppScreens.routes,
           home: TestPage(),
         ));

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:convert';
 import '../system/models/chart_data_models.dart';
-import '../chart_screen.dart';
+import 'chart_screen.dart';
 
 class AttendanceChartScreen extends StatelessWidget {
   const AttendanceChartScreen({super.key});

@@ -2,7 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_exam_types.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/exams/edit_exam_types.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/submit_form.dart';
@@ -108,7 +108,7 @@ class _LectureDialogState extends State<ExamTypesDialog> {
                   width: double.infinity,
                   height: 50,
                   child: ClipRRect(
-                    child: CustomImage(imagePath: "assets/back.png"),
+                    child: CustomAssetImage(assetPath: "assets/back.png"),
                   ),
                 ),
                 Row(

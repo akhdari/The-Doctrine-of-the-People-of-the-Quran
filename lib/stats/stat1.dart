@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import '../system/models/chart_data_models.dart';
-import '../chart_screen.dart';
+import 'chart_screen.dart';
 
 class StudentProgressChartScreen extends StatelessWidget {
   const StudentProgressChartScreen({super.key});

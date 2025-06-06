@@ -105,7 +105,7 @@ class _GuardianDialogState extends State<GuardianDialog> {
                   height: 50,
                   child: ClipRRect(
                     //"assets/back.png"
-                    child: CustomImage(imagePath: "assets/back.png"),
+                    child: CustomAssetImage(assetPath: "assets/back.png"),
                   ),
                 ),
                 Row(

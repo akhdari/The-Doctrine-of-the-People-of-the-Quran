@@ -1,42 +1,37 @@
 import 'package:flutter/material.dart';
 
-class CustomImage extends StatefulWidget {
-  final String imagePath;
+class CustomAssetImage extends StatefulWidget {
+  final String assetPath;
   final double? width;
   final double? height;
 
-  const CustomImage({
+  const CustomAssetImage({
     super.key,
-    required this.imagePath,
+    required this.assetPath,
     this.width,
     this.height,
   });
 
   @override
-  State<CustomImage> createState() => _CustomImageState();
+  State<CustomAssetImage> createState() => _CustomAssetImageState();
 }
 
-class _CustomImageState extends State<CustomImage> {
+class _CustomAssetImageState extends State<CustomAssetImage> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: widget.width,
       height: widget.height,
-      child: Image(
-        image: AssetImage(widget.imagePath),
+      child: Image.asset(
+        widget.assetPath,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           return Icon(
             Icons.error,
             color: colorScheme.error,
           );
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

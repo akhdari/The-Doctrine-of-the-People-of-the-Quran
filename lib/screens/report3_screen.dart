@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../reports/report_screen.dart';
+import '../helpers/report_screen.dart';
 import '../reports/report3.dart' as report3;
 import '../system/models/report3_model.dart' as model3;
 import '../data/report3_data.dart' as data3;
-import '../reports/pdf_generator.dart' as pdf_generator;
+import '../helpers/pdf_generator.dart' as pdf_generator;
 import '../system/models/shared.dart' as shared;
 
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/utils/font_loader.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/font_loader.dart';
 
 class Report3Screen extends StatelessWidget {
   final fonts = Get.find<FontController>();

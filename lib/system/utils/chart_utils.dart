@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../controllers/chart_filter_controller.dart';
+import '../../controllers/charts/chart_filter_controller.dart';
 
 class ChartData {
   final String x;

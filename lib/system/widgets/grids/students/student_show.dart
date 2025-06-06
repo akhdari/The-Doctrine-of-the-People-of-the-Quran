@@ -144,7 +144,7 @@ class _StudentScreenState extends State<StudentScreen> {
                   _loadData();
                   return controller.getData(ApiEndpoints.getStudents);
                 },
-                onDelete: (id) => controller.postDelete(id),
+                onDelete: (id) => controller.postDelete(id, context),
                 getObj: (obj) {
                   if (obj != null) {
                     dev.log('Selected lecture: $obj');

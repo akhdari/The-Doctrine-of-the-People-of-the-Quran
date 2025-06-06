@@ -48,15 +48,15 @@ class FooterSection extends StatelessWidget {
               GestureDetector(
                 onTap: () => launchURL(
                     'https://apps.apple.com/us/app/example-app/id123456789'),
-                child:
-                    CustomImage(imagePath: 'assets/footer/APP.png', height: 72),
+                child: CustomAssetImage(
+                    assetPath: 'assets/footer/APP.png', height: 72),
               ),
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () => launchURL(
                     'https://play.google.com/store/apps/details?id=com.example.app'),
-                child: CustomImage(
-                    imagePath: 'assets/footer/google-play.png', height: 50),
+                child: CustomAssetImage(
+                    assetPath: 'assets/footer/google-play.png', height: 50),
               ),
             ],
           ),

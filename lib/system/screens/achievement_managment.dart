@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'system_ui.dart';
+import 'base_layout.dart';
 import '../widgets/typehead.dart';
 import '../widgets/grids/acheivement/acheivement_show.dart';
 import '../../controllers/achievement.dart';
@@ -136,7 +136,7 @@ class _AddAcheivementState extends State<AddAcheivement> {
 
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
-      body: SystemUI(
+      body: BaseLayout(
         title: "Achievement Management",
         child: Column(children: [
           Row(
@@ -182,22 +182,3 @@ class _AddAcheivementState extends State<AddAcheivement> {
     );
   }
 }
-/*
-SfDateRangePicker(
-                              view: DateRangePickerView.month,
-                              monthViewSettings:
-                                  DateRangePickerMonthViewSettings(
-                                firstDayOfWeek: 1,
-                              ),
-                              showNavigationArrow: true,
-                              navigationMode:
-                                  DateRangePickerNavigationMode.scroll,
-                              selectionMode:
-                                  DateRangePickerSelectionMode.single,
-                              initialSelectedDate: DateTime.now(),
-                              todayHighlightColor: Color(0xff169b88),
-                              initialDisplayDate: DateTime.now(),
-                              showTodayButton: true,
-                              showActionButtons: true,
-                            ),
-*/

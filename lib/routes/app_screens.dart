@@ -1,28 +1,36 @@
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_notes.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_records.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_teachers.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_types.dart';
+
+// Import bindings
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_notes.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_types.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/copy.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/acheivement.dart';
+//import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/starter.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/attendance_binding.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/charts/stat1_binding.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/charts/stat2_binding.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/charts/stat3_binding.dart';
+//import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_teacher_binding.dart'; // Assuming this is correct
+
+// Import screens
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exam_management.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_notes.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_records.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_teachers.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_types.dart';
-import '../system/screens/copy.dart';
-import '../bindings/copy.dart';
-import '../system/screens/add_student.dart';
-import '../bindings/student.dart';
-import '../system/screens/add_guardian.dart';
-import '../bindings/guardian.dart';
-import '../system/screens/add_lecture.dart';
-import '../bindings/lecture.dart';
-import '../system/screens/add_acheivement.dart';
-import '../bindings/acheivement.dart';
-import '../testpage.dart';
-import '../bindings/theme.dart';
-import '../system/screens/login.dart';
-import '../system/widgets/attendance/attendance.dart';
-// Core screens
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/copy.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/student_managment.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/guardian_managment.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/lecture_managment.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/achievement_managment.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/login.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/attendance/attendance.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/testpage.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/flipcard.dart';
 
 // Report screens (namespaced)
@@ -36,45 +44,12 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/stats/stat1.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/stats/stat2.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/stats/stat3.dart';
 
-// Bindings for dependency injection
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/attendance_binding.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/stat1_binding.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/stat2_binding.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/stat3_binding.dart';
-
-//import 'package:test_app/bindings/stat4_binding.dart';
-
-class Routes {
-  static const test = '/test';
-  static const copy = '/copy';
-  static const logIn = '/logIn';
-  static const addStudent = '/add_student';
-  static const addGuardian = '/add_guardian';
-  static const addLecture = '/add_lecture';
-  static const addAcheivement = '/add_acheivement';
-  static const Attendance = '/Attendance';
-
-  static const attendance = '/attendance';
-  static const INITIAL = '/';
-  static const REPORT1 = '/report1';
-  static const REPORT2 = '/report2';
-  static const REPORT3 = '/report3';
-  static const REPORT4 = '/report4';
-  static const CARD = '/card';
-  static const TEST = '/test';
-  static const STAT1 = '/stat1';
-  static const STAT2 = '/stat2';
-  static const STAT3 = '/stat3';
-  static const STAT4 = '/stat4';
-
-  static const examPage = '/exams';
-  static const examRrcords = '/exams/records';
-  static const examResultsNotes = '/exams/notes';
-  static const examTypes = '/exams/types';
-  static const examTeachers = '/exams/teachers';
-
-  static const String financialManagement = '/financial_management';
-}
+// Utility screens
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/forget_password.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/create_account.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/landing_screen.dart';
+// App routes
+import 'package:the_doctarine_of_the_ppl_of_the_quran/routes/app_routes.dart';
 
 class AppScreens {
   static final routes = [
@@ -99,29 +74,17 @@ class AppScreens {
       binding: LectureBinding(),
     ),
     GetPage(
-      name: Routes.addAcheivement,
+      name: Routes.addAchievement,
       page: () => AddAcheivement(),
       binding: AcheivementBinding(),
     ),
     GetPage(
-      name: Routes.TEST,
-      page: () => CopyPage(),
-      binding: CopyBinding(),
-    ),
-    GetPage(
-      name: Routes.copy,
-      page: () => CopyPage(),
-      binding: CopyBinding(),
-    ),
-    GetPage(
       name: Routes.test,
       page: () => TestPage(),
-      binding: ThemeBinding(),
     ),
     GetPage(
       name: Routes.logIn,
       page: () => LogInPage(),
-      //  binding:,
     ),
     GetPage(
       name: Routes.attendance,
@@ -129,22 +92,21 @@ class AppScreens {
       binding: AttendanceBinding(),
     ),
     GetPage(
-      name: Routes.INITIAL,
+      name: Routes.initial,
       page: () => TestPage(),
     ),
 
     // Report screens
-    GetPage(name: Routes.REPORT1, page: () => report1.Report1Screen()),
-    GetPage(name: Routes.REPORT2, page: () => report2.Report2Screen()),
-    GetPage(name: Routes.REPORT3, page: () => report3.Report3Screen()),
-    GetPage(name: Routes.REPORT4, page: () => report4.Report4Screen()),
+    GetPage(name: Routes.report1, page: () => report1.Report1Screen()),
+    GetPage(name: Routes.report2, page: () => report2.Report2Screen()),
+    GetPage(name: Routes.report3, page: () => report3.Report3Screen()),
+    GetPage(name: Routes.report4, page: () => report4.Report4Screen()),
 
-    // Other utility screens
-    GetPage(name: Routes.TEST, page: () => const TestPage()),
-    GetPage(name: Routes.CARD, page: () => const StudentSelectionPage()),
+    // Utility screens
+    GetPage(name: Routes.test, page: () => const TestPage()),
+    GetPage(name: Routes.card, page: () => const StudentSelectionPage()),
 
-    // Stats screens with bindings
-
+    // Exam related screens with bindings
     GetPage(
       name: Routes.examPage,
       page: () => ExamPage(),
@@ -155,12 +117,12 @@ class AppScreens {
       binding: ExamTypesBinding(),
     ),
     GetPage(
-      name: Routes.examRrcords,
+      name: Routes.examRecords,
       page: () => ExamRecords(),
       binding: ExamRecordsBinding(),
     ),
     GetPage(
-      name: Routes.examResultsNotes,
+      name: Routes.examNotes,
       page: () => ExamNotes(),
       binding: ExamNotesBinding(),
     ),
@@ -169,27 +131,42 @@ class AppScreens {
       page: () => ExamTeachers(),
       binding: ExamTeacherBinding(),
     ),
-    GetPage(
-      name: Routes.financialManagement,
-      page: () => TestPage(), // Placeholder for financial management screen
-      binding: ThemeBinding(), // Replace with actual binding when available
-    ),
 
+    /*GetPage(
+      name: Routes.financialManagement,
+      page: () => ,
+      
+    ),*/
+
+    // Stats screens
     GetPage(
-      name: Routes.STAT1,
+      name: Routes.stat1,
       page: () => StudentProgressChartScreen(),
       binding: Stat1Binding(),
     ),
-
     GetPage(
-      name: Routes.STAT2,
+      name: Routes.stat2,
       page: () => AttendanceChartScreen(),
       binding: Stat2Binding(),
     ),
     GetPage(
-      name: Routes.STAT3,
+      name: Routes.stat3,
       page: () => PerformanceChartScreen(),
       binding: Stat3Binding(),
+    ),
+
+    // User account related
+    GetPage(
+      name: Routes.createAccount,
+      page: () => CreateAccountScreen(),
+    ),
+    GetPage(
+      name: Routes.forgetPassword,
+      page: () => ForgetPasswordScreen(),
+    ),
+    GetPage(
+      name: Routes.onboarding,
+      page: () => OnboardingScreen(),
     ),
   ];
 }
