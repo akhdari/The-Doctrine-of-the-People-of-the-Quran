@@ -1,10 +1,11 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class GoldenRecord implements Model {
-  dynamic goldenRecordId;
-  dynamic studentId;
-  dynamic recordType;
-  dynamic riwayah;
-  dynamic dateOfCompletion;
-  dynamic schoolName;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class GoldenRecord implements Model {
+ dynamic goldenRecordId;
+ dynamic studentId;
+ dynamic recordType;
+ dynamic riwayah;
+ dynamic dateOfCompletion;
+ dynamic schoolName;
 
   GoldenRecord({
     this.goldenRecordId,

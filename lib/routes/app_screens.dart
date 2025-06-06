@@ -1,4 +1,13 @@
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_notes.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_types.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exam_management.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_notes.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_types.dart';
 import '../system/screens/copy.dart';
 import '../bindings/copy.dart';
 import '../system/screens/add_student.dart';
@@ -12,8 +21,8 @@ import '../bindings/acheivement.dart';
 import '../testpage.dart';
 import '../bindings/theme.dart';
 import '../system/screens/login.dart';
+import '../system/widgets/attendance/attendance.dart';
 // Core screens
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/attendance/attendance.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/flipcard.dart';
 
 // Report screens (namespaced)
@@ -43,6 +52,8 @@ class Routes {
   static const addGuardian = '/add_guardian';
   static const addLecture = '/add_lecture';
   static const addAcheivement = '/add_acheivement';
+  static const Attendance = '/Attendance';
+
   static const attendance = '/attendance';
   static const INITIAL = '/';
   static const REPORT1 = '/report1';
@@ -55,6 +66,14 @@ class Routes {
   static const STAT2 = '/stat2';
   static const STAT3 = '/stat3';
   static const STAT4 = '/stat4';
+
+  static const examPage = '/exams';
+  static const examRrcords = '/exams/records';
+  static const examResultsNotes = '/exams/notes';
+  static const examTypes = '/exams/types';
+  static const examTeachers = '/exams/teachers';
+
+  static const String financialManagement = '/financial_management';
 }
 
 class AppScreens {
@@ -86,12 +105,23 @@ class AppScreens {
     ),
     GetPage(
       name: Routes.TEST,
+      page: () => CopyPage(),
+      binding: CopyBinding(),
+    ),
+    GetPage(
+      name: Routes.copy,
+      page: () => CopyPage(),
+      binding: CopyBinding(),
+    ),
+    GetPage(
+      name: Routes.test,
       page: () => TestPage(),
       binding: ThemeBinding(),
     ),
     GetPage(
       name: Routes.logIn,
       page: () => LogInPage(),
+      //  binding:,
     ),
     GetPage(
       name: Routes.attendance,
@@ -114,11 +144,43 @@ class AppScreens {
     GetPage(name: Routes.CARD, page: () => const StudentSelectionPage()),
 
     // Stats screens with bindings
+
+    GetPage(
+      name: Routes.examPage,
+      page: () => ExamPage(),
+    ),
+    GetPage(
+      name: Routes.examTypes,
+      page: () => ExamTypes(),
+      binding: ExamTypesBinding(),
+    ),
+    GetPage(
+      name: Routes.examRrcords,
+      page: () => ExamRecords(),
+      binding: ExamRecordsBinding(),
+    ),
+    GetPage(
+      name: Routes.examResultsNotes,
+      page: () => ExamNotes(),
+      binding: ExamNotesBinding(),
+    ),
+    GetPage(
+      name: Routes.examTeachers,
+      page: () => ExamTeachers(),
+      binding: ExamTeacherBinding(),
+    ),
+    GetPage(
+      name: Routes.financialManagement,
+      page: () => TestPage(), // Placeholder for financial management screen
+      binding: ThemeBinding(), // Replace with actual binding when available
+    ),
+
     GetPage(
       name: Routes.STAT1,
       page: () => StudentProgressChartScreen(),
       binding: Stat1Binding(),
     ),
+
     GetPage(
       name: Routes.STAT2,
       page: () => AttendanceChartScreen(),

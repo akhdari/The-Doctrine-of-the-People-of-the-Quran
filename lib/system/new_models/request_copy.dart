@@ -1,10 +1,11 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class RequestCopy implements Model {
-  dynamic requestCopyId;
-  dynamic username;
-  dynamic firstName;
-  dynamic lastName;
-  dynamic email;
-  dynamic phoneNumber;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class RequestCopy implements Model {
+ dynamic requestCopyId;
+ dynamic username;
+ dynamic firstName;
+ dynamic lastName;
+ dynamic email;
+ dynamic phoneNumber;
 
   RequestCopy({
     this.requestCopyId,

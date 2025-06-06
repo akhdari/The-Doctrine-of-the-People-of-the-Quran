@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student_lecture_achievements.dart';
 import '/system/widgets/input_field.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
 import '../../models/post/acheivement.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
+
 import '../custom_container.dart';
 import '../image.dart';
 import '../../utils/const/acheivement.dart';
@@ -37,7 +38,6 @@ class AcheivemtDialog extends StatefulWidget {
 class _AcheivemtDialogState extends State<AcheivemtDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final ScrollController _scrollController;
-  final Connect _connect = Connect();
   final Acheivement _acheivement = Acheivement();
   final SurahAyahList _hifdList = SurahAyahList();
   final SurahAyahList _quickRevList = SurahAyahList();
@@ -46,7 +46,7 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
   final RxBool _isComplete = true.obs;
   final BeveledRectangleBorder _shape = const BeveledRectangleBorder();
   late final LatestAcheivement _latestAcheivement;
-  late AcheivementTypeWrapper _latestInfo;
+  late StudentLectureAchievements _latestInfo;
 
   @override
   void initState() {
@@ -76,15 +76,9 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
     try {
       _latestInfo =
           await _latestAcheivement.getData(widget.studentId, widget.sessionId);
-      if (_latestInfo.errorMessage == null) {
-        _latestAcheivement
-            .assignControllerValue(_latestAcheivement.selectedType.value);
-        Get.snackbar('Success', 'Achievement data loaded successfully');
-      } else {
-        debugPrint('Error fetching data: ${_latestInfo.errorMessage}');
-        Get.snackbar(
-            'Error', _latestInfo.errorMessage ?? 'Unknown error occurred');
-      }
+      _latestAcheivement
+          .assignControllerValue(_latestAcheivement.selectedType.value);
+      Get.snackbar('Success', 'Achievement data loaded successfully');
     } catch (e) {
       debugPrint('Exception in _loadLatestAchievement: $e');
       Get.snackbar('Error', 'Failed to load achievement data');
@@ -106,12 +100,8 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
       dev.log(_acheivement.toMap().toString());
 
       // Submit form and get result
-      final success = await submitForm(
-        _formKey,
-        _connect,
-        _acheivement,
-        url,
-      );
+      final success =
+          await submitForm(_formKey, _acheivement, url, Acheivement.fromMap);
 
       // Close dialog only on success
       if (success) {

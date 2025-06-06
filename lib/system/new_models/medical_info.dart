@@ -1,9 +1,10 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class MedicalInfo implements Model {
-  dynamic studentId;
-  dynamic bloodType;
-  dynamic allergies;
-  dynamic diseases;
-  dynamic diseasesCauses;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class MedicalInfo implements Model {
+ dynamic studentId;
+ dynamic bloodType;
+ dynamic allergies;
+ dynamic diseases;
+ dynamic diseasesCauses;
 
   MedicalInfo({
     this.studentId,

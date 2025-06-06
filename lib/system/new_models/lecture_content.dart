@@ -1,13 +1,14 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class LectureContent implements Model {
-  dynamic id;
-  dynamic fromSurah;
-  dynamic fromAyah;
-  dynamic toSurah;
-  dynamic toAyah;
-  dynamic observation;
-  dynamic studentId;
-  dynamic lectureId;
-  dynamic type;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class LectureContent implements Model {
+ dynamic id;
+ dynamic fromSurah;
+ dynamic fromAyah;
+ dynamic toSurah;
+ dynamic toAyah;
+ dynamic observation;
+ dynamic studentId;
+ dynamic lectureId;
+ dynamic type;
 
   LectureContent({
     this.id,

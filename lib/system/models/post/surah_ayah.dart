@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
 
-class AcheivementTypeWrapper {
-  final AcheivementType acheivementType;
-  final String? errorMessage;
-
-  AcheivementTypeWrapper({required this.acheivementType, this.errorMessage});
-  AcheivementTypeWrapper.isSuccess({required this.acheivementType})
-      : errorMessage = null;
-  AcheivementTypeWrapper.isFailure({required this.errorMessage})
-      : acheivementType = AcheivementType(
-          hifd: null,
-          quickRev: null,
-          majorRev: null,
-        );
-}
-
 class AcheivementType {
   final SurahAyah? hifd;
   final SurahAyah? quickRev;

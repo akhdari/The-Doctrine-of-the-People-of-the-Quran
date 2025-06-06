@@ -1,17 +1,18 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class PersonalInfo implements Model {
-  dynamic studentId;
-  dynamic firstNameAr;
-  dynamic lastNameAr;
-  dynamic firstNameEn;
-  dynamic lastNameEn;
-  dynamic nationality;
-  dynamic sex;
-  dynamic dateOfBirth;
-  dynamic placeOfBirth;
-  dynamic homeAddress;
-  dynamic fatherStatus;
-  dynamic motherStatus;
-  dynamic profileImage;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class PersonalInfo implements Model {
+ dynamic studentId;
+ dynamic firstNameAr;
+ dynamic lastNameAr;
+ dynamic firstNameEn;
+ dynamic lastNameEn;
+ dynamic nationality;
+ dynamic sex;
+ dynamic dateOfBirth;
+ dynamic placeOfBirth;
+ dynamic homeAddress;
+ dynamic fatherStatus;
+ dynamic motherStatus;
+ dynamic profileImage;
 
   PersonalInfo({
     this.studentId,

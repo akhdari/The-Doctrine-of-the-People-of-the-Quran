@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/student.dart';
 import '../../../models/grid/generic_data_grid.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import '../../../models/get/student_class.dart'; // Your student model
 
 class StudentGrid extends StatelessWidget {
-  final List<Student> data;
+  final List<StudentInfoDialog> data;
   final Future<void> Function(int id) onDelete;
   final Future<void> Function() onRefresh;
+  final void Function(StudentInfoDialog?)? getObj;
 
   const StudentGrid({
     super.key,
     required this.data,
     required this.onDelete,
     required this.onRefresh,
+    this.getObj,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GenericDataGrid<Student>(
+    return GenericDataGrid<StudentInfoDialog>(
       data: data,
       // selectionMode: SelectionMode.singleDeselect,
+      getObj: (row) {
+        if (getObj != null) {
+          getObj!(row);
+        }
+      },
       onDelete: onDelete,
       onRefresh: onRefresh,
       screenTitle: 'Students List',
@@ -28,21 +35,30 @@ class StudentGrid extends StatelessWidget {
       showCheckBoxColumn: true,
       idExtractor: (row) => int.parse(row.getCells()[0].value),
       rowBuilder: (student) => DataGridRow(cells: [
-        DataGridCell<String>(columnName: 'id', value: student.id),
         DataGridCell<String>(
-            columnName: 'first_name_ar', value: student.firstNameAr),
+            columnName: 'id', value: student.personalInfo.studentId.toString()),
         DataGridCell<String>(
-            columnName: 'last_name_ar', value: student.lastNameAr),
-        DataGridCell<String>(columnName: 'sex', value: student.sex),
+            columnName: 'first_name_ar',
+            value: student.personalInfo.firstNameAr),
         DataGridCell<String>(
-            columnName: 'date_of_birth', value: student.dateOfBirth),
+            columnName: 'last_name_ar', value: student.personalInfo.lastNameAr),
         DataGridCell<String>(
-            columnName: 'place_of_birth', value: student.placeOfBirth),
+            columnName: 'sex', value: student.personalInfo.sex),
         DataGridCell<String>(
-            columnName: 'nationality', value: student.nationality),
+            columnName: 'date_of_birth',
+            value: student.personalInfo.dateOfBirth),
         DataGridCell<String>(
-            columnName: 'lecture_name_ar', value: student.lectureNameAr),
-        DataGridCell<String>(columnName: 'username', value: student.username),
+            columnName: 'place_of_birth',
+            value: student.personalInfo.placeOfBirth),
+        DataGridCell<String>(
+            columnName: 'nationality', value: student.personalInfo.nationality),
+        DataGridCell<String>(
+            columnName: 'lecture_name_ar',
+            value: student.lectures.isNotEmpty
+                ? student.lectures.map((e) => e.lectureNameAr).join(', ')
+                : 'No Lecture Assigned'),
+        DataGridCell<String>(
+            columnName: 'username', value: student.accountInfo.username),
         DataGridCell<String>(columnName: 'button', value: null),
       ]),
       columns: [

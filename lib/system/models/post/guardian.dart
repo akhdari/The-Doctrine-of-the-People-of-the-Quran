@@ -1,51 +1,46 @@
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/account_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/contact_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/personal_info.dart';
+
 import 'abstract_class.dart';
 
-class Guardian extends AbstractClass {
+class GuardianInfoDialog extends AbstractClass {
   //info
-  late String firstName;
-  late String lastName;
-  late String relationship;
-  String? dateOfBirth;
-  String? address;
-  String? job;
+  Guardian guardian = Guardian();
+  AccountInfo accountInfo = AccountInfo();
+  ContactInfo contactInfo = ContactInfo();
+  List<PersonalInfo> children = [];
 
-  //account info
-  late String email;
-  late String phoneNumber;
-  //contact info
-  late String username;
-  late String passcode;
-  //account image
-  String? imagePath;
+  GuardianInfoDialog();
   @override
   bool get isComplete {
-    return firstName.isNotEmpty &&
-        lastName.isNotEmpty &&
-        relationship.isNotEmpty &&
-        username.isNotEmpty &&
-        passcode.isNotEmpty;
+    return guardian.firstName.isNotEmpty &&
+        guardian.lastName.isNotEmpty &&
+        guardian.relationship.isNotEmpty &&
+        accountInfo.username.isNotEmpty &&
+        accountInfo.passcode.isNotEmpty;
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      "info": {
-        "first_name": firstName,
-        "last_name": lastName,
-        "relationship": relationship,
-        "date_of_birth": dateOfBirth,
-        "home_address": address,
-        "job": job,
-      },
-      "account_info": {
-        "username": username,
-        "passcode": passcode,
-        "profile_image": imagePath,
-      },
-      "contact_info": {
-        "email": email,
-        "phone_number": phoneNumber,
-      }
+      'info': guardian.toJson(),
+      'contact_info': contactInfo.toJson(),
+      'account_info': accountInfo.toJson(),
+      'children': children.map((child) => child.toJson()).toList(),
     };
+  }
+
+  GuardianInfoDialog.fromMap(Map<String, dynamic> map) {
+    guardian = Guardian.fromJson(map['info']);
+    contactInfo = ContactInfo.fromJson(map['contact_info']);
+    accountInfo = AccountInfo.fromJson(map['account_info']);
+    if (map['children'] != null) {
+      children = List<PersonalInfo>.from(
+          map['children'].map((child) => PersonalInfo.fromJson(child)));
+    } else {
+      children = [];
+    }
   }
 }

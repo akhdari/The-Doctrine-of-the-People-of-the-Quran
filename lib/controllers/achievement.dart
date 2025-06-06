@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
-import '/system/models/get/acheivement_class.dart';
-import 'dart:developer' as dev;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/get/acheivement_class.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import '/system/services/network/api_endpoints.dart';
 import 'package:flutter/material.dart';
 
@@ -25,21 +24,18 @@ class AchievementController extends GetxController {
 
   Future<void> fetchData({VoidCallback? onFinished}) async {
     errorMessage.value = '';
-    final connect = Connect();
 
     try {
-      final result = await connect
-          .get(ApiEndpoints.getStudentsByLecture(lectureId.value!));
-      dev.log(result.toString());
+      final result = await ApiService.fetchList<Acheivement>(
+          ApiEndpoints.getSpecialAchievements,
+          (json) => Acheivement.fromJson(json));
 
-      if (result.isSuccess && result.data != null) {
+      if (result.isNotEmpty) {
         isrequestCompleted.value = true;
-        achievementList.value =
-            result.data!.map((json) => Acheivement.fromJson(json)).toList();
+        achievementList.value = result;
       } else {
         isrequestCompleted.value = true;
-        errorMessage.value =
-            result.errorMessage ?? 'Unknown error fetching students';
+        errorMessage.value = 'Unknown error fetching students';
       }
     } catch (e) {
       isrequestCompleted.value = true;

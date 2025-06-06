@@ -11,6 +11,8 @@ class Acheivement extends AbstractClass {
   String? teacherNote;
   String? attendanceStatus;
 
+  Acheivement();
+
   @override
   bool get isComplete {
     return hifd.isNotEmpty || quickRev.isNotEmpty || majorRev.isNotEmpty;
@@ -28,5 +30,23 @@ class Acheivement extends AbstractClass {
       "attendenceStatus": attendanceStatus,
       "teacherNote": teacherNote ?? '',
     };
+  }
+
+  factory Acheivement.fromMap(Map<String, dynamic> map) {
+    return Acheivement()
+      ..lectureId = map['lectureId'] as int?
+      ..studentId = map['studentId'] as int?
+      ..date = map['date'] as String?
+      ..hifd = (map['hifd'] as List<dynamic>? ?? [])
+          .map((item) => SurahAyah.fromMap(item as Map<String, dynamic>))
+          .toList()
+      ..quickRev = (map['quickRev'] as List<dynamic>? ?? [])
+          .map((item) => SurahAyah.fromMap(item as Map<String, dynamic>))
+          .toList()
+      ..majorRev = (map['majorRev'] as List<dynamic>? ?? [])
+          .map((item) => SurahAyah.fromMap(item as Map<String, dynamic>))
+          .toList()
+      ..attendanceStatus = map['attendenceStatus'] as String?
+      ..teacherNote = map['teacherNote'] as String?;
   }
 }

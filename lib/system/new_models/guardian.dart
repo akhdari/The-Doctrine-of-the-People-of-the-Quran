@@ -1,4 +1,6 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class Guardian implements Model {
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+
+class Guardian implements Model {
   dynamic guardianId;
   dynamic firstName;
   dynamic lastName;
@@ -24,30 +26,34 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.da
   });
 
   factory Guardian.fromJson(Map<String, dynamic> json) => Guardian(
-    guardianId: json['guardian_id'],
-    firstName: json['first_name'],
-    lastName: json['last_name'],
-    dateOfBirth: json['date_of_birth'],
-    relationship: json['relationship'],
-    guardianContactId: json['guardian_contact_id'],
-    guardianAccountId: json['guardian_account_id'],
-    homeAddress: json['home_address'],
-    job: json['job'],
-    profileImage: json['profile_image'],
-  );
+        guardianId: json['guardian_id'],
+        firstName: json['first_name'],
+        lastName: json['last_name'],
+        dateOfBirth: json['date_of_birth'],
+        relationship: json['relationship'],
+        guardianContactId: json['guardian_contact_id'],
+        guardianAccountId: json['guardian_account_id'],
+        homeAddress: json['home_address'],
+        job: json['job'],
+        profileImage: json['profile_image'],
+      );
 
   @override
   Map<String, dynamic> toJson() => {
-    'guardian_id': guardianId,
-    'first_name': firstName,
-    'last_name': lastName,
-    'date_of_birth': dateOfBirth,
-    'relationship': relationship,
-    'guardian_contact_id': guardianContactId,
-    'guardian_account_id': guardianAccountId,
-    'home_address': homeAddress,
-    'job': job,
-    'profile_image': profileImage,
-  };
-}
+        'guardian_id': guardianId,
+        'first_name': firstName,
+        'last_name': lastName,
+        'date_of_birth': dateOfBirth,
+        'relationship': relationship,
+        'guardian_contact_id': guardianContactId,
+        'guardian_account_id': guardianAccountId,
+        'home_address': homeAddress,
+        'job': job,
+        'profile_image': profileImage,
+      };
 
+  @override
+  String toString() {
+    return '[ $guardianId ] - $firstName $lastName ';
+  }
+}

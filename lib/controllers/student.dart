@@ -1,27 +1,24 @@
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
-import '/system/models/get/student_class.dart';
 import 'package:flutter/material.dart';
 
 class StudentController extends GetxController {
   RxBool isLoading = true.obs;
-  RxList<Student> studentList = <Student>[].obs;
+  RxList<StudentInfoDialog> studentList = <StudentInfoDialog>[].obs;
   RxString errorMessage = ''.obs;
 
   Future<void> getData(String fetchUrl, {VoidCallback? onFinished}) async {
     try {
       errorMessage.value = '';
-      final connect = Connect();
-      final result = await connect.get(fetchUrl);
-
-      if (result.isSuccess && result.data != null) {
-        studentList.value =
-            result.data!.map((json) => Student.fromJson(json)).toList();
+      final result = await ApiService.fetchList<StudentInfoDialog>(
+          fetchUrl, (StudentInfoDialog.fromJson));
+      if (result.isEmpty) {
+        errorMessage.value = 'No students found';
       } else {
-        errorMessage.value =
-            result.errorMessage ?? 'Unknown error fetching students';
-        studentList.clear();
+        errorMessage.value = '';
+        studentList.value = result;
       }
     } catch (e) {
       errorMessage.value =
@@ -34,15 +31,7 @@ class StudentController extends GetxController {
 
   Future<void> postDelete(int id) async {
     try {
-      final connect = Connect();
-
-      final result = await connect.delete(ApiEndpoints.getStudentById(id));
-
-      if (result.isSuccess) {
-        Get.snackbar('Success', 'Student deleted successfully');
-      } else {
-        Get.snackbar('Error', 'Failed to delete student ${result.errorCode}');
-      }
+      await ApiService.delete(ApiEndpoints.getStudentById(id));
     } catch (e) {
       Get.snackbar('Error', 'Failed to connect to server');
     }

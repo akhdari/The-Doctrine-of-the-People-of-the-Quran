@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_buttons_menu.dart';
 import '../../dialogs/student.dart';
 import '../../../../controllers/generate.dart';
 import '../../../../controllers/student.dart';
@@ -22,11 +27,25 @@ class _StudentScreenState extends State<StudentScreen> {
   bool minimumLoadTimeCompleted = false;
   late StudentController controller;
 
+  final Rxn<StudentInfoDialog> student = Rxn<StudentInfoDialog>();
+  final Duration delay = const Duration(seconds: 5);
+  late EditStudent editStudentController;
+  final RxBool hasSelection = false.obs;
+
   @override
   void initState() {
     super.initState();
     controller = Get.find<StudentController>();
     _loadData();
+
+    if (!Get.isRegistered<EditStudent>()) {
+      editStudentController = Get.put(EditStudent(
+        initialLecture: null,
+        isEdit: false,
+      ));
+    } else {
+      editStudentController = Get.find<EditStudent>();
+    }
   }
 
   void _loadData() {
@@ -56,21 +75,45 @@ class _StudentScreenState extends State<StudentScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.add, color: Colors.black),
-                onPressed: () {
+            padding: const EdgeInsets.all(8.0),
+            child: Obx(
+              () => TopButtons(
+                onAdd: () {
+                  if (Get.isRegistered<EditStudent>()) {
+                    hasSelection.value = false;
+                    student.value = null;
+                    Get.delete<EditStudent>();
+                  }
                   Get.put(form.FormController(14));
                   Get.put(Generate());
                   Get.dialog(StudentDialog());
                 },
+                onEdit: () {
+                  if (student.value != null) {
+                    Get.put(form.FormController(14));
+                    Get.put(Generate());
+                    editStudentController.updateLecture(student.value!);
+                    editStudentController.isEdit = true;
+                    Get.dialog(StudentDialog());
+                  }
+                },
+                onDelete: () async {
+                  if (student.value == null) {
+                    Get.snackbar('Error', 'No student selected for deletion');
+                    return;
+                  }
+
+                  await ApiService.delete(ApiEndpoints.getAccountInfoById(
+                      student.value!.accountInfo.accountId ?? 0));
+                  setState(() {
+                    student.value = null;
+                    hasSelection.value = false;
+                    _loadData();
+                  });
+                },
+                hasSelection: hasSelection.value,
               ),
-            ],
-          ),
-        ),
+            )),
         Expanded(
           child: Obx(() {
             if (controller.isLoading.value) {
@@ -96,13 +139,23 @@ class _StudentScreenState extends State<StudentScreen> {
             }
 
             return StudentGrid(
-              data: controller.studentList,
-              onRefresh: () {
-                _loadData();
-                return controller.getData(ApiEndpoints.getStudents);
-              },
-              onDelete: (id) => controller.postDelete(id),
-            );
+                data: controller.studentList,
+                onRefresh: () {
+                  _loadData();
+                  return controller.getData(ApiEndpoints.getStudents);
+                },
+                onDelete: (id) => controller.postDelete(id),
+                getObj: (obj) {
+                  if (obj != null) {
+                    dev.log('Selected lecture: $obj');
+                    hasSelection.value = true;
+                    student.value = obj;
+                  } else {
+                    dev.log('Deselected lecture');
+                    hasSelection.value = false;
+                    student.value = null;
+                  }
+                });
           }),
         ),
       ],

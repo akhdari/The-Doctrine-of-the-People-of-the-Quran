@@ -1,9 +1,10 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class Supervisor implements Model {
-  dynamic supervisorId;
-  dynamic firstName;
-  dynamic lastName;
-  dynamic supervisorAccountId;
-  dynamic profileImage;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class Supervisor implements Model {
+ dynamic supervisorId;
+ dynamic firstName;
+ dynamic lastName;
+ dynamic supervisorAccountId;
+ dynamic profileImage;
 
   Supervisor({
     this.supervisorId,

@@ -1,10 +1,11 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class ExamLevel implements Model {
-  dynamic examLevelId;
-  dynamic level;
-  dynamic fromSurah;
-  dynamic fromAyah;
-  dynamic toSurah;
-  dynamic toAyah;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class ExamLevel implements Model {
+ dynamic examLevelId;
+ dynamic level;
+ dynamic fromSurah;
+ dynamic fromAyah;
+ dynamic toSurah;
+ dynamic toAyah;
 
   ExamLevel({
     this.examLevelId,

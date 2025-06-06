@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_buttons_menu.dart';
 import 'dart:async';
 import 'dart:developer' as dev;
 import '../../dialogs/lecture.dart';
 import '../../../../controllers/lecture.dart';
 import '../../../../controllers/edit_lecture.dart';
-import '../../../../controllers/form_controller.dart' as form;
 import '../../error_illustration.dart';
 import 'lecture.dart';
 import '/system/widgets/three_bounce.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/get/lecture_class.dart';
 
 class LectureShow extends StatefulWidget {
   final LectureController controller;
@@ -25,7 +26,7 @@ class LectureShow extends StatefulWidget {
 }
 
 class _LectureShowState extends State<LectureShow> {
-  final Rxn<Lecture> lecture = Rxn<Lecture>();
+  final Rxn<LectureForm> lecture = Rxn<LectureForm>();
   final Duration delay = const Duration(seconds: 5);
   late EditLecture editLectureController;
   final RxBool hasSelection = false.obs;
@@ -35,7 +36,8 @@ class _LectureShowState extends State<LectureShow> {
 
     Future.wait([
       Future.delayed(delay),
-      widget.controller.getData(ApiEndpoints.getLectures, onFinished: () {}),
+      widget.controller
+          .getData(ApiEndpoints.getSpecialLectures, onFinished: () {}),
     ]).then((_) {
       if (mounted) {
         widget.controller.isLoading.value = false;
@@ -50,14 +52,7 @@ class _LectureShowState extends State<LectureShow> {
     // Initialize EditLecture controller if not already registered
     if (!Get.isRegistered<EditLecture>()) {
       editLectureController = Get.put(EditLecture(
-        initialLecture: Lecture(
-          id: '',
-          lectureNameAr: '',
-          lectureNameEn: '',
-          circleType: '',
-          teacherIds: [],
-          studentCount: 0,
-        ),
+        initialLecture: null,
         isEdit: false,
       ));
     } else {
@@ -76,34 +71,40 @@ class _LectureShowState extends State<LectureShow> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.add, color: Colors.black),
-                onPressed: () {
+            padding: const EdgeInsets.all(8.0),
+            child: Obx(
+              () => TopButtons(
+                onAdd: () {
+                  if (Get.isRegistered<EditLecture>()) {
+                    hasSelection.value = false;
+                    lecture.value = null;
+                    Get.delete<EditLecture>();
+                  }
                   Get.dialog(LectureDialog());
                 },
+                onEdit: () {
+                  if (lecture.value != null) {
+                    editLectureController.updateLecture(LectureForm(
+                      lecture: lecture.value?.lecture,
+                      teachers: lecture.value?.teachers ?? [],
+                      schedules: lecture.value?.schedules ?? [],
+                    ));
+                    editLectureController.isEdit = true;
+                    Get.dialog(LectureDialog());
+                  }
+                },
+                onDelete: () async {
+                  await ApiService.delete(ApiEndpoints.getLectureById(
+                      lecture.value!.lecture.lectureId ?? 0));
+                  setState(() {
+                    lecture.value = null;
+                    hasSelection.value = false;
+                    _loadData();
+                  });
+                },
+                hasSelection: hasSelection.value,
               ),
-              Obx(() => IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: hasSelection.value ? Colors.black : Colors.grey,
-                    ),
-                    onPressed: hasSelection.value
-                        ? () {
-                            final currentLecture = lecture.value!;
-                            Get.put(form.FormController(10));
-                            editLectureController.updateLecture(currentLecture);
-                            editLectureController.isEdit = true;
-                            Get.dialog(LectureDialog());
-                          }
-                        : null,
-                  )),
-            ],
-          ),
-        ),
+            )),
         Expanded(
           child: Obx(() {
             if (widget.controller.isLoading.value) {
@@ -142,7 +143,7 @@ class _LectureShowState extends State<LectureShow> {
               },
               getObj: (obj) {
                 if (obj != null) {
-                  dev.log('Selected lecture: ${obj.lectureNameAr}');
+                  dev.log('Selected lecture: $obj');
                   lecture.value = obj;
                 } else {
                   dev.log('Deselected lecture');

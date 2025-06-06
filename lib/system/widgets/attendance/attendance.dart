@@ -188,8 +188,7 @@ class AttendanceController extends GetxController {
 }
 
 class AttendanceScreen extends StatelessWidget {
-  //final AttendanceController controller = Get.put(AttendanceController());
-  final AttendanceController controller = Get.find<AttendanceController>();
+  final AttendanceController controller = Get.put(AttendanceController());
 
   AttendanceScreen({super.key});
 
@@ -351,7 +350,7 @@ class AttendanceScreen extends StatelessWidget {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),
@@ -394,7 +393,7 @@ class AttendanceScreen extends StatelessWidget {
                                 ),
                               ),
                             );
-                          }).toList(),
+                          }),
                         ],
                       ),
                     );

@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
 import 'testpage.dart';
 import 'package:get/get.dart';
@@ -5,27 +7,32 @@ import 'system/utils/theme.dart';
 import 'controllers/theme.dart';
 import 'routes/app_screens.dart';
 import 'bindings/theme.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-//
-import './system/utils/font_loader.dart';
-//
-
-// Global font variables
-late pw.Font arabicFont;
-late pw.Font arabicFontBold;
-late pw.Font fallbackFont;
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('ar');
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
+  await dotenv.load(fileName: ".env"); // Load .env file
+  dev.log('Environment variables loaded: ${dotenv.env}');
   Get.put(ThemeController());
-  Get.put(FontController());
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
+/*
+class TestAttendance extends StatefulWidget {
+  const TestAttendance({super.key});
+
+  @override
+  State<TestAttendance> createState() => _TestAttendanceState();
+}
+
+class _TestAttendanceState extends State<TestAttendance> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Attendance(),
+    );
+  }
+}
+*/
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

@@ -1,4 +1,6 @@
 /// Builds the top header section of the PDF report.
+library;
+
 import 'package:pdf/widgets.dart' as pw;
 
 pw.Widget buildTopHeaderSection(

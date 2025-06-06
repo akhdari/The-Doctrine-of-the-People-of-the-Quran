@@ -1,6 +1,7 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class TeamAccomplishmentStudent implements Model {
-  dynamic teamAccomplishmentId;
-  dynamic studentId;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class TeamAccomplishmentStudent implements Model {
+ dynamic teamAccomplishmentId;
+ dynamic studentId;
 
   TeamAccomplishmentStudent({
     this.teamAccomplishmentId,

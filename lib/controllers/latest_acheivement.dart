@@ -2,7 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/abstract_class.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student_lecture_achievements.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
+
 import '/system/services/network/api_endpoints.dart';
 
 class LatestAcheivementModel extends AbstractClass {
@@ -81,26 +83,10 @@ class LatestAcheivement extends GetxController {
     observation.text = surahAyah.observation ?? '';
   }
 
-  Future<AcheivementTypeWrapper> getData(int studentId, int lectureId) async {
-    final connect = Connect();
-    AcheivementType acheivement;
-    final result = await connect.post(
-      ApiEndpoints.getLatestAchievements,
-      LatestAcheivementModel(
-        studentId: studentId,
-        lectureId: lectureId,
-      ),
-    );
-    if (result.isSuccess) {
-      acheivement = AcheivementType.fromJson(result.data as List<dynamic>);
-      latestehifdList = acheivement.hifd;
-      latestquickRevList = acheivement.quickRev;
-      latestmajorRevList = acheivement.majorRev;
-      return AcheivementTypeWrapper.isSuccess(acheivementType: acheivement);
-    } else {
-      return AcheivementTypeWrapper.isFailure(
-        errorMessage: result.errorMessage,
-      );
-    }
+  Future<StudentLectureAchievements> getData(
+      int studentId, int lectureId) async {
+    return await ApiService.fetchObject<StudentLectureAchievements>(
+        ApiEndpoints.getLatestAchievements,
+        StudentLectureAchievements.fromJson);
   }
 }

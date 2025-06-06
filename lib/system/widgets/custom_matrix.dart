@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
 import 'timer.dart';
 
 class TimeCellController extends GetxController {
@@ -82,8 +83,8 @@ class TimeCellController extends GetxController {
     return hours * 60 + minutes;
   }
 
-  Map<String, Map<String, String>> getSelectedDays() {
-    final result = <String, Map<String, String>>{};
+  List<WeeklySchedule> getSelectedDays() {
+    final List<WeeklySchedule> result = [];
 
     for (var entry in weekDays.entries) {
       if (entry.value.value) {
@@ -100,10 +101,13 @@ class TimeCellController extends GetxController {
           continue;
         }
 
-        result[day] = {
-          'from': fromTime,
-          'to': toTime,
-        };
+        result.add(WeeklySchedule(
+          weeklyScheduleId: 0,
+          dayOfWeek: day,
+          startTime: fromTime,
+          endTime: toTime,
+          lectureId: 0,
+        ));
       }
     }
 /*

@@ -1,15 +1,16 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class ExamStudent implements Model {
-  dynamic examId;
-  dynamic studentId;
-  dynamic appreciationId;
-  dynamic pointHifd;
-  dynamic pointTajwidApplicative;
-  dynamic pointTajwidTheoric;
-  dynamic pointPerformance;
-  dynamic pointDeductionTal;
-  dynamic pointDeductionTanbihi;
-  dynamic pointDeductionTajwidi;
-  dynamic dateTakeExam;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class ExamStudent implements Model {
+ dynamic examId;
+ dynamic studentId;
+ dynamic appreciationId;
+ dynamic pointHifd;
+ dynamic pointTajwidApplicative;
+ dynamic pointTajwidTheoric;
+ dynamic pointPerformance;
+ dynamic pointDeductionTal;
+ dynamic pointDeductionTanbihi;
+ dynamic pointDeductionTajwidi;
+ dynamic dateTakeExam;
 
   ExamStudent({
     this.examId,

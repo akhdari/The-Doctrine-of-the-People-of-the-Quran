@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter/material.dart';
@@ -81,10 +82,8 @@ class GenericDataSource<T> extends DataGridSource {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: GestureDetector(
-        child: isSelected
-            ? Icon(deleteIcon, color: Colors.red)
-            : Icon(infoIcon, color: Colors.blue),
-        onTap: () => isSelected ? _showDeleteDialog(row) : _showRowDetails(row),
+        child: Icon(infoIcon, color: Colors.blue),
+        onTap: () => _showRowDetails(row),
       ),
     );
   }

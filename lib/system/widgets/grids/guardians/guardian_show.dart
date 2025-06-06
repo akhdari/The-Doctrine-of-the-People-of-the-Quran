@@ -1,5 +1,11 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/edit_guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_buttons_menu.dart';
 import 'guardian.dart'; // path to your GuardianGrid
 import 'package:get/get.dart';
 import '/controllers/generate.dart';
@@ -22,12 +28,17 @@ class _GuardianScreenState extends State<GuardianScreen> {
   Duration duration = const Duration(seconds: 5);
   bool minimumLoadTimeCompleted = false;
 
+  final Rxn<GuardianInfoDialog> guardian = Rxn<GuardianInfoDialog>();
+  final Duration delay = const Duration(seconds: 5);
+  late EditGuardian editGuardianController;
+  final RxBool hasSelection = false.obs;
+
   void _loadData() {
     controller.isLoading.value = true;
 
     Future.wait([
       Future.delayed(duration),
-      controller.getData(ApiEndpoints.getGuardians),
+      controller.getData(ApiEndpoints.getSpecialGuardians),
     ]).then((_) {
       if (mounted) {
         controller.isLoading.value = false;
@@ -40,6 +51,15 @@ class _GuardianScreenState extends State<GuardianScreen> {
     super.initState();
     controller = Get.find<GuardianController>();
     _loadData();
+
+    if (!Get.isRegistered<EditGuardian>()) {
+      editGuardianController = Get.put(EditGuardian(
+        initialLecture: null,
+        isEdit: false,
+      ));
+    } else {
+      editGuardianController = Get.find<EditGuardian>();
+    }
   }
 
   @override
@@ -54,19 +74,43 @@ class _GuardianScreenState extends State<GuardianScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.add, color: Colors.black),
-                onPressed: () {
-                  Get.put(form.FormController(10));
+          child: Obx(
+            () => TopButtons(
+              onAdd: () {
+                if (Get.isRegistered<EditGuardian>()) {
+                  hasSelection.value = false;
+                  guardian.value = null;
+                  Get.delete<EditGuardian>();
+                }
+                Get.put(form.FormController(14));
+                Get.put(Generate());
+                Get.dialog(GuardianDialog());
+              },
+              onEdit: () {
+                if (guardian.value != null) {
+                  Get.put(form.FormController(14));
                   Get.put(Generate());
+                  editGuardianController.updateGuardian(guardian.value!);
+                  editGuardianController.isEdit = true;
                   Get.dialog(GuardianDialog());
-                  // .then((_) => controller.getData(fetchUrl));
-                },
-              ),
-            ],
+                }
+              },
+              onDelete: () async {
+                if (guardian.value == null) {
+                  Get.snackbar('Error', 'No guardian selected for deletion');
+                  return;
+                }
+
+                await ApiService.delete(ApiEndpoints.getAccountInfoById(
+                    guardian.value!.accountInfo.accountId ?? 0));
+                setState(() {
+                  guardian.value = null;
+                  hasSelection.value = false;
+                  _loadData();
+                });
+              },
+              hasSelection: hasSelection.value,
+            ),
           ),
         ),
         Expanded(
@@ -95,13 +139,23 @@ class _GuardianScreenState extends State<GuardianScreen> {
             }
 
             return GuardianGrid(
-              data: controller.guardianList,
-              onRefresh: () {
-                _loadData();
-                return controller.getData(ApiEndpoints.getGuardians);
-              },
-              onDelete: (id) => controller.postDelete(id),
-            );
+                data: controller.guardianList,
+                onRefresh: () {
+                  _loadData();
+                  return controller.getData(ApiEndpoints.getSpecialGuardians);
+                },
+                onDelete: (id) => controller.postDelete(id),
+                getObj: (obj) {
+                  if (obj != null) {
+                    dev.log('Selected lecture: $obj');
+                    hasSelection.value = true;
+                    guardian.value = obj;
+                  } else {
+                    dev.log('Deselected lecture');
+                    hasSelection.value = false;
+                    guardian.value = null;
+                  }
+                });
           }),
         ),
       ],

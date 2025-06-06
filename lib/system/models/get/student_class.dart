@@ -1,4 +1,6 @@
-class Student {
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+
+class Student implements Model {
   final String id;
   final String firstNameAr;
   final String lastNameAr;
@@ -8,6 +10,21 @@ class Student {
   final String nationality;
   final String lectureNameAr;
   final String username;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstNameAr': firstNameAr,
+      'lastNameAr': lastNameAr,
+      'sex': sex,
+      'dateOfBirth': dateOfBirth,
+      'placeOfBirth': placeOfBirth,
+      'nationality': nationality,
+      'lectures': lectureNameAr,
+      'username': username,
+    };
+  }
 
   Student({
     required this.id,
@@ -23,14 +40,14 @@ class Student {
 
   factory Student.fromJson(Map<String, dynamic> map) {
     return Student(
-      id: map['student_id'].toString(),
-      firstNameAr: map['first_name_ar'] ?? '',
-      lastNameAr: map['last_name_ar'] ?? '',
+      id: map['id'].toString(),
+      firstNameAr: map['firstNameAr'] ?? '',
+      lastNameAr: map['lastNameAr'] ?? '',
       sex: map['sex'] ?? '',
-      dateOfBirth: map['date_of_birth'] ?? '',
-      placeOfBirth: map['place_of_birth'] ?? '',
+      dateOfBirth: map['dateOfBirth'] ?? '',
+      placeOfBirth: map['placeOfBirth'] ?? '',
       nationality: map['nationality'] ?? '',
-      lectureNameAr: map['lecture_name_ar'] ?? '',
+      lectureNameAr: map['lectures'] ?? '',
       username: map['username'] ?? '',
     );
   }

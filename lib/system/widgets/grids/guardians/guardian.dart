@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/guardian.dart';
 import '../../../models/grid/generic_data_grid.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import '../../../models/get/guardian_class.dart';
 
 class GuardianGrid extends StatelessWidget {
-  final List<Guardian> data;
+  final List<GuardianInfoDialog> data;
   final Future<void> Function(int id) onDelete;
   final Future<void> Function() onRefresh;
+  final void Function(GuardianInfoDialog? obj)? getObj;
 
   const GuardianGrid({
     super.key,
     required this.data,
     required this.onDelete,
     required this.onRefresh,
+    required this.getObj,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GenericDataGrid<Guardian>(
+    return GenericDataGrid<GuardianInfoDialog>(
       data: data,
       onRefresh: onRefresh,
       onDelete: onDelete,
+      getObj: (row) {
+        if (getObj != null) {
+          getObj!(row);
+        }
+      },
       //selectionMode: SelectionMode.singleDeselect,
       screenTitle: 'Guardians List',
       detailsTitle: 'Guardian Details',
@@ -28,21 +35,27 @@ class GuardianGrid extends StatelessWidget {
       showCheckBoxColumn: true,
       idExtractor: (row) => int.parse(row.getCells()[0].value),
       rowBuilder: (guardian) => DataGridRow(cells: [
-        DataGridCell<String>(columnName: 'id', value: guardian.id),
         DataGridCell<String>(
-            columnName: 'first_name', value: guardian.firstName),
-        DataGridCell<String>(columnName: 'last_name', value: guardian.lastName),
+            columnName: 'id', value: guardian.accountInfo.accountId.toString()),
         DataGridCell<String>(
-            columnName: 'date_of_birth', value: guardian.dateOfBirth),
+            columnName: 'first_name', value: guardian.guardian.firstName),
         DataGridCell<String>(
-            columnName: 'relationship', value: guardian.relationship),
+            columnName: 'last_name', value: guardian.guardian.lastName),
         DataGridCell<String>(
-            columnName: 'phone_number', value: guardian.phoneNumber),
-        DataGridCell<String>(columnName: 'email', value: guardian.email),
+            columnName: 'date_of_birth', value: guardian.guardian.dateOfBirth),
         DataGridCell<String>(
-            columnName: 'guardian_account', value: guardian.guardianAccount),
+            columnName: 'relationship', value: guardian.guardian.relationship),
         DataGridCell<String>(
-            columnName: 'children', value: guardian.children.toString()),
+            columnName: 'phone_number',
+            value: guardian.contactInfo.phoneNumber),
+        DataGridCell<String>(
+            columnName: 'email', value: guardian.contactInfo.email),
+        DataGridCell<String>(
+            columnName: 'guardian_account',
+            value: guardian.accountInfo.username),
+        DataGridCell<String>(
+            columnName: 'children',
+            value: guardian.children.map((e) => e.firstNameAr).join(', ')),
         DataGridCell<String>(columnName: 'button', value: null),
       ]),
       columns: [

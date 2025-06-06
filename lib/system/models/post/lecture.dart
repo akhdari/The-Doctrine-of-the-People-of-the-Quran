@@ -1,39 +1,60 @@
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/teacher.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
+
 import 'abstract_class.dart';
 
-class Lecture extends AbstractClass {
+class LectureForm extends AbstractClass {
   //lecture info
   //required
-  late String lectureNameAr;
-  late String lectureNameEn;
-  late String circleType;
-  late List<int> teachersId;
-  late int showOnwebsite; //TODO bool
-  late String category; //drop down
-
+  late Lecture lecture = Lecture();
+  late List<Teacher> teachers = [];
   //lecture schedule
-  Map<String, Map<String, dynamic>>? schedule;
+  late List<WeeklySchedule> schedules;
+  int studentCount;
+
+  LectureForm(
+      {Lecture? lecture,
+      List<Teacher>? teachers,
+      List<WeeklySchedule>? schedules,
+      this.studentCount = 0})
+      : lecture = lecture ?? Lecture(),
+        teachers = teachers ?? [],
+        schedules = schedules ?? [];
+
+  static var fromJson = (Map<String, dynamic> json) {
+    return LectureForm(studentCount: json['student_count'] ?? 0)
+      ..lecture = Lecture.fromJson(json['lecture'] ?? {})
+      ..teachers = (json['teachers'] as List<dynamic>? ?? [])
+          .map((t) => Teacher.fromJson(t))
+          .toList()
+      ..schedules = (json['schedules'] as List<dynamic>? ?? [])
+          .map((s) => WeeklySchedule.fromJson(s))
+          .toList();
+  };
 
   @override
   bool get isComplete {
-    return lectureNameAr.isNotEmpty &&
-        lectureNameEn.isNotEmpty &&
-        circleType.isNotEmpty &&
-        teachersId.isNotEmpty &&
-        schedule != null;
+    return lecture.lectureNameAr.isNotEmpty &&
+        lecture.lectureNameEn.isNotEmpty &&
+        lecture.circleType.isNotEmpty &&
+        teachers.isNotEmpty &&
+        schedules.isNotEmpty;
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      "info": {
-        "lecture_name_ar": lectureNameAr,
-        "lecture_name_en": lectureNameEn,
-        "circle_type": circleType,
-        "category": category,
-        "teacher_ids": teachersId,
-        "show_on_website": showOnwebsite
+      "lecture": {
+        "lecture_id": lecture.lectureId,
+        "lecture_name_ar": lecture.lectureNameAr,
+        "lecture_name_en": lecture.lectureNameEn,
+        "circle_type": lecture.circleType,
+        "shown_on_website": lecture.shownOnWebsite
       },
-      "schedule": schedule,
+      "teachers": teachers.map((t) => t.toJson()).toList(),
+      "schedules": schedules.map((s) => s.toJson()).toList(),
+      "student_count": studentCount,
     };
   }
 }

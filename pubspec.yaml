@@ -63,6 +63,10 @@ dependencies:
   printing: ^5.14.2
   flip_card: ^0.7.0
 
+  # to use .env files
+  flutter_dotenv: ^5.1.0
+  dotenv: ^4.2.0
+
 
 
 dev_dependencies:
@@ -87,6 +91,7 @@ flutter:
     - assets/footer/
     - assets/illustration/
     - assets/page.png
+    - .env
 
 
 

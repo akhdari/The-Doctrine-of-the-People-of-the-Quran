@@ -1,63 +1,25 @@
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/account_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/contact_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/formal_education_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/medical_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/personal_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/subscription_info.dart';
 import 'abstract_class.dart';
 
-//TODO is guardian id required
-class StudentInfoDialog extends AbstractClass {
-  // Required fields (non-nullable)
-  //personal ifo
-  late String firstNameAR;
-  late String lastNameAR;
-  late String sex;
-  //student account
-  late String username;
-  late String password;
-  //student contact
-  late String phoneNumber;
-  late String emailAddress;
-
-  // Optional fields (nullable)
-  //sessions
-  List<int>? sessions;
-  //other personal info
-  String? firstNameEN;
-  String? lastNameEN;
-  String? nationality;
-  String? dateOfBirth;
-  String? placeOfBirth;
-  String? address;
-  //medical info
-  String? bloodType;
-  String? hasDisease;
-  String? diseaseCauses;
-  String? allergies;
-
-  //formal education
-  String? schoolName;
-  String? schoolType;
-  String? grade;
-  String? academicLevel;
-  //subsription info
-  String? enrollmentDate;
-  String? exitDate;
-  String? exitReason;
-  bool? isExempt;
-  double? exemptionPercent;
-  String? exemptionReason;
-
-  //gradian info
-  int? guardianId;
-  String? firstName;
-  String? lastName;
-  String? dateOfBirth2;
-  String? relationship;
-  //guardian account
-  String? username2;
-  String? password2;
-  String? imagePath2;
-  //parents status
-  String? motherStatus;
-  String? fatherStatus;
-  //other contact info
-  String? imagePath;
+class StudentInfoDialog extends AbstractClass implements Model {
+  PersonalInfo personalInfo = PersonalInfo();
+  AccountInfo accountInfo = AccountInfo();
+  ContactInfo contactInfo = ContactInfo();
+  MedicalInfo medicalInfo = MedicalInfo();
+  Guardian guardian = Guardian();
+  List<Lecture> lectures = [];
+  Student student = Student();
+  FormalEducationInfo formalEducationInfo = FormalEducationInfo();
+  SubscriptionInfo subscriptionInfo = SubscriptionInfo();
 
   // Constructor for empty form initialization
   StudentInfoDialog();
@@ -65,80 +27,48 @@ class StudentInfoDialog extends AbstractClass {
   @override
   // Method to check if all required fields are filled
   bool get isComplete {
-    return firstNameAR.isNotEmpty &&
-        lastNameAR.isNotEmpty &&
-        sex.isNotEmpty &&
-        //username.isNotEmpty &&
-        password.isNotEmpty &&
-        phoneNumber.isNotEmpty &&
-        emailAddress.isNotEmpty;
+    return personalInfo.firstNameAr.isNotEmpty &&
+        personalInfo.lastNameAr.isNotEmpty &&
+        personalInfo.sex.isNotEmpty &&
+        accountInfo.username.isNotEmpty &&
+        accountInfo.passcode.isNotEmpty &&
+        contactInfo.phoneNumber.isNotEmpty &&
+        contactInfo.email.isNotEmpty;
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      'student': {
-        'personalInfo': {
-          'firstNameAR': firstNameAR,
-          'lastNameAR': lastNameAR,
-          'sex': sex,
-          'firstNameEN': firstNameEN,
-          'lastNameEN': lastNameEN,
-          'nationality': nationality,
-          'dateOfBirth': dateOfBirth,
-          'placeOfBirth': placeOfBirth,
-          'address': address,
-        },
-        'account': {
-          'username': username,
-          'password': password,
-        },
-        'contactInfo': {
-          'phoneNumber': phoneNumber,
-          'emailAddress': emailAddress,
-        },
-        'educationInfo': {
-          'schoolName': schoolName,
-          'schoolType': schoolType,
-          'grade': grade,
-          'academicLevel': academicLevel,
-        },
-        'subscriptionInfo': {
-          'enrollmentDate': enrollmentDate,
-          'exitDate': exitDate,
-          'exitReason': exitReason,
-          'isExempt': isExempt,
-          'exemptionPercent': exemptionPercent,
-          'exemptionReason': exemptionReason,
-        },
-        'medicalInfo': {
-          'bloodType': bloodType,
-          'hasDisease': hasDisease,
-          'diseaseCauses': diseaseCauses,
-          'allergies': allergies,
-        },
-      },
-      'guardian': {
-        'personalInfo': {
-          'guardianId': guardianId,
-          'firstName': firstName,
-          'lastName': lastName,
-          'dateOfBirth': dateOfBirth2,
-          'relationship': relationship,
-        },
-        'account': {
-          'username': username2,
-          'password': password2,
-        },
-        'contactInfo': {
-          'imagePath': imagePath2,
-        },
-        'parentsStatus': {
-          'motherStatus': motherStatus,
-          'fatherStatus': fatherStatus,
-        },
-      },
-      'sessions': sessions, // list of sessions
+      'personalInfo': personalInfo.toJson(),
+      'accountInfo': accountInfo.toJson(),
+      'contactInfo': contactInfo.toJson(),
+      'medicalInfo': medicalInfo.toJson(),
+      'guardian': guardian.toJson(),
+      'student': student.toJson(),
+      'lectures': lectures.map((lecture) => lecture.toJson()).toList(),
+      'formalEducationInfo': formalEducationInfo.toJson(),
+      'subscriptionInfo': subscriptionInfo.toJson(),
     };
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return toMap();
+  }
+
+  static StudentInfoDialog fromJson(Map<String, dynamic> json) {
+    return StudentInfoDialog()
+      ..personalInfo = PersonalInfo.fromJson(json['personalInfo'])
+      ..accountInfo = AccountInfo.fromJson(json['accountInfo'])
+      ..contactInfo = ContactInfo.fromJson(json['contactInfo'])
+      ..medicalInfo = MedicalInfo.fromJson(json['medicalInfo'])
+      ..guardian = Guardian.fromJson(json['guardian'])
+      ..student = Student.fromJson(json['student'])
+      ..lectures = (json['lectures'] as List)
+          .map((lecture) => Lecture.fromJson(lecture))
+          .toList()
+      ..formalEducationInfo =
+          FormalEducationInfo.fromJson(json['formalEducationInfo'])
+      ..subscriptionInfo = SubscriptionInfo.fromJson(json['subscriptionInfo']);
   }
 }

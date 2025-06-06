@@ -1,12 +1,13 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class TeamAccomplishment implements Model {
-  dynamic teamAccomplishmentId;
-  dynamic fromSurah;
-  dynamic fromAyah;
-  dynamic toSurah;
-  dynamic toAyah;
-  dynamic accompanyingCurriculumSubject;
-  dynamic accompanyingCurriculumLesson;
-  dynamic tajweedLesson;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class TeamAccomplishment implements Model {
+ dynamic teamAccomplishmentId;
+ dynamic fromSurah;
+ dynamic fromAyah;
+ dynamic toSurah;
+ dynamic toAyah;
+ dynamic accompanyingCurriculumSubject;
+ dynamic accompanyingCurriculumLesson;
+ dynamic tajweedLesson;
 
   TeamAccomplishment({
     this.teamAccomplishmentId,

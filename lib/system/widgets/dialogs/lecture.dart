@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/teacher.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import '../../utils/const/lecture.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
 import '../../models/post/lecture.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/connect.dart';
+
 import '../../../controllers/validator.dart';
 import '../../../controllers/edit_lecture.dart';
 import '../custom_container.dart';
@@ -29,7 +30,8 @@ class LectureDialog extends StatefulWidget {
 class _LectureDialogState extends State<LectureDialog> {
   Future<void> loadData() async {
     try {
-      final fetchedTeachernNames = await getItems(ApiEndpoints.getTeachers);
+      final fetchedTeachernNames =
+          await getItems<Teacher>(ApiEndpoints.getTeachers, Teacher.fromJson);
 
       dev.log('teacherNames: ${fetchedTeachernNames.toString()}');
 
@@ -45,9 +47,8 @@ class _LectureDialogState extends State<LectureDialog> {
   final GlobalKey<FormState> lectureFormKey = GlobalKey<FormState>();
   late ScrollController scrollController;
   late form.FormController formController;
-  final Connect connect = Connect();
-  final lectureInfo = Lecture();
-  MultiSelectResult? teacherResult;
+  final lectureInfo = LectureForm();
+  MultiSelectResult<Teacher>? teacherResult;
   EditLecture? editLecture;
 
   @override
@@ -160,8 +161,8 @@ class _LectureDialogState extends State<LectureDialog> {
                                             Validator.notEmptyValidator(
                                                 value, "يجب ادخال الاسم"),
                                         focusNode: formController.focusNodes[0],
-                                        onSaved: (p0) =>
-                                            lectureInfo.lectureNameAr = p0!,
+                                        onSaved: (p0) => lectureInfo
+                                            .lecture.lectureNameAr = p0!,
                                       ),
                                     ),
                                   ),
@@ -177,8 +178,8 @@ class _LectureDialogState extends State<LectureDialog> {
                                             Validator.notEmptyValidator(
                                                 value, "يجب ادخال الاسم"),
                                         focusNode: formController.focusNodes[1],
-                                        onSaved: (p0) =>
-                                            lectureInfo.lectureNameEn = p0!,
+                                        onSaved: (p0) => lectureInfo
+                                            .lecture.lectureNameEn = p0!,
                                       ),
                                     ),
                                   ),
@@ -194,26 +195,13 @@ class _LectureDialogState extends State<LectureDialog> {
                                       inputTitle: "lecture type",
                                       child: DropDownWidget<String>(
                                         items: type,
-                                        initialValue: type[0],
-                                        /*
-                                        editLecture != null
-                                            ? editLecture!.lectureType
+                                        initialValue: editLecture != null
+                                            ? editLecture!.lecture.value
+                                                    ?.lecture.circleType ??
+                                                type[0]
                                             : type[0],
-                                        */
-                                        onSaved: (p0) =>
-                                            lectureInfo.circleType = p0!,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: InputField(
-                                      inputTitle: "category",
-                                      child: DropDownWidget(
-                                        items: category,
-                                        initialValue: category[2],
-                                        onSaved: (p0) =>
-                                            lectureInfo.category = p0!,
+                                        onSaved: (p0) => lectureInfo
+                                            .lecture.circleType = p0!,
                                       ),
                                     ),
                                   ),
@@ -224,23 +212,23 @@ class _LectureDialogState extends State<LectureDialog> {
                               ),
                               InputField(
                                 inputTitle: "teachers",
-                                child: MultiSelect(
+                                child: MultiSelect<Teacher>(
                                   getPickedItems: (pickedItems) {
-                                    dev.log(
-                                        'Updated teacherNames: ${pickedItems.toString()}');
-                                    lectureInfo.teachersId =
-                                        pickedItems.map((e) => e.id).toList();
+                                    lectureInfo.teachers =
+                                        pickedItems.map((e) => e.obj).toList();
                                   },
                                   preparedData: teacherResult?.items ?? [],
                                   hintText: "search by teacher name",
                                   maxSelectedItems: null,
-                                  initialPickedItems: editLecture != null &&
-                                          teacherResult?.items != null
-                                      ? teacherResult!.items!
-                                          .where((element) => editLecture!
-                                              .teacherIds
-                                              .contains(element.id.toString()))
-                                          .toList()
+                                  initialPickedItems: editLecture!
+                                              .lecture.value !=
+                                          null
+                                      ? teacherResult?.items
+                                              ?.where((element) => editLecture!
+                                                  .teacherIds
+                                                  .contains(element.obj))
+                                              .toList() ??
+                                          []
                                       : null,
                                 ),
                               ),
@@ -249,14 +237,15 @@ class _LectureDialogState extends State<LectureDialog> {
                               ),
                               InputField(
                                   inputTitle: "show on website?",
-                                  child: DropDownWidget(
+                                  child: DropDownWidget<bool>(
                                       items: trueFalse,
-                                      initialValue: trueFalse[1],
+                                      initialValue: editLecture != null
+                                          ? editLecture!.lecture.value!.lecture
+                                              .shownOnWebsite
+                                          : true,
                                       onSaved: (p0) {
-                                        lectureInfo.showOnwebsite =
+                                        lectureInfo.lecture.shownOnWebsite =
                                             transformBool(p0!);
-                                        dev.log(lectureInfo.showOnwebsite
-                                            .toString());
                                       }))
                             ],
                           ),
@@ -286,9 +275,9 @@ class _LectureDialogState extends State<LectureDialog> {
                         'Form valid: ${lectureFormKey.currentState?.validate()}');
                     debugPrint(
                         'Fields: ${formController.controllers.map((c) => c.text)}');
-                    debugPrint('Teachers: ${lectureInfo.teachersId}');
 
-                    lectureInfo.schedule = timeCellController.getSelectedDays();
+                    lectureInfo.schedules =
+                        timeCellController.getSelectedDays();
                     isComplete.value = false;
 
                     if (lectureFormKey.currentState?.validate() ?? false) {
@@ -298,12 +287,24 @@ class _LectureDialogState extends State<LectureDialog> {
 
                       try {
                         // Depending on whether it's an edit or a new submission, call the appropriate endpoint
-                        final bool success = await submitForm(lectureFormKey,
-                            connect, lectureInfo, ApiEndpoints.getLectures);
+                        final bool success = editLecture!.lecture.value == null
+                            ? await submitForm<LectureForm>(
+                                lectureFormKey,
+                                lectureInfo,
+                                ApiEndpoints.submitLectureForm,
+                                (LectureForm.fromJson))
+                            : await submitEditDataForm<LectureForm>(
+                                lectureFormKey,
+                                lectureInfo,
+                                ApiEndpoints.getSpecialLecture(editLecture!
+                                    .lecture.value!.lecture.lectureId),
+                                (LectureForm.fromJson));
 
                         // Handle result based on success
                         if (success) {
                           Get.back(result: true);
+                          Get.snackbar(
+                              'Success', 'Student data submitted successfully');
                         } else {
                           // Show error message if submission failed
                           Get.snackbar(

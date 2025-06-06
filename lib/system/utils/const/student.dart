@@ -10,9 +10,9 @@ const List<String> bloodType = [
   "O+",
   "O-"
 ];
-const List<String> yesNo = ["yes", "no"];
+const List<String> yesNo = ["Yes", "No"];
 const List<bool> trueFalse = [true, false];
-List<String?> schoolType = ["public", "private", "international"];
+List<String?> schoolType = ['Public', 'Private', 'International'];
 const List<String> academicLevel = [
   "Kindergarten",
   "Primary School",
@@ -46,7 +46,7 @@ const List<String> grades = [
   "Doctorate Year 2",
   "Doctorate Year 3"
 ];
-List<double> exemptionPercentage = [25, 50, 75, 100];
+List<double> exemptionPercentage = [0.0, 25, 50, 75, 100];
 const List<String> state = ["alive", "dead"];
 const List<String> test = ["single", "married", "widowed"];
 

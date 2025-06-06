@@ -1,118 +1,155 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiEndpoints {
-  static const String baseUrl =
+  static final String baseUrl = dotenv.env['DB_REST_API_URL'] ??
       'http://192.168.100.50/quran/ahl_quran_backend/api/v1';
 
   // AccountInfo endpoints
-  static const String getAccountInfos = '$baseUrl/accountinfos';
+  static final String getAccountInfos = '$baseUrl/accountinfos';
   static String getAccountInfoById(int id) => '$baseUrl/accountinfos/$id';
 
   // Appreciation endpoints
-  static const String getAppreciations = '$baseUrl/appreciations';
+  static final String getAppreciations = '$baseUrl/appreciations';
   static String getAppreciationById(int id) => '$baseUrl/appreciations/$id';
 
   // ContactInfo endpoints
-  static const String getContactInfos = '$baseUrl/contactinfos';
+  static final String getContactInfos = '$baseUrl/contactinfos';
   static String getContactInfoById(int id) => '$baseUrl/contactinfos/$id';
 
   // Exam endpoints
-  static const String getExams = '$baseUrl/exams';
+  static final String getExams = '$baseUrl/exams';
   static String getExamById(int id) => '$baseUrl/exams/$id';
 
   // ExamLevel endpoints
-  static const String getExamLevels = '$baseUrl/examlevels';
+  static final String getExamLevels = '$baseUrl/examlevels';
   static String getExamLevelById(int id) => '$baseUrl/examlevels/$id';
 
   // ExamStudent endpoints
-  static const String getExamStudents = '$baseUrl/examstudents';
+  static final String getExamStudents = '$baseUrl/examstudents';
   static String getExamStudentById(int examId, int studentId) =>
       '$baseUrl/examstudents/exams/$examId/students/$studentId';
 
   // ExamTeacher endpoints
-  static const String getExamTeachers = '$baseUrl/examteachers';
+  static final String getExamTeachers = '$baseUrl/examteachers';
   static String getExamTeacherById(int examId, int teacherId) =>
       '$baseUrl/examteachers/exams/$examId/teachers/$teacherId';
 
   // FormalEducationInfo endpoints
-  static const String getFormalEducationInfos = '$baseUrl/formaleducationinfos';
+  static final String getFormalEducationInfos = '$baseUrl/formaleducationinfos';
   static String getFormalEducationInfoById(int id) =>
       '$baseUrl/formaleducationinfos/$id';
 
   // GoldenRecord endpoints
-  static const String getGoldenRecords = '$baseUrl/goldenrecords';
+  static final String getGoldenRecords = '$baseUrl/goldenrecords';
   static String getGoldenRecordById(int id) => '$baseUrl/goldenrecords/$id';
 
   // Guardian endpoints
-  static const String getGuardians = '$baseUrl/guardians';
+  static final String getGuardians = '$baseUrl/guardians';
+  static final String getSpecialGuardians = '$baseUrl/special/guardians';
+  static String getSpecialGuardiansById(int id) =>
+      '$baseUrl/special/guardians/$id';
   static String getGuardianById(int id) => '$baseUrl/guardians/$id';
 
   // LectureContent endpoints
-  static const String getLectureContents = '$baseUrl/lecturecontents';
+  static final String getLectureContents = '$baseUrl/lecturecontents';
   static String getLectureContentById(int id) => '$baseUrl/lecturecontents/$id';
 
   // Lecture endpoints
-  static const String getLectures = '$baseUrl/lectures';
+  static final String getLectures = '$baseUrl/lectures';
+  static final String getSpecialLectures = '$baseUrl/special/lectures';
   static String getLectureById(int id) => '$baseUrl/lectures/$id';
 
   // LectureStudent endpoints
-  static const String getLectureStudents = '$baseUrl/lecturestudents';
+  static final String getLectureStudents = '$baseUrl/lecturestudents';
   static String getLectureStudentById(int lectureId, int studentId) =>
       '$baseUrl/lecturestudents/lectures/$lectureId/students/$studentId';
 
   // LectureTeacher endpoints
-  static const String getLectureTeachers = '$baseUrl/lectureteachers';
+  static final String getLectureTeachers = '$baseUrl/lectureteachers';
   static String getLectureTeacherById(int lectureId, int teacherId) =>
       '$baseUrl/lectureteachers/lectures/$lectureId/teachers/$teacherId';
 
   // MedicalInfo endpoints
-  static const String getMedicalInfos = '$baseUrl/medicalinfos';
+  static final String getMedicalInfos = '$baseUrl/medicalinfos';
   static String getMedicalInfoById(int id) => '$baseUrl/medicalinfos/$id';
 
   // PersonalInfo endpoints
-  static const String getPersonalInfos = '$baseUrl/personalinfos';
+  static final String getPersonalInfos = '$baseUrl/personalinfos';
   static String getPersonalInfoById(int id) => '$baseUrl/personalinfos/$id';
 
   // RequestCopy endpoints
-  static const String getRequestCopys = '$baseUrl/requestcopys';
+  static final String getRequestCopys = '$baseUrl/requestcopys';
   static String getRequestCopyById(int id) => '$baseUrl/requestcopys/$id';
 
   // Student endpoints
-  static const String getStudents = '$baseUrl/students';
+  static final String getStudents = '$baseUrl/special/students';
   static String getStudentById(int id) => '$baseUrl/students/$id';
 
   // SubscriptionInfo endpoints
-  static const String getSubscriptionInfos = '$baseUrl/subscriptioninfos';
+  static final String getSubscriptionInfos = '$baseUrl/subscriptioninfos';
   static String getSubscriptionInfoById(int id) =>
       '$baseUrl/subscriptioninfos/$id';
 
   // Supervisor endpoints
-  static const String getSupervisors = '$baseUrl/supervisors';
+  static final String getSupervisors = '$baseUrl/supervisors';
   static String getSupervisorById(int id) => '$baseUrl/supervisors/$id';
 
   // Teacher endpoints
-  static const String getTeachers = '$baseUrl/teachers';
+  static final String getTeachers = '$baseUrl/teachers';
   static String getTeacherById(int id) => '$baseUrl/teachers/$id';
 
   // TeamAccomplishment endpoints
-  static const String getTeamAccomplishments = '$baseUrl/teamaccomplishments';
+  static final String getTeamAccomplishments = '$baseUrl/teamaccomplishments';
   static String getTeamAccomplishmentById(int id) =>
       '$baseUrl/teamaccomplishments/$id';
 
   // TeamAccomplishmentStudent endpoints
-  static const String getTeamAccomplishmentStudents =
+  static final String getTeamAccomplishmentStudents =
       '$baseUrl/teamaccomplishmentstudents';
   static String getTeamAccomplishmentStudentById(int teamId, int studentId) =>
       '$baseUrl/teamaccomplishmentstudents/teamaccomplishments/$teamId/students/$studentId';
 
   // WeeklySchedule endpoints
-  static const String getWeeklySchedules = '$baseUrl/weeklyschedules';
+  static final String getWeeklySchedules = '$baseUrl/weeklyschedules';
 
   static String getLatestAchievements = '$baseUrl/achievements/latest';
 
   static String getGuardianAccounts = '$baseUrl/guardians';
 
   static String getLectureIdName = '$baseUrl/lectures/ar_name-and-id';
+
+  static String getStudentAchievements = '$baseUrl/achievements';
+
+  static String getSpecialAchievements = '$baseUrl/special/achievements';
+
+  static String submitStudentForm = '$baseUrl/special/students/submit';
+  static String submitLectureForm = '$baseUrl/special/lectures/submit';
+  static String getSpecialLecture(int id) => '$baseUrl/special/lectures/$id';
+
+  static String submitGuardianForm = '$baseUrl/special/guardians/submit';
+
   static String getWeeklyScheduleById(int id) => '$baseUrl/weeklyschedules/$id';
 
   static String getStudentsByLecture(int idLecture) =>
       '$baseUrl/lecturestudents/lectures/$idLecture/students';
+
+  static String getSpecialStudent(int id) => '$baseUrl/special/students/$id';
+
+  static String getGuardianByUserName(String? guardianAccountUserName) =>
+      '$baseUrl/special/students/$guardianAccountUserName';
+
+  // Special ExamRecords endpoints
+  static final String getSpecialExamRecords = '$baseUrl/special/exams-records';
+  static final String submitSpecialExamRecord =
+      '$baseUrl/special/exams-records/submit';
+  static String updateSpecialExamRecord(int id) =>
+      '$baseUrl/special/exams-records/$id';
+
+  // Special ExamsTeachers endpoints
+  static final String getSpecialExamsTeachers =
+      '$baseUrl/special/exams-teachers';
+  static final String submitSpecialExamsTeacher =
+      '$baseUrl/special/exams-teachers/submit';
+  static String updateSpecialExamsTeacher(int id) =>
+      '$baseUrl/special/exams-teachers/$id';
 }

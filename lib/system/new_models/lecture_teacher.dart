@@ -1,8 +1,9 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';class LectureTeacher implements Model {
-  dynamic teacherId;
-  dynamic lectureId;
-  dynamic lectureDate;
-  dynamic attendanceStatus;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+class LectureTeacher implements Model {
+ dynamic teacherId;
+ dynamic lectureId;
+ dynamic lectureDate;
+ dynamic attendanceStatus;
 
   LectureTeacher({
     this.teacherId,
