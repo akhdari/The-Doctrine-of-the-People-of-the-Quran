@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/lecture.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/utils/snackbar_helper.dart';
 
 /// Controller for managing lectures list, loading state, and deletion
 class LectureController extends GetxController {
-  // State observables
   RxBool isLoading = false.obs;
   RxList<LectureForm> lectureList = <LectureForm>[].obs;
   RxString errorMessage = ''.obs;
@@ -30,32 +28,24 @@ class LectureController extends GetxController {
       } else {
         errorMessage.value = 'تعذر جلب المحاضرات.';
         lectureList.clear();
-        if (context != null) {
-          showInfoSnackbar(context, 'لا توجد محاضرات متاحة حالياً.');
-        }
       }
     } catch (e) {
-      errorMessage.value = 'فشل الاتصال بالخادم. تحقق من الاتصال بالإنترنت.';
+      errorMessage.value = e is NoNetworkException
+          ? 'لا يوجد اتصال بالإنترنت.'
+          : 'فشل الاتصال بالخادم. تحقق من الاتصال بالإنترنت.';
       lectureList.clear();
-      if (context != null) {
-        showErrorSnackbar(context, 'حدث خطأ أثناء تحميل المحاضرات.');
-      }
     } finally {
       onFinished?.call();
     }
   }
 
   /// Deletes a lecture and refreshes the list
-  Future<void> postDelete(int id, BuildContext context) async {
+  Future<void> postDelete(int id) async {
     try {
-      // TODO: Replace with actual delete request if API supports it
-      // await ApiService.deleteItem('lecture-endpoint/$id');
-
-      // Show success message and refresh
-      showSuccessSnackbar(context, 'تم حذف المحاضرة بنجاح.');
-      await getData(ApiEndpoints.getLectures, context: context);
-    } catch (e) {
-      showErrorSnackbar(context, 'فشل حذف المحاضرة. حاول لاحقاً.');
+      await ApiService.delete(ApiEndpoints.getLectureById(id));
+      await getData(ApiEndpoints.getLectures);
+    } catch (_) {
+      errorMessage.value = 'فشل حذف المحاضرة. حاول لاحقاً.';
     }
   }
 }

@@ -8,6 +8,9 @@ Future<DateTime?> showCustomDatePicker({
 }) async {
   DateTime tempDate = initialDate;
 
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
   return await showDialog<DateTime>(
     context: context,
     builder: (context) {
@@ -36,17 +39,20 @@ Future<DateTime?> showCustomDatePicker({
                       tempDate = DateTime.now();
                       Navigator.of(context).pop(tempDate);
                     },
-                    icon: const Icon(Icons.today, color: Colors.green),
-                    label: const Text(
-                      'Today',
-                      style: TextStyle(color: Colors.green),
+                    icon: Icon(Icons.today, color: colorScheme.primary),
+                    label: Text(
+                      'اليوم',
+                      style: TextStyle(color: colorScheme.primary),
                     ),
                   ),
                   Row(
                     children: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(null),
-                        child: const Text('Close'),
+                        child: Text(
+                          'إغلاق',
+                          style: TextStyle(color: colorScheme.onSurface),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
@@ -54,9 +60,13 @@ Future<DateTime?> showCustomDatePicker({
                           Navigator.of(context).pop(tempDate);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green.shade700,
+                          backgroundColor: colorScheme.primary,
+                          foregroundColor: colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                        child: const Text('Apply'),
+                        child: const Text('تطبيق'),
                       ),
                     ],
                   ),

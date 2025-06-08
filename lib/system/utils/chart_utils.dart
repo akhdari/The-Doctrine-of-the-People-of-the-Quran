@@ -39,20 +39,20 @@ Widget buildFiltersWithActions(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           _buildFieldColumn(
-            "اسم المحاضرة",
-            _buildDropdown(controller.lectureNameController, context),
-          ),
-          _buildFieldColumn(
-            "اسم الطالب",
-            _buildDropdown(controller.studentNameController, context),
+            "إلى تاريخ",
+            _buildDateField(context, controller, isFrom: false),
           ),
           _buildFieldColumn(
             "من تاريخ",
             _buildDateField(context, controller, isFrom: true),
           ),
           _buildFieldColumn(
-            "إلى تاريخ",
-            _buildDateField(context, controller, isFrom: false),
+            "اسم المحاضرة",
+            _buildDropdown(controller.lectureNameController, context),
+          ),
+          _buildFieldColumn(
+            "اسم الطالب",
+            _buildDropdown(controller.studentNameController, context),
           ),
           ElevatedButton.icon(
             onPressed: () {
@@ -90,7 +90,11 @@ Widget _buildFieldColumn(String label, Widget field) {
         padding: const EdgeInsets.only(bottom: 6),
         child: Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          textAlign: TextAlign.right,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
         ),
       ),
       field,
@@ -103,6 +107,7 @@ Widget _buildDropdown(TextEditingController controller, BuildContext context) {
     constraints: const BoxConstraints(minWidth: 160, maxWidth: 180),
     child: TextField(
       controller: controller,
+      textAlign: TextAlign.right,
       decoration: InputDecoration(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         contentPadding: const EdgeInsets.symmetric(
@@ -110,6 +115,7 @@ Widget _buildDropdown(TextEditingController controller, BuildContext context) {
           vertical: 14,
         ),
         hintText: "اكتب هنا",
+        hintStyle: const TextStyle(),
       ),
     ),
   );
@@ -140,6 +146,7 @@ Widget _buildDateField(
                 ? DateFormat('d MMM yyyy', 'ar').format(date)
                 : "اختر التاريخ",
             style: const TextStyle(fontSize: 14),
+            textAlign: TextAlign.right,
           );
         }),
       ),

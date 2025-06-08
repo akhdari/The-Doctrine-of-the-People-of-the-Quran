@@ -8,7 +8,7 @@ class StarterBinding extends Bindings {
   @override
   void dependencies() {
     // Lazy put controllers (created on demand)
-    Get.lazyPut(() => FontController());
+    Get.put(() => FontController());
 
     //need to be available immediately (singleton)
     Get.put(ProfileController());

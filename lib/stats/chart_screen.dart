@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+
 import '../controllers/charts/chart_config_controller.dart';
 import '../controllers/charts/chart_filter_controller.dart';
 import '../../system/utils/chart_utils.dart';
@@ -8,6 +9,7 @@ import '../../system/utils/snackbar_helper.dart';
 import '../../system/utils/chart_download_utils.dart';
 import '../../system/models/chart_data_models.dart';
 import 'download_button.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
 
 class ChartScreen<T> extends StatelessWidget {
   final String title;
@@ -27,19 +29,17 @@ class ChartScreen<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: _ChartContent<T>(
-          data: data,
-          tag: tag,
-          seriesConfigs: seriesConfigs,
-          axisConfig: axisConfig,
+    return BaseLayout(
+      title: title,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: _ChartContent<T>(
+            data: data,
+            tag: tag,
+            seriesConfigs: seriesConfigs,
+            axisConfig: axisConfig,
+          ),
         ),
       ),
     );
@@ -117,10 +117,7 @@ class _ChartContentState<T> extends State<_ChartContent<T>> {
       final lectureName = record.lectureName?.toString() ?? '';
       final date = record.date as DateTime?;
 
-      if (date == null) {
-        debugPrint("تحذير: تم تجاوز سجل بدون تاريخ: $record");
-        return false;
-      }
+      if (date == null) return false;
 
       final studentMatch = studentFilter.isEmpty ||
           studentName.toLowerCase().contains(studentFilter);
@@ -153,11 +150,8 @@ class _ChartContentState<T> extends State<_ChartContent<T>> {
     }
 
     final allValues = filteredData
-        .expand(
-          (data) => widget.seriesConfigs.map(
-            (config) => config.valueMapper(data as dynamic),
-          ),
-        )
+        .expand((data) =>
+            widget.seriesConfigs.map((config) => config.valueMapper(data)))
         .toList();
 
     _configController.autoCalculateRange(allValues);
@@ -181,59 +175,67 @@ class _ChartContentState<T> extends State<_ChartContent<T>> {
           },
         ),
         const SizedBox(height: 24),
-        Expanded(
-          child: _isLoading
-              ? buildLoadingIndicator()
-              : Obx(() {
-                  if (!_filterController.isFilterApplied.value) {
-                    return buildEmptyState(
-                      "يرجى تطبيق الفلاتر لعرض البيانات",
-                    );
-                  }
-                  if (_chartData.isEmpty) {
-                    return buildEmptyState("لا توجد بيانات للفلاتر المحددة");
-                  }
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 300, maxHeight: 500),
+              child: _isLoading
+                  ? buildLoadingIndicator()
+                  : Obx(() {
+                      if (!_filterController.isFilterApplied.value) {
+                        return buildEmptyState(
+                            "يرجى تطبيق الفلاتر لعرض البيانات");
+                      }
 
-                  final seriesData = <String, List<ChartEntry>>{};
-                  for (var entry in _chartData) {
-                    seriesData.putIfAbsent(entry.category, () => []).add(entry);
-                  }
+                      if (_chartData.isEmpty) {
+                        return buildEmptyState(
+                            "لا توجد بيانات للفلاتر المحددة");
+                      }
 
-                  return buildChartContainer(
-                    child: SfCartesianChart(
-                      key: _chartKey,
-                      primaryXAxis: widget.axisConfig.xAxis,
-                      primaryYAxis: NumericAxis(
-                        title: AxisTitle(text: widget.axisConfig.yAxisLabel),
-                        minimum: _configController.yAxisMin.value,
-                        maximum: _configController.yAxisMax.value,
-                        interval: _configController.yAxisInterval.value,
-                      ),
-                      legend: Legend(
-                        isVisible: true,
-                        position: LegendPosition.top,
-                        overflowMode: LegendItemOverflowMode.wrap,
-                      ),
-                      tooltipBehavior: TooltipBehavior(
-                        enable: true,
-                        format:
-                            'point.x : point.y ${widget.axisConfig.yAxisLabel}',
-                      ),
-                      series: widget.seriesConfigs.map((config) {
-                        return config.seriesBuilder(
-                          seriesData[config.name] ?? [],
-                          config.color,
-                        );
-                      }).toList(),
-                    ),
-                  );
-                }),
+                      final seriesData = <String, List<ChartEntry>>{};
+                      for (var entry in _chartData) {
+                        seriesData
+                            .putIfAbsent(entry.category, () => [])
+                            .add(entry);
+                      }
+
+                      return buildChartContainer(
+                        child: SfCartesianChart(
+                          key: _chartKey,
+                          primaryXAxis: widget.axisConfig.xAxis,
+                          primaryYAxis: NumericAxis(
+                            title: AxisTitle(
+                              text: widget.axisConfig.yAxisLabel,
+                            ),
+                            minimum: _configController.yAxisMin.value,
+                            maximum: _configController.yAxisMax.value,
+                            interval: _configController.yAxisInterval.value,
+                          ),
+                          legend: const Legend(
+                            isVisible: true,
+                            position: LegendPosition.top,
+                            overflowMode: LegendItemOverflowMode.wrap,
+                          ),
+                          tooltipBehavior: TooltipBehavior(
+                            enable: true,
+                            format:
+                                'point.x : point.y ${widget.axisConfig.yAxisLabel}',
+                          ),
+                          series: widget.seriesConfigs.map((config) {
+                            return config.seriesBuilder(
+                              seriesData[config.name] ?? [],
+                              config.color,
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    }),
+            );
+          },
         ),
         const SizedBox(height: 16),
         DownloadButton(
-          onPressed: () {
-            downloadChart(_chartKey, context);
-          },
+          onPressed: () => downloadChart(_chartKey, context),
         ),
       ],
     );
@@ -244,8 +246,10 @@ class ChartSeriesConfig {
   final String name;
   final Color color;
   final double Function(dynamic) valueMapper;
-  final CartesianSeries<ChartEntry, dynamic> Function(List<ChartEntry>, Color)
-      seriesBuilder;
+  final CartesianSeries<ChartEntry, dynamic> Function(
+    List<ChartEntry>,
+    Color,
+  ) seriesBuilder;
 
   ChartSeriesConfig({
     required this.name,
@@ -259,5 +263,8 @@ class ChartAxisConfig {
   final ChartAxis xAxis;
   final String yAxisLabel;
 
-  ChartAxisConfig({required this.xAxis, required this.yAxisLabel});
+  ChartAxisConfig({
+    required this.xAxis,
+    required this.yAxisLabel,
+  });
 }

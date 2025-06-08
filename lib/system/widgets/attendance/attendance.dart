@@ -38,7 +38,7 @@ class AttendanceController extends GetxController {
   final RxBool selectAllAbsent = false.obs;
   final RxBool selectAllLate = false.obs;
   final RxBool selectAllExcused = false.obs;
-
+//TODO Use a class bcs class name and students = obj
   final List<Student> dummyStudents = [
     Student(id: 'S001', name: 'أسامة الغناني'),
     Student(id: 'S002', name: 'جمال صحراوي'),
@@ -47,6 +47,9 @@ class AttendanceController extends GetxController {
     Student(id: 'S005', name: 'عبد الهادي تبغيت'),
     Student(id: 'S006', name: 'محمد سهير'),
     Student(id: 'S007', name: 'هارون العناني'),
+    Student(id: 'S008', name: 'عبد الرحمن عوض'),
+    Student(id: 'S009', name: 'عبد الله عوض'),
+    Student(id: 'S010', name: 'عبد الله محمد'),
   ];
 
   final List<Lecture> dummyLectures = [
@@ -220,9 +223,7 @@ class AttendanceScreen extends StatelessWidget {
       case AttendanceStatus.excused:
         return controller.selectAllExcused;
       default:
-        throw Exception(
-          'Invalid status for header checkbox',
-        ); // Should not happen
+        throw Exception('Invalid status for header checkbox');
     }
   }
 
@@ -233,7 +234,10 @@ class AttendanceScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Obx(
-            () => Text('حضور ${controller.selectedLecture.value.name}'),
+            () => Text(
+              'حضور ${controller.selectedLecture.value.name}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
           actions: [
             IconButton(
@@ -244,6 +248,16 @@ class AttendanceScreen extends StatelessWidget {
                   initialDate: controller.selectedDate.value,
                   firstDate: DateTime(2020),
                   lastDate: DateTime(2030),
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: Theme.of(context).colorScheme,
+                        dialogBackgroundColor:
+                            Theme.of(context).colorScheme.surface,
+                      ),
+                      child: child!,
+                    );
+                  },
                 );
                 if (picked != null) {
                   controller.updateDate(picked);
@@ -256,7 +270,7 @@ class AttendanceScreen extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '${controller.selectedDate.value.day}-${controller.selectedDate.value.month}-${controller.selectedDate.value.year}',
-                    style: const TextStyle(fontSize: 16),
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -271,9 +285,11 @@ class AttendanceScreen extends StatelessWidget {
               child: Obx(
                 () => DropdownButtonFormField<Lecture>(
                   value: controller.selectedLecture.value,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'اختر الحلقة',
-                    border: OutlineInputBorder(),
+                    border: Theme.of(context).inputDecorationTheme.border,
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
                   ),
                   items: controller.dummyLectures.map((lecture) {
                     return DropdownMenuItem<Lecture>(
@@ -293,18 +309,21 @@ class AttendanceScreen extends StatelessWidget {
             // Header Row with Select All Checkboxes
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              color: Colors.teal,
+              color: Theme.of(context).colorScheme.primary,
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     flex: 4,
                     child: Center(
                       child: Text(
                         'الطالب',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                       ),
                     ),
                   ),
@@ -315,37 +334,41 @@ class AttendanceScreen extends StatelessWidget {
                     return Expanded(
                       flex: 1,
                       child: Column(
-                        // Use Column to stack checkbox and text
                         children: [
                           Obx(
                             () => Checkbox(
                               value: _getHeaderCheckboxRx(status).value,
                               onChanged: (bool? newValue) {
                                 controller.toggleHeaderCheckbox(
-                                  status,
-                                  newValue,
-                                );
+                                    status, newValue);
                               },
                               fillColor: WidgetStateProperty.resolveWith<Color>(
-                                  (Set<WidgetState> states) {
-                                if (states.contains(WidgetState.selected)) {
-                                  return Colors
-                                      .white; // Checkbox color when selected
-                                }
-                                return Colors
-                                    .white; // Checkbox border color when not selected
-                              }),
-                              checkColor:
-                                  Colors.teal, // Color of the check mark
+                                (Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.selected)) {
+                                    return Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary;
+                                  }
+                                  return Theme.of(context)
+                                      .colorScheme
+                                      .onPrimary
+                                      .withOpacity(0.5);
+                                },
+                              ),
+                              checkColor: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           Text(
                             _statusLabel(status),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  fontSize: 12,
+                                ),
                           ),
                         ],
                       ),
@@ -356,49 +379,50 @@ class AttendanceScreen extends StatelessWidget {
             ),
 
             // Student List
-            Obx(
-              () => Expanded(
-                child: ListView.builder(
-                  itemCount: controller.students.length,
-                  itemBuilder: (context, index) {
-                    final student = controller.students[index];
-                    return Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      color: index % 2 == 0 ? Colors.grey[200] : Colors.white,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Center(child: Text(student.student.name)),
+            Expanded(
+              child: ListView.builder(
+                itemCount: controller.students.length,
+                itemBuilder: (context, index) {
+                  final student = controller.students[index];
+                  return Container(
+                    key: ValueKey(student.student.id), // Add key here
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    color: index % 2 == 0
+                        ? Theme.of(context).colorScheme.surfaceContainerLow
+                        : Theme.of(context).colorScheme.surface,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Center(
+                            child: Text(
+                              student.student.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
-                          // Individual student radio buttons
-                          ...AttendanceStatus.values
-                              .where((s) => s != AttendanceStatus.none)
-                              .map((status) {
-                            return Expanded(
-                              flex: 1,
-                              child: Obx(
-                                () => Radio<AttendanceStatus>(
+                        ),
+                        ...AttendanceStatus.values
+                            .where((s) => s != AttendanceStatus.none)
+                            .map((status) {
+                          return Expanded(
+                            flex: 1,
+                            child: Obx(() => Radio<AttendanceStatus>(
                                   value: status,
                                   groupValue: student.status.value,
                                   onChanged: (newValue) {
                                     if (newValue != null) {
-                                      controller.updateStatus(
-                                        index,
-                                        newValue,
-                                      );
+                                      controller.updateStatus(index, newValue);
                                     }
                                   },
-                                  activeColor: Colors.teal,
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                                  activeColor:
+                                      Theme.of(context).colorScheme.primary,
+                                )),
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
