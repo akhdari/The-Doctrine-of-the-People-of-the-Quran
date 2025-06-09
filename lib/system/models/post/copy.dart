@@ -21,7 +21,7 @@ class Copy extends AbstractClass {
   }
 
   @override
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "schoolName": schoolName,
       "country": country,

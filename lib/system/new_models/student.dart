@@ -27,4 +27,7 @@ class Student implements Model {
         'student_contact_id': studentContactId,
         'student_account_id': studentAccountId,
       };
+
+  @override
+  List<int> getPrimaryKey() => [studentId, guardianId];
 }

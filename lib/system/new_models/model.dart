@@ -4,4 +4,5 @@ abstract class Model {
     throw UnimplementedError(
         'fromJson method must be implemented in subclasses');
   }
+  List<int> getPrimaryKey();
 }

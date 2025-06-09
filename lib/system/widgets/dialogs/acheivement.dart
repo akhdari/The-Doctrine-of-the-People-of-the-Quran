@@ -97,11 +97,11 @@ class _AcheivemtDialogState extends State<AcheivemtDialog> {
       _acheivement.majorRev = _majorRevList.surahAyahList;
 
       // Log form data for debugging
-      dev.log(_acheivement.toMap().toString());
+      dev.log(_acheivement.toJson().toString());
 
       // Submit form and get result
       final success =
-          await submitForm(_formKey, _acheivement, url, Acheivement.fromMap);
+          await submitForm(_formKey, _acheivement, url, Acheivement.fromJson);
 
       // Close dialog only on success
       if (success) {

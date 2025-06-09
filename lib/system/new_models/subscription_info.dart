@@ -40,4 +40,7 @@ class SubscriptionInfo implements Model {
         'is_exempt_from_payment': isExemptFromPayment ? 1 : 0,
         'exemption_percentage': exemptionPercentage,
       };
+
+  @override
+  List<int> getPrimaryKey() => [subscriptionId, studentId];
 }

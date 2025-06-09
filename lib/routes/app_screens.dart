@@ -1,20 +1,21 @@
 import 'package:get/get.dart';
 
 // Import bindings
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_notes.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_records.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_teachers.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exams/exam_types.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/copy.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/student.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/guardian.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/management_binding.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/acheivement.dart';
 //import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/starter.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/attendance_binding.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/charts/stat1_binding.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/charts/stat2_binding.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/charts/stat3_binding.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/appreciation.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/exam.dart';
 //import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_teacher_binding.dart'; // Assuming this is correct
 
 // Import screens
@@ -61,17 +62,19 @@ class AppScreens {
     GetPage(
       name: Routes.addStudent,
       page: () => AddStudent(),
-      binding: StudentBinding(),
+      binding: ManagementBinding<StudentInfoDialog>(
+          fromJson: StudentInfoDialog.fromJson),
     ),
     GetPage(
       name: Routes.addGuardian,
       page: () => AddGuardian(),
-      binding: GuardianBinding(),
+      binding: ManagementBinding<GuardianInfoDialog>(
+          fromJson: GuardianInfoDialog.fromJson),
     ),
     GetPage(
       name: Routes.addLecture,
       page: () => AddLecture(),
-      binding: LectureBinding(),
+      binding: ManagementBinding<LectureForm>(fromJson: LectureForm.fromJson),
     ),
     GetPage(
       name: Routes.addAchievement,
@@ -114,22 +117,24 @@ class AppScreens {
     GetPage(
       name: Routes.examTypes,
       page: () => ExamTypes(),
-      binding: ExamTypesBinding(),
+      binding: ManagementBinding<Exam>(fromJson: Exam.fromJson),
     ),
     GetPage(
       name: Routes.examRecords,
       page: () => ExamRecords(),
-      binding: ExamRecordsBinding(),
+      binding: ManagementBinding<ExamRecordInfoDialog>(
+          fromJson: ExamRecordInfoDialog.fromJson),
     ),
     GetPage(
       name: Routes.examNotes,
       page: () => ExamNotes(),
-      binding: ExamNotesBinding(),
+      binding: ManagementBinding<Appreciation>(fromJson: Appreciation.fromJson),
     ),
     GetPage(
       name: Routes.examTeachers,
       page: () => ExamTeachers(),
-      binding: ExamTeacherBinding(),
+      binding: ManagementBinding<ExamTeacherInfoDialog>(
+          fromJson: ExamTeacherInfoDialog.fromJson),
     ),
 
     /*GetPage(

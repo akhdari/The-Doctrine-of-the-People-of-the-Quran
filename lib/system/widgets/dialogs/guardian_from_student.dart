@@ -212,7 +212,7 @@ class _GuardianDialogLiteState extends State<GuardianDialogLite> {
                     guardianFormKey,
                     guardianInfo,
                     ApiEndpoints.submitGuardianForm,
-                    (GuardianInfoDialog.fromMap),
+                    (GuardianInfoDialog.fromJson),
                   );
                   if (success) {
                     Get.back(); // Close the dialog

@@ -30,4 +30,7 @@ class WeeklySchedule implements Model {
         'start_time': startTime,
         'end_time': endTime,
       };
+
+  @override
+  List<int> getPrimaryKey() => weeklyScheduleId;
 }

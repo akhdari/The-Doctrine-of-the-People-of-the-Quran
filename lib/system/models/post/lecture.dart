@@ -1,10 +1,11 @@
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/teacher.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
 
 import 'abstract_class.dart';
 
-class LectureForm extends AbstractClass {
+class LectureForm extends AbstractClass implements Model {
   //lecture info
   //required
   late Lecture lecture = Lecture();
@@ -43,7 +44,7 @@ class LectureForm extends AbstractClass {
   }
 
   @override
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "lecture": {
         "lecture_id": lecture.lectureId,
@@ -57,4 +58,7 @@ class LectureForm extends AbstractClass {
       "student_count": studentCount,
     };
   }
+
+  @override
+  List<int> getPrimaryKey() => lecture.lectureId;
 }

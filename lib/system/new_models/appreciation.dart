@@ -35,4 +35,7 @@ class Appreciation implements Model {
       pointMax: pointMax ?? this.pointMax,
     );
   }
+
+  @override
+  List<int> getPrimaryKey() => appreciationId;
 }

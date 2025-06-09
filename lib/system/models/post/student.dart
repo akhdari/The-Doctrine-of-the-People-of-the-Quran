@@ -37,7 +37,7 @@ class StudentInfoDialog extends AbstractClass implements Model {
   }
 
   @override
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'personalInfo': personalInfo.toJson(),
       'accountInfo': accountInfo.toJson(),
@@ -49,11 +49,6 @@ class StudentInfoDialog extends AbstractClass implements Model {
       'formalEducationInfo': formalEducationInfo.toJson(),
       'subscriptionInfo': subscriptionInfo.toJson(),
     };
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return toMap();
   }
 
   static StudentInfoDialog fromJson(Map<String, dynamic> json) {
@@ -71,4 +66,7 @@ class StudentInfoDialog extends AbstractClass implements Model {
           FormalEducationInfo.fromJson(json['formalEducationInfo'])
       ..subscriptionInfo = SubscriptionInfo.fromJson(json['subscriptionInfo']);
   }
+
+  @override
+  List<int> getPrimaryKey() => student.studentAccountId;
 }

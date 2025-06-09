@@ -36,7 +36,7 @@ class AcheivementGrid extends StatelessWidget {
       rowBuilder: (achievement) => DataGridRow(cells: [
         DataGridCell<String>(
           columnName: 'student_id',
-          value: achievement.studentID,
+          value: achievement.studentID.toString(),
         ),
         DataGridCell<String>(
           columnName: 'full_name',
@@ -48,7 +48,7 @@ class AcheivementGrid extends StatelessWidget {
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                final studentId = int.parse(achievement.studentID);
+                final studentId = achievement.studentID;
                 Get.put(LatestAcheivement());
                 Get.dialog(
                   AcheivemtDialog(
@@ -180,7 +180,7 @@ class AttendanceDialog extends StatelessWidget {
 
   AttendanceDialog({super.key, required this.data}) {
     for (var student in data) {
-      controller.studentAttendance[student.studentID] = null;
+      controller.studentAttendance[student.studentID.toString()] = null;
     }
   }
 
@@ -279,10 +279,10 @@ class AttendanceDialog extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(student.studentName),
         ),
-        _buildAttendanceCell(student.studentID, 'present'),
-        _buildAttendanceCell(student.studentID, 'absent'),
-        _buildAttendanceCell(student.studentID, 'late'),
-        _buildAttendanceCell(student.studentID, 'excuse'),
+        _buildAttendanceCell(student.studentID.toString(), 'present'),
+        _buildAttendanceCell(student.studentID.toString(), 'absent'),
+        _buildAttendanceCell(student.studentID.toString(), 'late'),
+        _buildAttendanceCell(student.studentID.toString(), 'excuse'),
       ],
     );
   }

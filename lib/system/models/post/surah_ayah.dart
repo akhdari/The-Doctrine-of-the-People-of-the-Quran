@@ -16,11 +16,11 @@ class AcheivementType {
 
     for (var item in jsonList) {
       if (item.containsKey('hifd')) {
-        hifd = SurahAyah.fromMap(item['hifd']);
+        hifd = SurahAyah.fromJson(item['hifd']);
       } else if (item.containsKey('quickRev')) {
-        quickRev = SurahAyah.fromMap(item['quickRev']);
+        quickRev = SurahAyah.fromJson(item['quickRev']);
       } else if (item.containsKey('majorRev')) {
-        majorRev = SurahAyah.fromMap(item['majorRev']);
+        majorRev = SurahAyah.fromJson(item['majorRev']);
       }
     }
 
@@ -48,22 +48,18 @@ class SurahAyah {
       this.observation})
       : key = UniqueKey();
 
-  Map<String, dynamic> toMap() => {
-        'fromSurahName': fromSurahName,
-        'toSurahName': toSurahName,
-        'fromAyahNumber': fromAyahNumber,
-        'toAyahNumber': toAyahNumber,
-        'observation': observation
-      };
-
-//[{"key":{}}]
-  //convert to json array of objects
-  List<Map<String, dynamic>> toJson() {
-    return [toMap()];
-  }
+  List<Map<String, dynamic>> toJson() => [
+        {
+          'fromSurahName': fromSurahName,
+          'toSurahName': toSurahName,
+          'fromAyahNumber': fromAyahNumber,
+          'toAyahNumber': toAyahNumber,
+          'observation': observation
+        }
+      ];
 
   //convert from json array of objects to list of maps
-  static SurahAyah fromMap(Map<String, dynamic> map) {
+  static SurahAyah fromJson(Map<String, dynamic> map) {
     return SurahAyah(
       fromSurahName: map['from_surah'],
       toSurahName: map['to_surah'],

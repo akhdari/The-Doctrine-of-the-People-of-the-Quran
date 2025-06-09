@@ -18,7 +18,7 @@ class LatestAcheivementModel extends AbstractClass {
   @override
   bool get isComplete => studentId != null && lectureId != null;
   @override
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'student_id': studentId,
       'lecture_id': lectureId,

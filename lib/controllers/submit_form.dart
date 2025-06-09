@@ -1,8 +1,8 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/abstract_class.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/utils/snackbar_helper.dart';
 
 Future<bool> submitForm<T extends AbstractClass>(
   GlobalKey<FormState> formKey,
@@ -15,16 +15,16 @@ Future<bool> submitForm<T extends AbstractClass>(
   formKey.currentState!.save();
 
   if (!obj.isComplete) {
-    showErrorSnackbar(Get.context!, 'يرجى إكمال جميع الحقول المطلوبة');
+    dev.log('يرجى إكمال جميع الحقول المطلوبة');
     return false;
   }
 
   try {
-    await ApiService.post<T>(url, obj.toMap(), fromJson);
-    showSuccessSnackbar(Get.context!, 'تم إرسال النموذج بنجاح');
+    await ApiService.post<T>(url, obj.toJson(), fromJson);
+    dev.log('تم إرسال النموذج بنجاح');
     return true;
   } catch (e) {
-    showErrorSnackbar(Get.context!, 'فشل إرسال النموذج - ${e.toString()}');
+    dev.log('فشل إرسال النموذج - ${e.toString()}');
     return false;
   }
 }
@@ -40,16 +40,16 @@ Future<bool> submitEditDataForm<T extends AbstractClass>(
   formKey.currentState!.save();
 
   if (!obj.isComplete) {
-    showErrorSnackbar(Get.context!, 'يرجى إكمال جميع الحقول المطلوبة');
+    dev.log('يرجى إكمال جميع الحقول المطلوبة');
     return false;
   }
 
   try {
-    await ApiService.put<T>(url, obj.toMap(), fromJson);
-    showSuccessSnackbar(Get.context!, 'تم تعديل النموذج بنجاح');
+    await ApiService.put<T>(url, obj.toJson(), fromJson);
+    dev.log('تم تعديل النموذج بنجاح');
     return true;
   } catch (e) {
-    showErrorSnackbar(Get.context!, 'فشل تعديل النموذج - ${e.toString()}');
+    dev.log('فشل تعديل النموذج - ${e.toString()}');
     return false;
   }
 }

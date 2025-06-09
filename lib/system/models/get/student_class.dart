@@ -1,7 +1,7 @@
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 
 class Student implements Model {
-  final String id;
+  final int id;
   final String firstNameAr;
   final String lastNameAr;
   final String sex;
@@ -40,7 +40,7 @@ class Student implements Model {
 
   factory Student.fromJson(Map<String, dynamic> map) {
     return Student(
-      id: map['id'].toString(),
+      id: map['id'],
       firstNameAr: map['firstNameAr'] ?? '',
       lastNameAr: map['lastNameAr'] ?? '',
       sex: map['sex'] ?? '',
@@ -51,4 +51,7 @@ class Student implements Model {
       username: map['username'] ?? '',
     );
   }
+
+  @override
+  List<int> getPrimaryKey() => [id];
 }

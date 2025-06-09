@@ -56,4 +56,7 @@ class Guardian implements Model {
   String toString() {
     return '[ $guardianId ] - $firstName $lastName ';
   }
+
+  @override
+  List<int> getPrimaryKey() => guardianAccountId;
 }

@@ -1,11 +1,12 @@
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/account_info.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/contact_info.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/personal_info.dart';
 
 import 'abstract_class.dart';
 
-class GuardianInfoDialog extends AbstractClass {
+class GuardianInfoDialog extends AbstractClass implements Model {
   //info
   Guardian guardian = Guardian();
   AccountInfo accountInfo = AccountInfo();
@@ -23,7 +24,7 @@ class GuardianInfoDialog extends AbstractClass {
   }
 
   @override
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'info': guardian.toJson(),
       'contact_info': contactInfo.toJson(),
@@ -32,7 +33,7 @@ class GuardianInfoDialog extends AbstractClass {
     };
   }
 
-  GuardianInfoDialog.fromMap(Map<String, dynamic> map) {
+  GuardianInfoDialog.fromJson(Map<String, dynamic> map) {
     guardian = Guardian.fromJson(map['info']);
     contactInfo = ContactInfo.fromJson(map['contact_info']);
     accountInfo = AccountInfo.fromJson(map['account_info']);
@@ -43,4 +44,7 @@ class GuardianInfoDialog extends AbstractClass {
       children = [];
     }
   }
+
+  @override
+  List<int> getPrimaryKey() => guardian.guardianAccountId;
 }

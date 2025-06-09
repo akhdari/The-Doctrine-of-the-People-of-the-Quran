@@ -22,7 +22,7 @@ class Lecture implements Model {
         teamAccomplishmentId: json['team_accomplishment_id'],
         lectureNameAr: json['lecture_name_ar'],
         lectureNameEn: json['lecture_name_en'],
-        shownOnWebsite: json['shown_on_website'],
+        shownOnWebsite: json['shown_on_website'] == 1,
         circleType: json['circle_type'],
       );
 
@@ -32,7 +32,7 @@ class Lecture implements Model {
         'team_accomplishment_id': teamAccomplishmentId,
         'lecture_name_ar': lectureNameAr,
         'lecture_name_en': lectureNameEn,
-        'shown_on_website': shownOnWebsite,
+        'shown_on_website': shownOnWebsite ? 1 : 0,
         'circle_type': circleType,
       };
 
@@ -40,4 +40,7 @@ class Lecture implements Model {
   String toString() {
     return '[ $lectureId ] - $lectureNameEn - $lectureNameAr';
   }
+
+  @override
+  List<int> getPrimaryKey() => lectureId;
 }

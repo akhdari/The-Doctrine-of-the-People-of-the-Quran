@@ -68,4 +68,7 @@ class Guardian implements Model {
       children: parsedChildren,
     );
   }
+
+  @override
+  List<int> getPrimaryKey() => id;
 }

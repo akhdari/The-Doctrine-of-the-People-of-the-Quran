@@ -53,4 +53,7 @@ class Teacher implements Model {
 
   @override
   int get hashCode => teacherId.hashCode;
+
+  @override
+  List<int> getPrimaryKey() => teacherAccountId;
 }

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_controller.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/appreciation.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dialog.dart';
 
-class AppreciationDialog extends StatefulWidget {
-  const AppreciationDialog({super.key});
+class AppreciationDialog extends GlobalDialog {
+  const AppreciationDialog(
+      {super.key, super.dialogHeader = "إضافة طالب", super.numberInputs = 14});
 
   @override
-  State<AppreciationDialog> createState() => _AppreciationDialogState();
+  State<GlobalDialog> createState() => _AppreciationDialogState();
 }
 
-class _AppreciationDialogState extends State<AppreciationDialog> {
+class _AppreciationDialogState<GEC extends GenericEditController<Appreciation>>
+    extends DialogState<GEC> {
   List<Appreciation>? entries;
 
   @override
@@ -99,5 +103,28 @@ class _AppreciationDialogState extends State<AppreciationDialog> {
     setState(() {
       entries?[index] = copyWith;
     });
+  }
+
+  @override
+  Column formChild() {
+    // TODO: implement formChild
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> loadData() {
+    // TODO: implement loadData
+    throw UnimplementedError();
+  }
+
+  @override
+  void setDefaultFieldsValue() {
+    // TODO: implement setDefaultFieldsValue
+  }
+
+  @override
+  Future<bool> submit() {
+    // TODO: implement submit
+    throw UnimplementedError();
   }
 }

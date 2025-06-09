@@ -1,9 +1,10 @@
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+
 class LectureTeacher implements Model {
- dynamic teacherId;
- dynamic lectureId;
- dynamic lectureDate;
- dynamic attendanceStatus;
+  dynamic teacherId;
+  dynamic lectureId;
+  dynamic lectureDate;
+  dynamic attendanceStatus;
 
   LectureTeacher({
     this.teacherId,
@@ -13,18 +14,20 @@ class LectureTeacher implements Model {
   });
 
   factory LectureTeacher.fromJson(Map<String, dynamic> json) => LectureTeacher(
-    teacherId: json['teacher_id'],
-    lectureId: json['lecture_id'],
-    lectureDate: json['lecture_date'],
-    attendanceStatus: json['attendance_status'],
-  );
+        teacherId: json['teacher_id'],
+        lectureId: json['lecture_id'],
+        lectureDate: json['lecture_date'],
+        attendanceStatus: json['attendance_status'],
+      );
 
   @override
   Map<String, dynamic> toJson() => {
-    'teacher_id': teacherId,
-    'lecture_id': lectureId,
-    'lecture_date': lectureDate,
-    'attendance_status': attendanceStatus,
-  };
-}
+        'teacher_id': teacherId,
+        'lecture_id': lectureId,
+        'lecture_date': lectureDate,
+        'attendance_status': attendanceStatus,
+      };
 
+  @override
+  List<int> getPrimaryKey() => [teacherId, lectureId];
+}

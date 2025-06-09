@@ -1,11 +1,12 @@
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
+
 class ExamLevel implements Model {
- dynamic examLevelId;
- dynamic level;
- dynamic fromSurah;
- dynamic fromAyah;
- dynamic toSurah;
- dynamic toAyah;
+  dynamic examLevelId;
+  dynamic level;
+  dynamic fromSurah;
+  dynamic fromAyah;
+  dynamic toSurah;
+  dynamic toAyah;
 
   ExamLevel({
     this.examLevelId,
@@ -17,22 +18,24 @@ class ExamLevel implements Model {
   });
 
   factory ExamLevel.fromJson(Map<String, dynamic> json) => ExamLevel(
-    examLevelId: json['exam_level_id'],
-    level: json['level'],
-    fromSurah: json['from_surah'],
-    fromAyah: json['from_ayah'],
-    toSurah: json['to_surah'],
-    toAyah: json['to_ayah'],
-  );
+        examLevelId: json['exam_level_id'],
+        level: json['level'],
+        fromSurah: json['from_surah'],
+        fromAyah: json['from_ayah'],
+        toSurah: json['to_surah'],
+        toAyah: json['to_ayah'],
+      );
 
   @override
   Map<String, dynamic> toJson() => {
-    'exam_level_id': examLevelId,
-    'level': level,
-    'from_surah': fromSurah,
-    'from_ayah': fromAyah,
-    'to_surah': toSurah,
-    'to_ayah': toAyah,
-  };
-}
+        'exam_level_id': examLevelId,
+        'level': level,
+        'from_surah': fromSurah,
+        'from_ayah': fromAyah,
+        'to_surah': toSurah,
+        'to_ayah': toAyah,
+      };
 
+  @override
+  List<int> getPrimaryKey() => examLevelId;
+}

@@ -27,4 +27,7 @@ class AccountInfo implements Model {
         'passcode': passcode,
         'account_type': accountType,
       };
+
+  @override
+  List<int> getPrimaryKey() => accountId;
 }

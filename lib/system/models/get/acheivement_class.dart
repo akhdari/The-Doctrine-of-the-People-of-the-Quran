@@ -1,13 +1,13 @@
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 
 class Acheivement implements Model {
-  String studentID;
+  int studentID;
   String studentName;
   Acheivement({required this.studentID, required this.studentName});
   String getStudentName() => studentName;
-  String getId() => studentID;
+  int getId() => studentID;
   factory Acheivement.fromJson(Map<String, dynamic> json) => Acheivement(
-        studentID: json['student_id'].toString(),
+        studentID: json['student_id'],
         studentName: json['full_name'],
       );
 
@@ -18,4 +18,7 @@ class Acheivement implements Model {
       'full_name': studentName,
     };
   }
+
+  @override
+  List<int> getPrimaryKey() => [studentID];
 }

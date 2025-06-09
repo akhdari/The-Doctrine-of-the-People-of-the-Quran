@@ -70,7 +70,5 @@ class Exam extends AbstractClass implements Model {
       examPerformancePoint != null;
 
   @override
-  Map<String, dynamic> toMap() {
-    return toJson();
-  }
+  List<int> getPrimaryKey() => examId;
 }

@@ -13,7 +13,7 @@ class SurahAyahList {
     surahAyahList.removeAt(index);
   }
 
-  Map<String, dynamic> toMap() => {
-        'surahAyahList': surahAyahList.map((item) => item.toMap()).toList(),
+  Map<String, dynamic> toJson() => {
+        'surahAyahList': surahAyahList.map((item) => item.toJson()).toList(),
       };
 }
