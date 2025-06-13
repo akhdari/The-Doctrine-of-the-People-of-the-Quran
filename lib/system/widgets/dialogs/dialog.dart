@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_controller.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/image.dart';
 
 /// An abstract dialog widget for adding or editing data,
 /// parameterized by a [GenericEditController].
@@ -100,8 +99,8 @@ abstract class DialogState<GEC extends GenericEditController>
     final colorScheme = Theme.of(context).colorScheme;
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: Get.width * 0.7,
-        maxHeight: Get.height * 0.8,
+        maxWidth: Get.width * 0.55,
+        maxHeight: Get.height * 0.65,
         minHeight: 400,
         minWidth: 300,
       ),
@@ -134,13 +133,7 @@ abstract class DialogState<GEC extends GenericEditController>
                         ),
                   ),
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ClipRRect(
-                    child: CustomAssetImage(assetPath: "assets/back.png"),
-                  ),
-                ),
+
                 Row(
                   children: [
                     const Spacer(),
