@@ -153,4 +153,6 @@ class ApiEndpoints {
       '$baseUrl/special/exams-teachers/submit';
   static String updateSpecialExamsTeacher(int id) =>
       '$baseUrl/special/exams-teachers/$id';
+
+  static String uploadImage = '$baseUrl/upload-image'; // example
 }

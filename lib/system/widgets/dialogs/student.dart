@@ -331,7 +331,7 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
                 ),
               ),
               const SizedBox(width: 8),
-              Expanded(
+              /* Expanded(
                 child: InputField(
                   inputTitle: "has disease",
                   child: DropDownWidget(
@@ -342,8 +342,8 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
                     onSaved: (p0) => studentInfo.medicalInfo.diseases = p0,
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
+              ),*/
+              //const SizedBox(width: 8),
               Expanded(
                 child: InputField(
                   inputTitle: "disease causes",
@@ -462,16 +462,13 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
                   )),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Obx(
-                      () => OutlinedButton(
-                        onPressed: () async {
-                          Get.put(form.FormController(5), tag: "guardian");
-
-                          Get.put(Generate());
-                          Get.dialog(GuardianDialogLite());
-                        },
-                        child: Text("Add Guardian"),
-                      ),
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        Get.put(form.FormController(5), tag: "guardian");
+                        Get.put(Generate());
+                        Get.dialog(GuardianDialogLite());
+                      },
+                      child: Text("Add Guardian"),
                     ),
                   ),
                 ],
