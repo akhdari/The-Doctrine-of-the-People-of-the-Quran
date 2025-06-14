@@ -4,19 +4,11 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controlle
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_controller.dart';
 
-/// An abstract dialog widget for adding or editing data,
-/// parameterized by a [GenericEditController].
-///
-/// [dialogHeader] sets the dialog's title.
-/// [numberInputs] determines the number of form fields.
+/// Abstract dialog that provides a template for forms with optional edit support.
 abstract class GlobalDialog extends StatefulWidget {
-  /// The header text displayed at the top of the dialog.
   final String dialogHeader;
-
-  /// The number of input fields in the form.
   final int numberInputs;
 
-  /// Creates a [GlobalDialog] with optional [dialogHeader] and [numberInputs].
   const GlobalDialog({
     super.key,
     this.dialogHeader = "add data",
@@ -27,36 +19,26 @@ abstract class GlobalDialog extends StatefulWidget {
   State<GlobalDialog> createState();
 }
 
-/// The state for [GlobalDialog], handling form logic and UI.
-///
-/// Subclasses must implement [formChild], [loadData], [submit], and [setDefaultFieldsValue].
+/// Base state class for form dialogs.
+/// Subclasses should define formChild, loadData, submit, setDefaultFieldsValue.
 abstract class DialogState<GEC extends GenericEditController>
     extends State<GlobalDialog> {
-  /// Key for the form widget.
   final GlobalKey<FormState> lectureFormKey = GlobalKey<FormState>();
-
-  /// Controller for scrolling the dialog content.
   late ScrollController scrollController;
-
-  /// Controller for managing form fields.
   late form.FormController formController;
-
-  /// Optional controller for editing existing data.
   GEC? editController;
-
-  /// Observable indicating if the form is ready for submission.
   RxBool isComplete = true.obs;
 
-  /// Returns the form fields as a [Column] widget.
+  /// Returns form fields as a Column.
   Column formChild();
 
-  /// Loads any required data for the dialog.
+  /// Load any necessary data (e.g. dropdowns, lists).
   Future<void> loadData();
 
-  /// Handles form submission logic.
+  /// Submit the form data.
   Future<bool> submit();
 
-  /// Sets default values for fields in edit mode.
+  /// Pre-fill form when editing.
   void setDefaultFieldsValue();
 
   @override
@@ -70,9 +52,8 @@ abstract class DialogState<GEC extends GenericEditController>
 
     if (Get.isRegistered<GEC>()) {
       editController = Get.find<GEC>();
-    } else {
-      editController = null;
     }
+
     formController = Get.find<form.FormController>();
     scrollController = ScrollController();
 
@@ -97,121 +78,155 @@ abstract class DialogState<GEC extends GenericEditController>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: Get.width * 0.55,
         maxHeight: Get.height * 0.65,
-        minHeight: 400,
         minWidth: 300,
+        minHeight: 400,
       ),
       child: Dialog(
-        shape: BeveledRectangleBorder(),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // slight rounding
+        ),
         backgroundColor: colorScheme.surface,
-        child: Scrollbar(
-          controller: scrollController,
-          child: Column(
-            children: [
-              //header
-              Stack(children: [
-                ColorFiltered(
-                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.dstIn),
-                  child: Container(
-                    width: double.infinity,
-                    height: 50,
-                    color: colorScheme.primary,
+        child: Column(
+          children: [
+            /// Header section (title + close button)
+            _DialogHeader(title: widget.dialogHeader),
+
+            /// Form content with scroll
+            Expanded(
+              child: Scrollbar(
+                controller: scrollController,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: lectureFormKey,
+                    child: formChild(),
                   ),
                 ),
-                // Dialog header text above the image
-                Positioned(
-                  left: 16,
-                  top: 8,
-                  child: Text(
-                    widget.dialogHeader,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
+              ),
+            ),
 
-                Row(
-                  children: [
-                    const Spacer(),
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        color: colorScheme.onSurface,
-                      ),
-                      onPressed: () => Get.back(),
-                    ),
-                  ],
-                )
-              ]),
-
-              Expanded(
-                  child: SingleChildScrollView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.all(20),
-                      child: Form(
-                        key: lectureFormKey,
-                        child: formChild(),
-                      ))),
-
-              // Submit button
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    debugPrint(
-                        'Form valid: ${lectureFormKey.currentState?.validate()}');
-                    debugPrint(
-                        'Fields: ${formController.controllers.map((c) => c.text)}');
-                    isComplete.value = false;
-
-                    if (lectureFormKey.currentState?.validate() ?? false) {
-                      // Save the form data
-                      lectureFormKey.currentState?.save();
-                      debugPrint('Form saved');
-
-                      try {
-                        // Depending on whether it's an edit or a new submission, call the appropriate endpoint
-                        final bool success = await submit();
-
-                        // Handle result based on success
-                        if (success) {
-                          Get.back(result: true);
-                          Get.snackbar(
-                              'Success', 'Student data submitted successfully');
-                        } else {
-                          // Show error message if submission failed
-                          Get.snackbar(
-                              'Error', 'Failed to submit lecture data');
-                        }
-                      } catch (e) {
-                        // Handle any errors during submission
-                        Get.snackbar('Error',
-                            'An error occurred while submitting the form');
-                        debugPrint('Error submitting form: $e');
-                      } finally {
-                        // Ensure to re-enable the submit button
-                        isComplete.value = true;
-                      }
-                    } else {
-                      // If form is invalid, show an error message
-                      Get.snackbar(
-                          'Error', 'Please fill out all required fields');
-                      isComplete.value = true;
-                    }
-                  },
-                  child: Obx(() => isComplete.value
-                      ? Text('Submit')
-                      : CircularProgressIndicator()),
-                ),
-              )
-            ],
-          ),
+            /// Submit button at bottom
+            _DialogSubmitButton(
+              isComplete: isComplete,
+              onSubmit: _handleSubmit,
+            )
+          ],
         ),
       ),
+    );
+  }
+
+  /// Handles form validation and submission.
+  Future<void> _handleSubmit() async {
+    debugPrint('Form valid: ${lectureFormKey.currentState?.validate()}');
+    debugPrint(
+        'Fields: ${formController.controllers.map((c) => c.text).toList()}');
+
+    isComplete.value = false;
+
+    if (lectureFormKey.currentState?.validate() ?? false) {
+      lectureFormKey.currentState?.save();
+
+      try {
+        final success = await submit();
+
+        if (success) {
+          Get.back(result: true);
+          Get.snackbar('Success', 'Data submitted successfully',
+              snackPosition: SnackPosition.BOTTOM);
+        } else {
+          Get.snackbar('Error', 'Failed to submit data',
+              snackPosition: SnackPosition.BOTTOM);
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'An error occurred during submission',
+            snackPosition: SnackPosition.BOTTOM);
+        debugPrint('Error submitting form: $e');
+      } finally {
+        isComplete.value = true;
+      }
+    } else {
+      Get.snackbar('Error', 'Please fill out all required fields',
+          snackPosition: SnackPosition.BOTTOM);
+      isComplete.value = true;
+    }
+  }
+}
+
+/// Dialog header widget with title + close button
+class _DialogHeader extends StatelessWidget {
+  final String title;
+
+  const _DialogHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: colorScheme.primary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.white),
+            onPressed: () => Get.back(),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+/// Submit button with loading indicator
+class _DialogSubmitButton extends StatelessWidget {
+  final RxBool isComplete;
+  final VoidCallback onSubmit;
+
+  const _DialogSubmitButton({
+    required this.isComplete,
+    required this.onSubmit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Obx(() => ElevatedButton.icon(
+            onPressed: isComplete.value ? onSubmit : null,
+            icon: isComplete.value
+                ? const Icon(Icons.send)
+                : const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+            label: Text(isComplete.value ? 'Submit' : 'Submitting...'),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(150, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6), // slight rounding
+              ),
+            ),
+          )),
     );
   }
 }

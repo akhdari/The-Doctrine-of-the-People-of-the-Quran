@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './auth_layout.dart';
-import 'input.dart';
 
 class LogIn extends StatelessWidget {
   const LogIn({super.key});
@@ -21,24 +20,34 @@ class LogIn extends StatelessWidget {
               "تسجيل الدخول",
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
+                color: colorScheme.onSurface,
               ),
             ),
           ),
           const SizedBox(height: 24),
           Text("اسم المستخدم", style: textTheme.bodyMedium),
           const SizedBox(height: 4),
-          Input(
-            hintText: "ادخل اسم المستخدم",
-            icon: Icon(Icons.email_outlined, color: iconTheme.color),
+          TextField(
+            decoration: InputDecoration(
+              hintText: "ادخل اسم المستخدم",
+              prefixIcon: Icon(Icons.email_outlined, color: iconTheme.color),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           Text("كلمة المرور", style: textTheme.bodyMedium),
           const SizedBox(height: 4),
-          Input(
-            hintText: "ادخل كلمة المرور",
-            ispassword: true,
-            icon: Icon(Icons.lock_outline, color: iconTheme.color),
+          TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: "ادخل كلمة المرور",
+              prefixIcon: Icon(Icons.lock_outline, color: iconTheme.color),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
           const SizedBox(height: 12),
           Align(

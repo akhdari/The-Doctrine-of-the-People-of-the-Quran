@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
-import 'timer.dart';
+import './time_picker.dart';
 
 class TimeCellController extends GetxController {
   final Map<String, RxBool> weekDays = {
@@ -30,8 +30,13 @@ class TimeCellController extends GetxController {
 
   void setTime(String day, String type, String newTime) {
     if (!_isValidTime(newTime)) {
-      Get.snackbar('Format Error', 'Please enter time in HH:MM format',
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        'Format Error',
+        'Please enter time in HH:MM format',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Theme.of(Get.context!).colorScheme.error,
+        colorText: Theme.of(Get.context!).colorScheme.onError,
+      );
       return;
     }
 
@@ -40,14 +45,24 @@ class TimeCellController extends GetxController {
 
     if (otherTime.isNotEmpty) {
       if (type == 'from' && !_isFromBeforeTo(newTime, otherTime)) {
-        Get.snackbar('Time Error', 'Start time must be before end time',
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Time Error',
+          'Start time must be before end time',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Theme.of(Get.context!).colorScheme.error,
+          colorText: Theme.of(Get.context!).colorScheme.onError,
+        );
         return;
       }
       if (type == 'to' &&
           !_isFromBeforeTo(dayTimes[day]!['from']!.value, newTime)) {
-        Get.snackbar('Time Error', 'End time must be after start time',
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Time Error',
+          'End time must be after start time',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Theme.of(Get.context!).colorScheme.error,
+          colorText: Theme.of(Get.context!).colorScheme.onError,
+        );
         return;
       }
     }
@@ -71,9 +86,8 @@ class TimeCellController extends GetxController {
   bool _isFromBeforeTo(String from, String to) {
     final fromMinutes = _timeToMinutes(from);
     final toMinutes = _timeToMinutes(to);
-
-    if (fromMinutes == toMinutes) return false; // same time = invalid
-    return true; // allow both same-day and overnight
+    if (fromMinutes == toMinutes) return false;
+    return true;
   }
 
   int _timeToMinutes(String time) {
@@ -94,10 +108,12 @@ class TimeCellController extends GetxController {
 
         if (fromTime.isEmpty || toTime.isEmpty) {
           Get.snackbar(
-              'Error', 'Please specify both start and end time for $day',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.redAccent,
-              colorText: Colors.white);
+            'Error',
+            'Please specify both start and end time for $day',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Theme.of(Get.context!).colorScheme.error,
+            colorText: Theme.of(Get.context!).colorScheme.onError,
+          );
           continue;
         }
 
@@ -110,10 +126,7 @@ class TimeCellController extends GetxController {
         ));
       }
     }
-/*
-    Get.snackbar('Success', 'Matrix saved successfully',
-        snackPosition: SnackPosition.BOTTOM);
-*/
+
     return result;
   }
 }
@@ -126,7 +139,7 @@ class CustomMatrix extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Table(
-      border: TableBorder.all(color: Colors.grey),
+      border: TableBorder.all(color: Theme.of(context).dividerColor),
       columnWidths: const {
         0: FlexColumnWidth(2),
         1: FlexColumnWidth(1),
@@ -135,19 +148,20 @@ class CustomMatrix extends StatelessWidget {
       },
       children: <TableRow>[
         TableRow(
-          decoration: const BoxDecoration(color: Colors.teal),
+          decoration:
+              BoxDecoration(color: Theme.of(context).colorScheme.primary),
           children: [
-            _buildHeaderCell('Day'),
-            _buildHeaderCell('Status'),
-            _buildHeaderCell('From'),
-            _buildHeaderCell('To'),
+            _buildHeaderCell(context, 'Day'),
+            _buildHeaderCell(context, 'Status'),
+            _buildHeaderCell(context, 'From'),
+            _buildHeaderCell(context, 'To'),
           ],
         ),
         ...controller.weekDays.entries.map((entry) {
           String day = entry.key;
           return TableRow(
             children: [
-              _buildDataCell(day),
+              _buildDataCell(context, day),
               _buildSwitchCell(controller, day),
               TimeCell(controller: controller, day: day, isFrom: true),
               TimeCell(controller: controller, day: day, isFrom: false),
@@ -158,29 +172,29 @@ class CustomMatrix extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCell(String text) {
+  Widget _buildHeaderCell(BuildContext context, String text) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }
 
-  Widget _buildDataCell(String text) {
+  Widget _buildDataCell(BuildContext context, String text) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: Colors.black,
-        ),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }
@@ -224,21 +238,24 @@ class TimeCell extends StatelessWidget {
       return TextButton(
         onPressed: () async {
           if (isSelected) {
-            final value = await timer(context);
-            if (value.isNotEmpty) {
-              controller.setTime(day, timeType, value);
+            final picked = await showCustomTimePicker(
+              context: context,
+              initialTime: TimeOfDay.now(),
+            );
+            if (picked != null) {
+              final formattedTime =
+                  '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+              controller.setTime(day, timeType, formattedTime);
             }
           }
         },
         child: Text(
-          timeValue.isEmpty
-              ? isFrom
-                  ? 'Start'
-                  : 'End'
-              : timeValue,
-          style: TextStyle(
-            color: timeValue.isEmpty ? Colors.grey : Colors.black,
-          ),
+          timeValue.isEmpty ? (isFrom ? 'Start' : 'End') : timeValue,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: timeValue.isEmpty
+                    ? Theme.of(context).hintColor
+                    : Theme.of(context).colorScheme.onSurface,
+              ),
         ),
       );
     });

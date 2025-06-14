@@ -16,6 +16,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ar');
   WidgetsFlutterBinding.ensureInitialized();
+
   Get.put(ThemeController());
   runApp(MyApp());
 }

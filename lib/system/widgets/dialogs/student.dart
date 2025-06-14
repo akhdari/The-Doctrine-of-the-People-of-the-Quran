@@ -8,7 +8,6 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/lecture.
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dialog.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/guardian_from_student.dart';
-import '../timer.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../../../controllers/validator.dart';
@@ -19,6 +18,7 @@ import '../../../controllers/generate.dart';
 import '../drop_down.dart';
 import '../../../controllers/form_controller.dart' as form;
 import './image_picker_widget.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/date_picker.dart';
 
 class StudentDialog extends GlobalDialog {
   const StudentDialog({
@@ -662,110 +662,148 @@ class SubscriptionInfoSection extends StatelessWidget {
       headerText: "subscription information",
       headerIcon: Icons.subscriptions,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: InputField(
-                  inputTitle: "enrollment date",
-                  child: Obx(
-                    () => OutlinedButton(
-                      onPressed: () async {
-                        await dateSelector(context).then((value) {
-                          if (value != null) {
-                            enrollmentDate.value = value;
-                            studentInfo.subscriptionInfo.enrollmentDate = value;
-                          }
-                        });
-                      },
-                      child: Text(enrollmentDate.value ?? "select date"),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InputField(
-                  inputTitle: "is exempt from payment",
-                  child: DropDownWidget<bool>(
-                    items: trueFalse,
-                    initialValue: editController?.model.value?.subscriptionInfo
-                                .isExemptFromPayment ==
-                            1
-                        ? true
-                        : false,
-                    onChanged: (p0) {
-                      isExempt.value = p0!;
-                      dev.log("isExempt: $isExempt");
-                    },
-                    onSaved: (p0) =>
-                        studentInfo.subscriptionInfo.isExemptFromPayment = p0,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: InputField(
-                  inputTitle: "exemption percentage",
-                  child: Obx(
-                    () => AbsorbPointer(
-                      absorbing: !isExempt.value,
-                      child: Opacity(
-                        opacity: isExempt.value ? 1.0 : 0.5,
-                        child: DropDownWidget<double>(
-                          items: exemptionPercentage,
-                          initialValue: editController?.model.value
-                                  ?.subscriptionInfo.exemptionPercentage ??
-                              exemptionPercentage[0],
-                          onChanged: (p0) {
-                            studentInfo.subscriptionInfo.exemptionPercentage =
-                                isExempt.value ? p0 : null;
-                          },
-                          onSaved: (p0) => studentInfo
-                              .subscriptionInfo.exemptionPercentage = p0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: InputField(
-                  inputTitle: "exit date",
-                  child: Obx(
-                    () => OutlinedButton(
-                      onPressed: () async {
-                        await dateSelector(context).then((value) {
-                          if (value != null) {
-                            exitDate.value = value;
-                            studentInfo.subscriptionInfo.exitDate = value;
-                          }
-                        });
-                      },
-                      child: Text(exitDate.value ?? "select date"),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InputField(
-                  inputTitle: "exit reason",
-                  child: CustomTextField(
-                    controller: formController.controllers[12],
-                    onSaved: (p0) =>
-                        studentInfo.subscriptionInfo.exitReason = p0,
-                    maxLines: 3,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _buildDateRow(context),
+          const SizedBox(height: 12),
+          _buildExemptRow(),
+          const SizedBox(height: 12),
+          _buildExitReasonField(),
         ],
       ),
+    );
+  }
+
+  /// Row containing enrollment and exit date pickers
+  Widget _buildDateRow(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: _buildEnrollmentDatePicker(context)),
+        const SizedBox(width: 12),
+        Expanded(child: _buildExitDatePicker(context)),
+      ],
+    );
+  }
+
+  /// Row containing isExempt and exemption percentage dropdowns
+  Widget _buildExemptRow() {
+    return Row(
+      children: [
+        Expanded(child: _buildIsExemptDropdown()),
+        const SizedBox(width: 12),
+        Expanded(child: _buildExemptionPercentageDropdown()),
+      ],
+    );
+  }
+
+  /// Full width exit reason field
+  Widget _buildExitReasonField() {
+    return InputField(
+      inputTitle: "exit reason",
+      child: CustomTextField(
+        controller: formController.controllers[12],
+        onSaved: (p0) => studentInfo.subscriptionInfo.exitReason = p0,
+        maxLines: 3,
+      ),
+    );
+  }
+
+  Widget _buildEnrollmentDatePicker(BuildContext context) {
+    return InputField(
+      inputTitle: "enrollment date",
+      child: Obx(() => OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              minimumSize: const Size(0, 36), // small button height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4), // more square
+              ),
+              side: BorderSide(color: Theme.of(context).colorScheme.primary),
+            ),
+            onPressed: () async {
+              final date = await showCustomDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              if (date != null) {
+                final dateStr = "${date.year}-${date.month}-${date.day}";
+                enrollmentDate.value = dateStr;
+                studentInfo.subscriptionInfo.enrollmentDate = dateStr;
+              }
+            },
+            child: Text(enrollmentDate.value ?? "select date"),
+          )),
+    );
+  }
+
+  Widget _buildExitDatePicker(BuildContext context) {
+    return InputField(
+      inputTitle: "exit date",
+      child: Obx(() => OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              minimumSize: const Size(0, 36), // small button height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4), // more square
+              ),
+              side: BorderSide(color: Theme.of(context).colorScheme.primary),
+            ),
+            onPressed: () async {
+              final date = await showCustomDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              if (date != null) {
+                final dateStr = "${date.year}-${date.month}-${date.day}";
+                exitDate.value = dateStr;
+                studentInfo.subscriptionInfo.exitDate = dateStr;
+              }
+            },
+            child: Text(exitDate.value ?? "select date"),
+          )),
+    );
+  }
+
+  Widget _buildIsExemptDropdown() {
+    return InputField(
+      inputTitle: "is exempt from payment",
+      child: DropDownWidget<bool>(
+        items: trueFalse,
+        initialValue: (editController
+                ?.model.value?.subscriptionInfo.isExemptFromPayment ==
+            1),
+        onChanged: (p0) => isExempt.value = p0!,
+        onSaved: (p0) => studentInfo.subscriptionInfo.isExemptFromPayment =
+            p0 == true ? 1 : 0,
+      ),
+    );
+  }
+
+  Widget _buildExemptionPercentageDropdown() {
+    return InputField(
+      inputTitle: "exemption percentage",
+      child: Obx(() => AbsorbPointer(
+            absorbing: !isExempt.value,
+            child: Opacity(
+              opacity: isExempt.value ? 1.0 : 0.5,
+              child: DropDownWidget<double>(
+                items: exemptionPercentage,
+                initialValue: editController
+                        ?.model.value?.subscriptionInfo.exemptionPercentage ??
+                    exemptionPercentage[0],
+                onChanged: (p0) {
+                  studentInfo.subscriptionInfo.exemptionPercentage =
+                      isExempt.value ? p0 : null;
+                },
+                onSaved: (p0) =>
+                    studentInfo.subscriptionInfo.exemptionPercentage = p0,
+              ),
+            ),
+          )),
     );
   }
 }

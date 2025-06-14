@@ -139,14 +139,15 @@ class GenericDataSource<T> extends DataGridSource {
     }
   }
 
-  /// Show full row details in dialog
   void _showRowDetails(DataGridRow row) {
+    final context = Get.context!;
+
     final details = row
         .getCells()
         .where((c) => c.columnName != 'button')
         .map(
           (cell) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -154,13 +155,16 @@ class GenericDataSource<T> extends DataGridSource {
                   width: 120,
                   child: Text(
                     '${cell.columnName}:',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                   ),
                 ),
                 Expanded(
-                  child: Text(
+                  child: SelectableText(
                     cell.value?.toString() ?? '',
-                    softWrap: true,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ],
@@ -171,18 +175,34 @@ class GenericDataSource<T> extends DataGridSource {
 
     Get.dialog(
       AlertDialog(
-        title: Text(detailsTitle),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: details,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // bit rounded
+        ),
+        title: Text(
+          detailsTitle,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: Get.height * 0.6,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: details,
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('إغلاق'),
+            child: Text(
+              'إغلاق',
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
           ),
         ],
       ),

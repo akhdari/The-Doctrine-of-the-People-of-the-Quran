@@ -13,7 +13,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dia
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/drop_down.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/input_field.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/multiselect.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/timer.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/time_picker.dart';
 
 class ExamRecordsDialog extends GlobalDialog {
   const ExamRecordsDialog(
@@ -78,9 +78,14 @@ class _LectureDialogState<
               child: Obx(
                 () => OutlinedButton(
                   onPressed: () async {
-                    await dateSelector(Get.context!).then((value) {
+                    await showCustomTimePicker(
+                      context: Get.context!,
+                      initialTime: TimeOfDay.now(),
+                    ).then((value) {
                       if (value != null) {
-                        lectureInfo.examStudent.dateTakeExam = value;
+                        // Format time as string or store TimeOfDay directly depending on your model
+                        lectureInfo.examStudent.dateTakeExam =
+                            "${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}";
                       }
                     });
                   },
