@@ -60,5 +60,5 @@ class LectureForm extends AbstractClass implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => lecture.lectureId;
+  List<int> getPrimaryKey() => [lecture.lectureId];
 }

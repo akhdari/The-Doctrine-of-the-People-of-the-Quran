@@ -23,7 +23,7 @@ abstract class GlobalDialog extends StatefulWidget {
 /// Subclasses should define formChild, loadData, submit, setDefaultFieldsValue.
 abstract class DialogState<GEC extends GenericEditController>
     extends State<GlobalDialog> {
-  final GlobalKey<FormState> lectureFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late ScrollController scrollController;
   late form.FormController formController;
   GEC? editController;
@@ -104,7 +104,7 @@ abstract class DialogState<GEC extends GenericEditController>
                   controller: scrollController,
                   padding: const EdgeInsets.all(20),
                   child: Form(
-                    key: lectureFormKey,
+                    key: formKey,
                     child: formChild(),
                   ),
                 ),
@@ -124,14 +124,14 @@ abstract class DialogState<GEC extends GenericEditController>
 
   /// Handles form validation and submission.
   Future<void> _handleSubmit() async {
-    debugPrint('Form valid: ${lectureFormKey.currentState?.validate()}');
+    debugPrint('Form valid: ${formKey.currentState?.validate()}');
     debugPrint(
         'Fields: ${formController.controllers.map((c) => c.text).toList()}');
 
     isComplete.value = false;
 
-    if (lectureFormKey.currentState?.validate() ?? false) {
-      lectureFormKey.currentState?.save();
+    if (formKey.currentState?.validate() ?? false) {
+      formKey.currentState?.save();
 
       try {
         final success = await submit();

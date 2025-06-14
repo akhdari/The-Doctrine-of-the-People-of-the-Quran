@@ -152,10 +152,10 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
   @override
   Future<bool> submit() async {
     return editExam!.model.value == null
-        ? await submitForm<Exam>(lectureFormKey, lectureInfo,
+        ? await submitForm<Exam>(formKey, lectureInfo,
             ApiEndpoints.submitLectureForm, (Exam.fromJson))
         : await submitEditDataForm<Exam>(
-            lectureFormKey,
+            formKey,
             lectureInfo,
             ApiEndpoints.getSpecialLecture(editExam!.model.value!.examId),
             (Exam.fromJson));

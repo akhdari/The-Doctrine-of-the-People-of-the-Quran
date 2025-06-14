@@ -123,10 +123,10 @@ class _LectureDialogState<
   @override
   Future<bool> submit() async {
     return super.editController!.model.value == null
-        ? await submitForm<ExamRecordInfoDialog>(lectureFormKey, lectureInfo,
+        ? await submitForm<ExamRecordInfoDialog>(formKey, lectureInfo,
             ApiEndpoints.submitLectureForm, (ExamRecordInfoDialog.fromJson))
         : await submitEditDataForm<ExamRecordInfoDialog>(
-            lectureFormKey,
+            formKey,
             lectureInfo,
             ApiEndpoints.getSpecialLecture(
                 editController!.model.value?.exam.examId ?? -1),

@@ -68,5 +68,5 @@ class StudentInfoDialog extends AbstractClass implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => student.studentAccountId;
+  List<int> getPrimaryKey() => [student.studentAccountId];
 }

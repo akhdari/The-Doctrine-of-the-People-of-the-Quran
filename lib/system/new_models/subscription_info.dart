@@ -37,7 +37,7 @@ class SubscriptionInfo implements Model {
         'enrollment_date': enrollmentDate,
         'exit_date': exitDate,
         'exit_reason': exitReason,
-        'is_exempt_from_payment': isExemptFromPayment ? 1 : 0,
+        'is_exempt_from_payment': isExemptFromPayment,
         'exemption_percentage': exemptionPercentage,
       };
 
