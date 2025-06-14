@@ -71,6 +71,7 @@ dependencies:
   connectivity_plus: ^6.1.4
   image_cropper: ^9.1.0
   flutter_image_compress: ^2.4.0
+  syncfusion_flutter_datagrid_export: ^29.2.10
 
 
 

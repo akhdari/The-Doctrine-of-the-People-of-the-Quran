@@ -35,7 +35,6 @@ class ManagementGrid<T extends Model> extends StatelessWidget {
       onRefresh: onRefresh,
       screenTitle: 'Students List',
       detailsTitle: 'Student Details',
-      rowsPerPage: 10,
       showCheckBoxColumn: true,
       idExtractor: (row) => int.parse(row.getCells()[0].value),
       rowBuilder: (student) => DataGridRow(cells: rowBuilder(student)),

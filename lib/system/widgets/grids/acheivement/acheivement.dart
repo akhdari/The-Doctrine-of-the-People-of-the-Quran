@@ -30,7 +30,6 @@ class AcheivementGrid extends StatelessWidget {
       selectionMode: SelectionMode.none,
       screenTitle: 'Students List',
       detailsTitle: 'Student Achievement Details',
-      rowsPerPage: 10,
       showCheckBoxColumn: false,
       idExtractor: (row) => int.parse(row.getCells()[0].value),
       rowBuilder: (achievement) => DataGridRow(cells: [

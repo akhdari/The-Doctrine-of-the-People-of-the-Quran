@@ -13,7 +13,8 @@ class GenericDataGrid<T> extends StatefulWidget {
   final dynamic Function(DataGridRow row) idExtractor;
   final String screenTitle;
   final String detailsTitle;
-  final int rowsPerPage;
+  final int initialRowsPerPage;
+  final List<int> availableRowsPerPage;
   final SelectionMode selectionMode;
   final bool showCheckBoxColumn;
   final IconData infoIcon;
@@ -22,6 +23,10 @@ class GenericDataGrid<T> extends StatefulWidget {
   final Future<void> Function() onRefresh;
   final void Function(DataGridRow? selectedRow)? getDataGridRow;
   final void Function(T? obj)? getObj;
+  final bool enablePagination;
+  final ValueChanged<int?>? onRowsPerPageChanged;
+  final Color? paginationBackgroundColor;
+  final Color? paginationTextColor;
 
   const GenericDataGrid({
     super.key,
@@ -34,7 +39,8 @@ class GenericDataGrid<T> extends StatefulWidget {
     this.cellBuilder,
     this.screenTitle = 'Data Grid',
     this.detailsTitle = 'Item Details',
-    this.rowsPerPage = 10,
+    this.initialRowsPerPage = 10,
+    this.availableRowsPerPage = const [5, 10, 20, 50],
     this.selectionMode = SelectionMode.singleDeselect,
     this.showCheckBoxColumn = false,
     this.infoIcon = Icons.info_outline,
@@ -42,6 +48,10 @@ class GenericDataGrid<T> extends StatefulWidget {
     this.selectionColor,
     this.getDataGridRow,
     this.getObj,
+    this.enablePagination = true,
+    this.onRowsPerPageChanged,
+    this.paginationBackgroundColor,
+    this.paginationTextColor,
   });
 
   @override
@@ -51,18 +61,22 @@ class GenericDataGrid<T> extends StatefulWidget {
 class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
   late DataGridController _controller;
   late GenericDataSource<T> _dataSource;
+  late int _rowsPerPage;
 
   @override
   void initState() {
     super.initState();
     _controller = DataGridController();
+    _rowsPerPage = widget.initialRowsPerPage;
     _initializeDataSource();
   }
 
   @override
   void didUpdateWidget(GenericDataGrid<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.data != widget.data) {
+    if (oldWidget.data != widget.data ||
+        oldWidget.initialRowsPerPage != widget.initialRowsPerPage) {
+      _rowsPerPage = widget.initialRowsPerPage;
       _initializeDataSource();
     }
   }
@@ -80,8 +94,20 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
       infoIcon: widget.infoIcon,
       deleteIcon: widget.deleteIcon,
       selectionColor: widget.selectionColor,
+      rowsPerPage: _rowsPerPage,
+      onRowsPerPageChanged: widget.onRowsPerPageChanged,
     );
   }
+
+  /* void _onRowsPerPageChanged(int? newRowsPerPage) {
+    if (newRowsPerPage != null) {
+      setState(() {
+        _rowsPerPage = newRowsPerPage;
+        _initializeDataSource();
+      });
+      widget.onRowsPerPageChanged?.call(newRowsPerPage);
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -90,52 +116,57 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
         Expanded(
           child: SfDataGridTheme(
             data: SfDataGridThemeData(
-              selectionColor:
-                  widget.selectionColor ?? Colors.blue.withValues(alpha: 0.1),
+              selectionColor: widget.selectionColor ??
+                  Color(0xFFC78D20).withValues(alpha: 0.1),
             ),
             child: SfDataGrid(
-                controller: _controller,
-                source: _dataSource,
-                columns: widget.columns,
-                columnWidthMode: ColumnWidthMode.fill,
-                selectionMode: widget.selectionMode,
-                showCheckboxColumn: widget.showCheckBoxColumn,
-                allowSorting: true,
-                allowFiltering: true,
-                gridLinesVisibility: GridLinesVisibility.both,
-                headerGridLinesVisibility: GridLinesVisibility.both,
-                /*
-                data grid row is wrapper that wraps the data grid cells 
-                and not the original obj 
-                */
-                //Once it's in the grid, a DataGridRow doesn't have a reference back to its original T
-                //we neep a mapping between the DataGridRow and the original T
-                onCheckboxValueChanged: (details) {
-                  if (details.value == true) {
-                    final selectedRow = details.row;
-                    if (selectedRow != null) {
-                      final rowId = widget.idExtractor(selectedRow);
-                      final obj = _dataSource.getModelFromRow(selectedRow);
-                      widget.getObj?.call(obj);
-                      widget.getDataGridRow?.call(selectedRow);
-                      dev.log('Checkbox changed for row ID: $rowId');
-                      dev.log('Original model: $obj');
-                    } else {
-                      dev.log('Checkbox changed for a null row.');
-                      widget.getObj?.call(null);
-                      widget.getDataGridRow?.call(null);
-                    }
+              controller: _controller,
+              source: _dataSource,
+              columns: widget.columns,
+              columnWidthMode: ColumnWidthMode.fill,
+              selectionMode: widget.selectionMode,
+              showCheckboxColumn: widget.showCheckBoxColumn,
+              allowSorting: true,
+              allowFiltering: true,
+              gridLinesVisibility: GridLinesVisibility.both,
+              headerGridLinesVisibility: GridLinesVisibility.both,
+              onCheckboxValueChanged: (details) {
+                if (details.value == true) {
+                  final selectedRow = details.row;
+                  if (selectedRow != null) {
+                    final rowId = widget.idExtractor(selectedRow);
+                    final obj = _dataSource.getModelFromRow(selectedRow);
+                    widget.getObj?.call(obj);
+                    widget.getDataGridRow?.call(selectedRow);
+                    dev.log('Checkbox changed for row ID: $rowId');
+                    dev.log('Original model: $obj');
                   } else {
+                    dev.log('Checkbox changed for a null row.');
                     widget.getObj?.call(null);
                     widget.getDataGridRow?.call(null);
                   }
-                }),
+                } else {
+                  widget.getObj?.call(null);
+                  widget.getDataGridRow?.call(null);
+                }
+              },
+            ),
           ),
         ),
+        if (widget.enablePagination)
+          SfDataPager(
+            delegate: _dataSource,
+            pageCount: (widget.data.length / _rowsPerPage).ceil().toDouble(),
+            visibleItemsCount: 5,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 5),
+            //availableRowsPerPage: widget.availableRowsPerPage,
+            // onRowsPerPageChanged: _onRowsPerPageChanged,
+          ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Wrap(
+            alignment: WrapAlignment.end,
+            spacing: 8.0,
             children: [
               FloatingActionButton(
                 mini: true,
@@ -151,7 +182,7 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
                     backgroundColor: Colors.red,
                     onPressed: () {
                       final selectedRow = _controller.selectedRows.first;
-                      final id = _dataSource.idExtractor(selectedRow);
+                      final id = widget.idExtractor(selectedRow);
                       widget.onDelete?.call(id as int);
                     },
                     child: Icon(widget.deleteIcon),

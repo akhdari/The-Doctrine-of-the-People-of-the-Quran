@@ -17,6 +17,8 @@ class GenericDataSource<T> extends DataGridSource {
   final IconData infoIcon;
   final IconData deleteIcon;
   final Color? selectionColor;
+  final int rowsPerPage;
+  final ValueChanged<int?>? onRowsPerPageChanged;
 
   GenericDataSource({
     required this.data,
@@ -30,6 +32,8 @@ class GenericDataSource<T> extends DataGridSource {
     this.infoIcon = Icons.info_outline,
     this.deleteIcon = Icons.delete,
     this.selectionColor,
+    required this.rowsPerPage,
+    this.onRowsPerPageChanged,
   }) {
     _data = data;
     buildDataGridRows();
@@ -62,13 +66,16 @@ class GenericDataSource<T> extends DataGridSource {
   T? getModelFromRow(DataGridRow row) => _rowToModelMap[row];
 
   @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
+  DataGridRowAdapter buildRow(
+    DataGridRow row,
+  ) {
     final isSelected = gridController.selectedRows.contains(row);
     final cells = row.getCells();
 
     return DataGridRowAdapter(
-      color:
-          isSelected ? (selectionColor ?? Colors.blue.withOpacity(0.1)) : null,
+      color: isSelected
+          ? (selectionColor ?? Color(0xFFC78D20).withValues(alpha: 0.1))
+          : null,
       cells: cells.map<Widget>((cell) {
         if (cell.columnName == 'button') {
           return _buildActionCell(row);
@@ -84,7 +91,7 @@ class GenericDataSource<T> extends DataGridSource {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: GestureDetector(
-        child: Icon(infoIcon, color: Colors.blue),
+        child: Icon(infoIcon, color: Color(0xFFC78D20)),
         onTap: () => _showRowDetails(row),
       ),
     );
@@ -105,22 +112,34 @@ class GenericDataSource<T> extends DataGridSource {
   }
 
   /// Confirm and delete row item
-  void _showDeleteDialog(DataGridRow row) async {
+  void _showDeleteDialog(DataGridRow row, BuildContext context) async {
+    final context = Get.context!;
     final result = await Get.dialog(
       AlertDialog(
-        title: const Text('تأكيد الحذف'),
-        content: const Text('هل أنت متأكد أنك تريد حذف هذا العنصر؟'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        contentPadding: const EdgeInsets.all(20),
+        title: Text(
+          'تأكيد الحذف',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        content: Text(
+          'هل أنت متأكد أنك تريد حذف هذا العنصر؟',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        actionsAlignment: MainAxisAlignment.end,
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () => Get.back(result: false),
             child: const Text('إلغاء'),
           ),
-          TextButton(
-            onPressed: () => Get.back(result: true),
-            child: const Text(
-              'حذف',
-              style: TextStyle(color: Colors.red),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
+            onPressed: () => Get.back(result: true),
+            child: const Text('حذف'),
           ),
         ],
       ),
@@ -131,10 +150,10 @@ class GenericDataSource<T> extends DataGridSource {
         final id = idExtractor(row);
         await onDelete?.call(id);
         await onRefresh();
-        showSuccessSnackbar(Get.context!, 'تم حذف العنصر بنجاح');
+        showSuccessSnackbar(context, 'تم حذف العنصر بنجاح');
       } catch (e) {
         dev.log("Delete error: $e");
-        showErrorSnackbar(Get.context!, 'فشل في حذف العنصر');
+        showErrorSnackbar(context, 'فشل في حذف العنصر');
       }
     }
   }
@@ -152,10 +171,10 @@ class GenericDataSource<T> extends DataGridSource {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 120,
+                  width: 140,
                   child: Text(
                     '${cell.columnName}:',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -164,7 +183,7 @@ class GenericDataSource<T> extends DataGridSource {
                 Expanded(
                   child: SelectableText(
                     cell.value?.toString() ?? '',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
               ],
@@ -176,33 +195,30 @@ class GenericDataSource<T> extends DataGridSource {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // bit rounded
+          borderRadius: BorderRadius.circular(12),
         ),
+        contentPadding: const EdgeInsets.all(20),
         title: Text(
           detailsTitle,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         content: ConstrainedBox(
           constraints: BoxConstraints(
+            maxWidth: 600,
             maxHeight: Get.height * 0.6,
           ),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: details,
             ),
           ),
         ),
+        actionsAlignment: MainAxisAlignment.end,
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () => Get.back(),
-            child: Text(
-              'إغلاق',
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-            ),
+            child: const Text('إغلاق'),
           ),
         ],
       ),
