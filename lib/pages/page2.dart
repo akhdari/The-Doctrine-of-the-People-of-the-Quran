@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quran_projet/nav.dart';
-import 'package:quran_projet/widgets/Footer.dart';
-import 'package:quran_projet/widgets/appbar.dart';
-import 'package:quran_projet/widgets/custom_app_section.dart';
-import 'package:quran_projet/widgets/pricing_content.dart';
-import 'package:quran_projet/widgets/pricing_section.dart';
-import 'package:quran_projet/widgets/section6.dart';
-
+import 'package:quran_projet/widgetsweb/Footer.dart';
+import 'package:quran_projet/widgetsweb/appbar.dart';
+import 'package:quran_projet/widgetsweb/custom_app_section.dart';
+import 'package:quran_projet/widgetsweb/pricing_content.dart';
+import 'package:quran_projet/widgetsweb/pricing_section.dart';
+import 'package:quran_projet/widgetsweb/section6.dart';
 
 class Page2 extends StatefulWidget {
   @override
@@ -72,12 +71,14 @@ class _Page2State extends State<Page2> {
       children: [
         Text(
           'الأسعار,',
-          style: TextStyle(fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         Text(
           'الأسعار,/الرئيسية',
-          style: TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20),

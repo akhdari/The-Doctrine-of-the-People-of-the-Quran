@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:quran_projet/nav.dart';
-import 'package:quran_projet/widgets/ContactForm.dart';
-import 'package:quran_projet/widgets/Footer.dart';
-import 'package:quran_projet/widgets/PartnersSection.dart';
-import 'package:quran_projet/widgets/SubscriptionSection.dart';
-import 'package:quran_projet/widgets/appbar.dart';
-import 'package:quran_projet/widgets/custom_app_section.dart';
-import 'package:quran_projet/widgets/features_section.dart';
-import 'package:quran_projet/widgets/image3scrol.dart';
-import 'package:quran_projet/widgets/mobile_showcase.dart';
-import 'package:quran_projet/widgets/nutifForm.dart';
-import 'package:quran_projet/widgets/pricing_section.dart';
-import 'package:quran_projet/widgets/section3.dart';
-import 'package:quran_projet/widgets/section6.dart';
-import 'package:quran_projet/widgets/users_section.dart';
-import 'package:quran_projet/widgets/image_carousel.dart';
-import 'package:quran_projet/widgets/stats_section.dart';
+import 'package:quran_projet/widgetsweb/ContactForm.dart';
+import 'package:quran_projet/widgetsweb/Footer.dart';
+import 'package:quran_projet/widgetsweb/PartnersSection.dart';
+import 'package:quran_projet/widgetsweb/SubscriptionSection.dart';
+import 'package:quran_projet/widgetsweb/appbar.dart';
+import 'package:quran_projet/widgetsweb/custom_app_section.dart';
+import 'package:quran_projet/widgetsweb/features_section.dart';
+import 'package:quran_projet/widgetsweb/image3scrol.dart';
+import 'package:quran_projet/widgetsweb/mobile_showcase.dart';
+import 'package:quran_projet/widgetsweb/nutifForm.dart';
+import 'package:quran_projet/widgetsweb/pricing_section.dart';
+import 'package:quran_projet/widgetsweb/section3.dart';
+import 'package:quran_projet/widgetsweb/section6.dart';
+import 'package:quran_projet/widgetsweb/users_section.dart';
+import 'package:quran_projet/widgetsweb/image_carousel.dart';
+import 'package:quran_projet/widgetsweb/stats_section.dart';
 
 class Page1 extends StatefulWidget {
   @override
@@ -83,13 +83,12 @@ class _Page1State extends State<Page1> {
                       Section6(),
                       CustomAppSection(),
                       StatsSection(),
-                      ImageCarousel3() ,
+                      ImageCarousel3(),
                       PartnersSection(),
                       SubscriptionSection(),
                       ContactForm(),
                       NutifForm(),
                       FooterSection()
-
                     ],
                   ),
                 ),
@@ -115,7 +114,8 @@ class _Page1State extends State<Page1> {
               transform: isHoveredImage
                   ? Matrix4.translationValues(0, -10, 0)
                   : Matrix4.identity(),
-              child: Image.asset('assets/homme.png', fit: BoxFit.contain, height: 350),
+              child: Image.asset('assets/homme.png',
+                  fit: BoxFit.contain, height: 350),
             ),
           ),
         ),
@@ -139,7 +139,8 @@ class _Page1State extends State<Page1> {
             transform: isHoveredImage
                 ? Matrix4.translationValues(0, -10, 0)
                 : Matrix4.identity(),
-            child: Image.asset('assets/homme.png', fit: BoxFit.contain, height: 250),
+            child: Image.asset('assets/homme.png',
+                fit: BoxFit.contain, height: 250),
           ),
         ),
       ],
@@ -150,13 +151,25 @@ class _Page1State extends State<Page1> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('نظام أهل القرآن', style: TextStyle(fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        Text('تسيير وتيسير التعليم القرآني', style: TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        Text('نظام أهل القرآن',
+            style: TextStyle(
+                fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center),
+        Text('تسيير وتيسير التعليم القرآني',
+            style: TextStyle(
+                fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center),
         SizedBox(height: 20),
-        Text('.نظام أهل القرآن هو نظام سحابي متكامل .. يمكن بواسطته إنشاء بيئة رقمية', 
-            style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        Text(' تربط بين مشرفي الحلقات ومدرسيها وطلابها وأولياء الأمور ، وذلك بمنحهم الأدوات الحديثة للارتقاء بحلقات القرآن', 
-            style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        Text(
+            '.نظام أهل القرآن هو نظام سحابي متكامل .. يمكن بواسطته إنشاء بيئة رقمية',
+            style: TextStyle(
+                fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center),
+        Text(
+            ' تربط بين مشرفي الحلقات ومدرسيها وطلابها وأولياء الأمور ، وذلك بمنحهم الأدوات الحديثة للارتقاء بحلقات القرآن',
+            style: TextStyle(
+                fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center),
         SizedBox(height: 25),
         MouseRegion(
           onEnter: (_) => setState(() => isHoveredButton = true),

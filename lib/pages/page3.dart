@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quran_projet/nav.dart';
-import 'package:quran_projet/widgets/Footer.dart';
-import 'package:quran_projet/widgets/appbar.dart';
-import 'package:quran_projet/widgets/features_section.dart';
-import 'package:quran_projet/widgets/section3.dart';
+import 'package:quran_projet/widgetsweb/Footer.dart';
+import 'package:quran_projet/widgetsweb/appbar.dart';
+import 'package:quran_projet/widgetsweb/features_section.dart';
+import 'package:quran_projet/widgetsweb/section3.dart';
 
 class Page3 extends StatefulWidget {
   const Page3({Key? key}) : super(key: key);
@@ -69,12 +69,14 @@ class _Page3State extends State<Page3> {
       children: [
         Text(
           'خصائص النظام',
-          style: TextStyle(fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 52, color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         Text(
           'خصائص النظام/الرئيسية',
-          style: TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20),
