@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 
+/// Section6 displays a responsive grid of service cards with app theme and Cairo font.
 class Section6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.background,
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
       child: Column(
         children: [
-          // Title text
-          const Text(
+          // Section title using theme text style
+          Text(
             "الخدمات الإضافية",
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
 
-          // Responsive grid using LayoutBuilder
+          // Responsive grid for cards
           LayoutBuilder(
             builder: (context, constraints) {
-              // Determine grid layout based on width
               int crossAxisCount;
               double aspectRatio;
 
@@ -38,11 +37,10 @@ class Section6 extends StatelessWidget {
                 aspectRatio = 1.5;
               }
 
-              // Card data
               final List<Map<String, dynamic>> cards = [
                 {
                   "title": "الشؤون المالية",
-                  "price": "DA19900",
+                  "price": "دج 19900",
                   "description": [
                     "اشتراكات الطلاب",
                     "رواتب المعلمين والموظفين",
@@ -52,7 +50,7 @@ class Section6 extends StatelessWidget {
                 },
                 {
                   "title": "الموقع التعريفي",
-                  "price": "DA19900",
+                  "price": "دج 19900",
                   "description": [
                     "التسجيل الإلكتروني",
                     "مكتبة المدرسة",
@@ -62,17 +60,17 @@ class Section6 extends StatelessWidget {
                 },
                 {
                   "title": "الرسائل الخاصة",
-                  "price": "DA9900",
+                  "price": "دج 9900",
                   "description": [
                     "التواصل بين الجميع",
-                    "خاصة وجماعية",
+                    "رسائل خاصة وجماعية",
                     "تنبيهات فورية",
                   ],
                   "icon": Icons.message,
                 },
                 {
                   "title": "المقرأة الإلكترونية",
-                  "price": "DA9900",
+                  "price": "دج 9900",
                   "description": [
                     "حلقات افتراضية",
                     "وقت غير محدود",
@@ -82,11 +80,9 @@ class Section6 extends StatelessWidget {
                 },
               ];
 
-              // GridView builder for cards
               return GridView.builder(
-                shrinkWrap: true, // Prevent GridView from expanding infinitely
-                physics:
-                    NeverScrollableScrollPhysics(), // Disable internal scrolling
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 20,
@@ -112,7 +108,7 @@ class Section6 extends StatelessWidget {
   }
 }
 
-// Card widget with zoom animation on hover (for web/desktop)
+/// Card widget with zoom effect on hover (for web/desktop).
 class AnimatedZoomCard extends StatefulWidget {
   final String title;
   final String price;
@@ -131,25 +127,25 @@ class AnimatedZoomCard extends StatefulWidget {
 }
 
 class _AnimatedZoomCardState extends State<AnimatedZoomCard> {
-  bool isHovered = false; // Track hover state
+  bool isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => isHovered = true), // Hover starts
-      onExit: (_) => setState(() => isHovered = false), // Hover ends
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         transform: isHovered
             ? Matrix4.translationValues(0, -5, 0)
-            : Matrix4.identity(), // Move card up on hover
+            : Matrix4.identity(),
         decoration: BoxDecoration(
-          color: Color(0xFF0E9D6D), // Green card background
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
               color: Colors.black26,
-              blurRadius: isHovered ? 12 : 6, // Stronger shadow on hover
+              blurRadius: isHovered ? 12 : 6,
               offset: Offset(0, isHovered ? 4 : 2),
             ),
           ],
@@ -162,11 +158,10 @@ class _AnimatedZoomCardState extends State<AnimatedZoomCard> {
             const SizedBox(height: 10),
             Text(
               widget.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
@@ -178,15 +173,13 @@ class _AnimatedZoomCardState extends State<AnimatedZoomCard> {
               ),
               child: Text(
                 widget.price,
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal,
-                ),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             const SizedBox(height: 10),
-            // List of description items
             Column(
               children: widget.description
                   .map(
@@ -194,11 +187,10 @@ class _AnimatedZoomCardState extends State<AnimatedZoomCard> {
                       padding: const EdgeInsets.symmetric(vertical: 2),
                       child: Text(
                         text,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                            ),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                   )

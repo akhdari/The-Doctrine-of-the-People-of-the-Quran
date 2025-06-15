@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// A card widget that zooms slightly on hover, displaying an icon, title, price, and description.
+/// Builds a card with zoom animation on hover, showing icon and text in Arabic
+/// Uses app theme for colors and font
 class ZoomCard extends StatefulWidget {
-  final String title;
-  final String price;
-  final String description;
-  final IconData icon;
+  final String title; // Arabic title
+  final String price; // Arabic price string
+  final String description; // Arabic description
+  final IconData icon; // Icon to display
 
   const ZoomCard({
     required this.title,
@@ -30,8 +31,7 @@ class ZoomCardState extends State<ZoomCard> {
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _scale = _hoverScale), // Scale up on hover
-      onExit: (_) =>
-          setState(() => _scale = _initialScale), // Reset scale on exit
+      onExit: (_) => setState(() => _scale = _initialScale), // Reset scale
       child: SizedBox(
         width: _CardDimensions.width,
         height: _CardDimensions.height,
@@ -39,7 +39,7 @@ class ZoomCardState extends State<ZoomCard> {
           duration: const Duration(milliseconds: 200),
           transform: Matrix4.identity()..scale(_scale),
           decoration: BoxDecoration(
-            color: _CardColors.primary,
+            color: Theme.of(context).primaryColor, // Use app primary color
             borderRadius: BorderRadius.circular(_CardDimensions.borderRadius),
           ),
           padding: const EdgeInsets.all(_CardDimensions.padding),
@@ -49,34 +49,38 @@ class ZoomCardState extends State<ZoomCard> {
               Icon(
                 widget.icon,
                 size: _CardDimensions.iconSize,
-                color: _CardColors.text,
+                color: Theme.of(context).textTheme.bodyLarge?.color ??
+                    Colors.white,
               ),
               const SizedBox(height: _CardDimensions.spacing),
               Text(
                 widget.title,
-                style: const TextStyle(
-                  fontSize: _TextSizes.title,
-                  fontWeight: FontWeight.bold,
-                  color: _CardColors.text,
-                ),
+                textDirection: TextDirection.rtl, // Arabic RTL text
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.white,
+                    ),
               ),
               const SizedBox(height: _CardDimensions.spacingSmall),
               Text(
-                'DA ${widget.price}',
-                style: const TextStyle(
-                  fontSize: _TextSizes.price,
-                  fontWeight: FontWeight.bold,
-                  color: _CardColors.text,
-                ),
+                'دج ${widget.price}', // Arabic price prefix
+                textDirection: TextDirection.rtl,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.white,
+                    ),
               ),
               const SizedBox(height: _CardDimensions.spacingSmall),
               Text(
                 widget.description,
-                style: const TextStyle(
-                  fontSize: _TextSizes.description,
-                  color: _CardColors.text,
-                ),
+                textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.white,
+                    ),
               ),
             ],
           ),
@@ -86,7 +90,7 @@ class ZoomCardState extends State<ZoomCard> {
   }
 }
 
-/// Constants for card dimensions and styling
+/// Constants for card dimensions
 class _CardDimensions {
   static const double width = 100.0;
   static const double height = 160.0;
@@ -95,17 +99,4 @@ class _CardDimensions {
   static const double iconSize = 40.0;
   static const double spacing = 10.0;
   static const double spacingSmall = 5.0;
-}
-
-/// Constants for card colors
-class _CardColors {
-  static const Color primary = Color(0xFF0E9D6D);
-  static const Color text = Colors.white;
-}
-
-/// Constants for text sizes
-class _TextSizes {
-  static const double title = 16.0;
-  static const double price = 18.0;
-  static const double description = 12.0;
 }

@@ -5,35 +5,37 @@ class Section3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      color: Colors.white,
+      color: colorScheme.background,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Title
-          const Text(
+          // Section title
+          Text(
             'خصائص النظام',
-            style: TextStyle(
-              fontSize: 35,
+            style: textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: colorScheme.onBackground,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 5),
-          const Divider(
-            color: Colors.green,
+          // Divider below the title
+          Divider(
+            color: colorScheme.secondary,
             thickness: 2,
             indent: 80,
             endIndent: 80,
           ),
           const SizedBox(height: 10),
 
-          // Responsive grid
+          // Responsive grid for features
           LayoutBuilder(
             builder: (context, constraints) {
-              // Determine column count based on width
               final int crossAxisCount = constraints.maxWidth > 1000
                   ? 3
                   : constraints.maxWidth > 600
@@ -41,9 +43,8 @@ class Section3 extends StatelessWidget {
                       : 1;
 
               return GridView.count(
-                shrinkWrap: true, // Prevent GridView from expanding infinitely
-                physics:
-                    const NeverScrollableScrollPhysics(), // Disable inner scroll
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
@@ -106,57 +107,61 @@ class _FeatureItemState extends State<FeatureItem> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true), // Hover in
-      onExit: (_) => setState(() => _isHovered = false), // Hover out
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         transform: _isHovered
             ? Matrix4.translationValues(0, -5, 0)
             : Matrix4.identity(),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 4,
+              blurRadius: _isHovered ? 6 : 4,
               spreadRadius: 2,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         padding: const EdgeInsets.all(15),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-          crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Icon with switcher for hover color
+            // Icon with hover color change
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               child: Icon(
                 widget.icon,
                 key: ValueKey<bool>(_isHovered),
                 size: 40,
-                color: _isHovered ? Colors.orange : const Color(0xFF0E9D6D),
+                color: _isHovered ? colorScheme.secondary : colorScheme.primary,
               ),
             ),
             const SizedBox(height: 15),
+            // Feature title
             Text(
               widget.title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 18,
+              style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             const SizedBox(height: 10),
+            // Feature description
             Text(
               widget.description,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
           ],

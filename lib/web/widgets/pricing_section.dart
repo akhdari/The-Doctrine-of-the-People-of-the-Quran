@@ -3,40 +3,39 @@ import 'package:flutter/material.dart';
 class PricingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      color: Colors.white,
+      color: colorScheme.onSurface, // Use theme background
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Titre
           Text(
             'عروض النّظام الأساسية',
-            style: TextStyle(
-              fontSize: 35,
+            style: textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: colorScheme.onSurface, // Use theme onBackground
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Divider(
-            color: Colors.green,
+            color: colorScheme.primary,
             thickness: 2,
             indent: 80,
             endIndent: 80,
           ),
-          SizedBox(height: 20),
-
-          // Grille responsive
+          const SizedBox(height: 20),
           GridView.count(
             crossAxisCount: MediaQuery.of(context).size.width > 800 ? 3 : 1,
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
-            childAspectRatio: 0.7, // Ajusté pour tenir compte de la nouvelle taille de l'image
-            children: [
+            childAspectRatio: 0.7,
+            children: const [
               HoverPricingCard(
                 title: 'المدرسة الكبيرة',
                 subtitle: 'أكثر من 1000 طالب',
@@ -66,7 +65,6 @@ class PricingSection extends StatelessWidget {
   }
 }
 
-// Widget avec animation au survol
 class HoverPricingCard extends StatefulWidget {
   final String title;
   final String subtitle;
@@ -96,55 +94,53 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        transform: _isHovered ? Matrix4.translationValues(0, -5, 0) : Matrix4.identity(),
+        duration: const Duration(milliseconds: 200),
+        transform: _isHovered
+            ? Matrix4.translationValues(0, -5, 0)
+            : Matrix4.identity(),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           boxShadow: _isHovered
-              ? [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2, offset: Offset(0, 4))]
+              ? [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 4),
+                  )
+                ]
               : [],
         ),
-        child: _buildPricingCard(
-          title: widget.title,
-          subtitle: widget.subtitle,
-          imagePath: widget.imagePath,
-          schoolPrice: widget.schoolPrice,
-          studentPrice: widget.studentPrice,
-        ),
+        child: _buildPricingCard(context),
       ),
     );
   }
 
-  // Widget qui construit une carte “offre”
-  Widget _buildPricingCard({
-    required String title,
-    required String subtitle,
-    required String imagePath,
-    required String schoolPrice,
-    required String studentPrice,
-  }) {
+  Widget _buildPricingCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
+            color: colorScheme.shadow.withOpacity(0.08), // Use theme shadow
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Partie verte avec le titre et le sous-titre
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Color(0xFF0E9D6D),
-              borderRadius: BorderRadius.only(
+              color: colorScheme.primary,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
@@ -152,60 +148,68 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
             child: Column(
               children: [
                 Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 22,
+                  widget.title,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
+                  widget.subtitle,
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: colorScheme.onPrimary.withOpacity(0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
-
-          // Image agrandie
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Image.asset(imagePath, height: 280, fit: BoxFit.contain),
+            child: Image.asset(
+              widget.imagePath,
+              height: 280,
+              fit: BoxFit.contain,
+            ),
           ),
-
-          // Prix
           Text(
-            schoolPrice,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            widget.schoolPrice,
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface, // Use theme onSurface
+            ),
             textAlign: TextAlign.center,
           ),
           Text(
-            studentPrice,
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+            widget.studentPrice,
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface.withOpacity(0.6),
+            ),
             textAlign: TextAlign.center,
           ),
-
-          // Bouton
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
-              // Action du bouton
+              // TODO: handle button action
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+              backgroundColor: colorScheme.secondary,
+              foregroundColor: colorScheme.onSecondary, // Use theme onSecondary
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+              textStyle: textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             child: Text(
               'طلب نسخة',
-              style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+              style: textTheme.labelLarge?.copyWith(
+                color: colorScheme.onSecondary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
     );

@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class PartnersSection extends StatefulWidget {
+  const PartnersSection({super.key});
+
   @override
-  _PartnersSection createState() => _PartnersSection();
+  _PartnersSectionState createState() => _PartnersSectionState();
 }
 
-class _PartnersSection extends State<PartnersSection> {
+class _PartnersSectionState extends State<PartnersSection> {
   final List<Map<String, String>> images = [
     {"image": "assets/partners/dz.jpg", "name": "الجزائر"},
     {"image": "assets/partners/maliz.jpg", "name": "ماليزيا"},
@@ -16,44 +18,57 @@ class _PartnersSection extends State<PartnersSection> {
 
   final PageController _pageController = PageController();
   int currentIndex = 0;
-  int itemsPerPage = 4; // Par défaut, 4 cartes par page
+  int itemsPerPage = 4; // Default: 4 cards per page
+
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      if (mounted) {
-        setState(() {
-          currentIndex = (currentIndex + itemsPerPage) % images.length;
-          int targetPage = (currentIndex / itemsPerPage).floor();
-          if (targetPage < (images.length / itemsPerPage).ceil()) {
-            _pageController.animateToPage(
-              targetPage,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
-            );
-          }
-        });
-      }
+    // Automatically switch pages every 5 seconds
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      if (!mounted) return;
+      setState(() {
+        currentIndex = (currentIndex + itemsPerPage) % images.length;
+        int targetPage = (currentIndex / itemsPerPage).floor();
+        if (targetPage < (images.length / itemsPerPage).ceil()) {
+          _pageController.animateToPage(
+            targetPage,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Responsive: 1 card per page on mobile, 4 on larger screens
     double screenWidth = MediaQuery.of(context).size.width;
-    itemsPerPage = screenWidth < 600 ? 1 : 4; // 1 carte sur mobile, 4 sur grand écran
+    itemsPerPage = screenWidth < 600 ? 1 : 4;
+
+    final theme = Theme.of(context);
 
     return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 20),
+      color: theme.colorScheme.background,
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
           Text(
             'شركاء النجاح',
-            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+            style: theme.textTheme.headlineMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           SizedBox(
             height: 300,
             child: PageView.builder(
@@ -61,7 +76,8 @@ class _PartnersSection extends State<PartnersSection> {
               itemCount: (images.length / itemsPerPage).ceil(),
               itemBuilder: (context, pageIndex) {
                 int startIndex = pageIndex * itemsPerPage;
-                int endIndex = (startIndex + itemsPerPage).clamp(0, images.length);
+                int endIndex =
+                    (startIndex + itemsPerPage).clamp(0, images.length);
                 List<Map<String, String>> displayedImages =
                     images.sublist(startIndex, endIndex);
 
@@ -79,17 +95,19 @@ class _PartnersSection extends State<PartnersSection> {
     );
   }
 
+  /// Builds a partner card with image and name
   Widget _buildCard(BuildContext context, String imagePath, String name) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => _showFullScreenImage(context, imagePath),
       child: Column(
         children: [
           Container(
-            width: 250, // Augmentation de la largeur de la carte
-            height: 210, // Ajustement pour une meilleure proportion
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            width: 250,
+            height: 210,
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -100,18 +118,20 @@ class _PartnersSection extends State<PartnersSection> {
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-              child: Image.asset(imagePath, fit: BoxFit.cover, width: double.infinity),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(15)),
+              child: Image.asset(imagePath,
+                  fit: BoxFit.cover, width: double.infinity),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Container(
-            width: 250, // Largeur égale à la carte
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+            width: 250,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 5),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 3,
@@ -122,7 +142,8 @@ class _PartnersSection extends State<PartnersSection> {
             alignment: Alignment.center,
             child: Text(
               name,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
           ),
@@ -131,6 +152,7 @@ class _PartnersSection extends State<PartnersSection> {
     );
   }
 
+  /// Shows the tapped image in a fullscreen dialog
   void _showFullScreenImage(BuildContext context, String imagePath) {
     showDialog(
       context: context,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'user_card.dart'; // Ensure this file exists and is properly structured
 
 /// A section displaying a grid of user cards with hover effects, showcasing system users.
+/// Uses app theme colors and font. Supports Arabic RTL text.
 class UsersSection extends StatelessWidget {
   const UsersSection({super.key});
 
@@ -15,23 +16,25 @@ class UsersSection extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
-            'مستخدمو النظام', // System Users
-            style: TextStyle(
-              fontSize: _TextSizes.sectionTitle,
-              fontWeight: FontWeight.bold,
-              color: _Colors.text,
-            ),
+          Text(
+            'مستخدمو النظام',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color ??
+                      Colors.white,
+                ),
             textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
           ),
           const SizedBox(height: _Dimensions.spacingSmall),
-          const Text(
-            'يوفر النظام خدمات ومزايا عديدة لمختلف مستخدميه.', // The system provides various services and benefits to its users
-            style: TextStyle(
-              fontSize: _TextSizes.sectionDescription,
-              color: _Colors.text,
-            ),
+          Text(
+            'يوفر النظام خدمات ومزايا عديدة لمختلف مستخدميه.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).textTheme.bodyLarge?.color ??
+                      Colors.white,
+                ),
             textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
           ),
           const SizedBox(height: _Dimensions.spacing),
           GridView.count(
@@ -43,19 +46,19 @@ class UsersSection extends StatelessWidget {
             children: const [
               HoverUserCard(
                 imagePath: _AssetPaths.parent,
-                title: 'ولي الأمر', // Parent
+                title: 'ولي الأمر',
               ),
               HoverUserCard(
                 imagePath: _AssetPaths.student,
-                title: 'الطالب', // Student
+                title: 'الطالب',
               ),
               HoverUserCard(
                 imagePath: _AssetPaths.teacher,
-                title: 'المعلم', // Teacher
+                title: 'المعلم',
               ),
               HoverUserCard(
                 imagePath: _AssetPaths.admin,
-                title: 'المشرف', // Admin
+                title: 'المشرف',
               ),
             ],
           ),
@@ -72,8 +75,8 @@ class UsersSection extends StatelessWidget {
 
 /// A card widget that elevates slightly on hover, wrapping a UserCard.
 class HoverUserCard extends StatefulWidget {
-  final String imagePath;
-  final String title;
+  final String imagePath; // Path to the image asset
+  final String title; // Arabic title of the user type
 
   const HoverUserCard({
     required this.imagePath,
@@ -121,17 +124,6 @@ class _Dimensions {
   static const double breakpoint = 800.0;
   static const double borderRadius = 10.0;
   static const double hoverElevation = 5.0;
-}
-
-/// Constants for colors
-class _Colors {
-  static const Color text = Colors.white;
-}
-
-/// Constants for text sizes
-class _TextSizes {
-  static const double sectionTitle = 35.0;
-  static const double sectionDescription = 16.0;
 }
 
 /// Constants for asset paths

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 /// A card widget displaying a user's image and title, used within a hoverable container.
+/// Uses app theme colors, fonts, and supports Arabic RTL text.
 class UserCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
+  final String imagePath; // Path to the user image asset
+  final String title; // Arabic title for the user type
 
   const UserCard({
     required this.imagePath,
@@ -27,25 +28,27 @@ class UserCard extends StatelessWidget {
               child: Image.asset(
                 imagePath,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const Icon(
+                errorBuilder: (context, error, stackTrace) => Icon(
                   Icons.error_outline,
                   size: _CardStyles.iconSize,
-                  color: _CardStyles.errorColor,
+                  color: Theme.of(context).colorScheme.error,
                 ),
               ),
             ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: _CardStyles.textPadding),
+            padding: const EdgeInsets.symmetric(
+              vertical: _CardStyles.textPadding,
+            ),
             child: Text(
               title,
-              style: const TextStyle(
-                fontSize: _TextSizes.title,
-                fontWeight: FontWeight.bold,
-                color: _CardStyles.textColor,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textTheme.bodyLarge?.color ??
+                        Colors.black,
+                  ),
               textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
             ),
           ),
         ],
@@ -61,11 +64,4 @@ class _CardStyles {
   static const double imagePadding = 8.0;
   static const double textPadding = 8.0;
   static const double iconSize = 40.0;
-  static const Color textColor = Colors.black;
-  static const Color errorColor = Colors.red;
-}
-
-/// Constants for text sizes
-class _TextSizes {
-  static const double title = 18.0;
 }

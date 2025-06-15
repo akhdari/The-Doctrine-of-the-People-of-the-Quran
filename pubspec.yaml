@@ -78,6 +78,7 @@ dependencies:
   syncfusion_flutter_xlsio: ^29.2.10
   typed_data: ^1.4.0
   google_fonts: ^6.2.1
+  carousel_slider: ^5.1.1
 
 
 

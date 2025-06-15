@@ -8,27 +8,31 @@ class NutifForm extends StatefulWidget {
 class _NutifFormState extends State<NutifForm> {
   final TextEditingController emailController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool isHovered = false; // État pour détecter le survol du bouton
+  bool isHovered = false; // Tracks button hover state
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      padding: EdgeInsets.all(20),
-      color: Color(0xFF0E9D6D),
+      padding: const EdgeInsets.all(20),
+      color: theme.colorScheme.primary, // Use app's primary color
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'اشترك في قائمتنا البريدية',
-            style: TextStyle(
-                fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             'لمتابعة جديد التحديثات والحصول على الأخبار، اشترك الآن!',
-            style: TextStyle(fontSize: 22, color: Colors.white),
+            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
           ),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           Form(
             key: formKey,
             child: Row(
@@ -38,12 +42,15 @@ class _NutifFormState extends State<NutifForm> {
                   onEnter: (_) => setState(() => isHovered = true),
                   onExit: (_) => setState(() => isHovered = false),
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isHovered ? Colors.teal : Colors.orange,
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                        textStyle: TextStyle(fontSize: 18),
+                        backgroundColor: isHovered
+                            ? theme.colorScheme.secondary
+                            : theme.colorScheme.tertiary,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
+                        textStyle: const TextStyle(fontSize: 18),
                       ),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
@@ -53,26 +60,25 @@ class _NutifFormState extends State<NutifForm> {
                               title: Text(
                                 'تم تسجيل بريدك في قائمتنا',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 26, // Texte agrandi
-                                  fontWeight: FontWeight.bold, // Texte en gras
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              content: Text(
+                              content: const Text(
                                 'من الآن وصاعدًا ستصلك أخبار وتحديثات النظام',
-                                textAlign: TextAlign.center, // Centrer le texte
+                                textAlign: TextAlign.center,
                               ),
                               actions: [
                                 Align(
-                                  alignment: Alignment.center, // Centrer le bouton
+                                  alignment: Alignment.center,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF0E9D6D), // Fond vert
+                                      color: theme.colorScheme.primary,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: TextButton(
                                       onPressed: () => Navigator.pop(context),
-                                      child: Padding(
+                                      child: const Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 20, vertical: 8),
                                         child: Text(
@@ -91,14 +97,14 @@ class _NutifFormState extends State<NutifForm> {
                           );
                         }
                       },
-                      child: Text(
+                      child: const Text(
                         'اشتراك',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
                     controller: emailController,
@@ -106,13 +112,14 @@ class _NutifFormState extends State<NutifForm> {
                       hintText: 'الرجاء إدخال البريد الإلكتروني',
                       fillColor: Colors.white,
                       filled: true,
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 12), // Augmente la hauteur
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 18, horizontal: 12),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     validator: (value) {
+                      // Validate email format
                       if (value == null ||
                           value.isEmpty ||
                           !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
