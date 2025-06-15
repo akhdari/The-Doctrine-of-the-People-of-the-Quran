@@ -87,7 +87,7 @@ class _ChartContentState<T> extends State<_ChartContent<T>> {
     try {
       _filterData();
     } catch (e) {
-      showErrorSnackbar(context, "فشل في تحميل البيانات: ${e.toString()}");
+      showErrorSnackbar("فشل في تحميل البيانات: ${e.toString()}");
     } finally {
       setState(() => _isLoading = false);
     }
@@ -107,7 +107,7 @@ class _ChartContentState<T> extends State<_ChartContent<T>> {
     final toDate = _filterController.toDate.value;
 
     if (fromDate == null || toDate == null) {
-      showErrorSnackbar(context, "نطاق التاريخ غير صالح");
+      showErrorSnackbar("نطاق التاريخ غير صالح");
       return;
     }
 

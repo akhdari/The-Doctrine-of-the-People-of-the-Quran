@@ -36,14 +36,14 @@ class ReportScreen extends StatelessWidget {
         ),
         loadingWidget: const Center(child: CircularProgressIndicator()),
         onError: (context, error) {
-          showErrorSnackbar(context, "Failed to load PDF: $error");
+          showErrorSnackbar("Failed to load PDF: $error");
           return Center(child: Text("Failed to load PDF."));
         },
         /*onPrinted:
             (context) =>
                 showSuccessSnackbar(context, "Document printed successfully"),*/
         onShared: (context) =>
-            showSuccessSnackbar(context, "Document shared successfully"),
+            showSuccessSnackbar("Document shared successfully"),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'generic_data_source.dart';
+import 'data_exporter.dart';
 import 'dart:developer' as dev;
 
 class GenericDataGrid<T> extends StatefulWidget {
@@ -96,18 +97,18 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
       selectionColor: widget.selectionColor,
       rowsPerPage: _rowsPerPage,
       onRowsPerPageChanged: widget.onRowsPerPageChanged,
+      columns: widget.columns,
     );
   }
 
-  /* void _onRowsPerPageChanged(int? newRowsPerPage) {
-    if (newRowsPerPage != null) {
-      setState(() {
-        _rowsPerPage = newRowsPerPage;
-        _initializeDataSource();
-      });
-      widget.onRowsPerPageChanged?.call(newRowsPerPage);
-    }
-  }*/
+  void _exportToExcel() {
+    DataExporter.exportToExcel<T>(
+      data: widget.data,
+      columns: widget.columns,
+      rowBuilder: widget.rowBuilder,
+      context: context,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +117,8 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
         Expanded(
           child: SfDataGridTheme(
             data: SfDataGridThemeData(
-              selectionColor: widget.selectionColor ??
-                  Color(0xFFC78D20).withValues(alpha: 0.1),
+              selectionColor:
+                  widget.selectionColor ?? Color(0xFFC78D20).withOpacity(0.1),
             ),
             child: SfDataGrid(
               controller: _controller,
@@ -140,10 +141,6 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
                     widget.getDataGridRow?.call(selectedRow);
                     dev.log('Checkbox changed for row ID: $rowId');
                     dev.log('Original model: $obj');
-                  } else {
-                    dev.log('Checkbox changed for a null row.');
-                    widget.getObj?.call(null);
-                    widget.getDataGridRow?.call(null);
                   }
                 } else {
                   widget.getObj?.call(null);
@@ -156,11 +153,9 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
         if (widget.enablePagination)
           SfDataPager(
             delegate: _dataSource,
-            pageCount: (widget.data.length / _rowsPerPage).ceil().toDouble(),
+            pageCount: (widget.data.length / _rowsPerPage).ceilToDouble(),
             visibleItemsCount: 5,
             itemPadding: const EdgeInsets.symmetric(horizontal: 5),
-            //availableRowsPerPage: widget.availableRowsPerPage,
-            // onRowsPerPageChanged: _onRowsPerPageChanged,
           ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -173,20 +168,22 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
                 onPressed: widget.onRefresh,
                 child: const Icon(Icons.refresh),
               ),
+              FloatingActionButton(
+                mini: true,
+                onPressed: _exportToExcel,
+                child: const Icon(Icons.file_download),
+              ),
               if (widget.onDelete != null &&
                   _controller.selectedRows.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: FloatingActionButton(
-                    mini: true,
-                    backgroundColor: Colors.red,
-                    onPressed: () {
-                      final selectedRow = _controller.selectedRows.first;
-                      final id = widget.idExtractor(selectedRow);
-                      widget.onDelete?.call(id as int);
-                    },
-                    child: Icon(widget.deleteIcon),
-                  ),
+                FloatingActionButton(
+                  mini: true,
+                  backgroundColor: Colors.red,
+                  onPressed: () {
+                    final selectedRow = _controller.selectedRows.first;
+                    final id = widget.idExtractor(selectedRow);
+                    widget.onDelete?.call(id as int);
+                  },
+                  child: Icon(widget.deleteIcon),
                 ),
             ],
           ),

@@ -41,12 +41,12 @@ class ChartFilterController extends GetxController {
   /// Validate that both dates are selected and correct
   bool canApply() {
     if (fromDate.value == null || toDate.value == null) {
-      showErrorSnackbar(Get.context!, 'يرجى تحديد تاريخ البداية والنهاية');
+      showErrorSnackbar('يرجى تحديد تاريخ البداية والنهاية');
       return false;
     }
 
     if (fromDate.value!.isAfter(toDate.value!)) {
-      showErrorSnackbar(Get.context!, 'تاريخ البداية يجب أن يكون قبل النهاية');
+      showErrorSnackbar('تاريخ البداية يجب أن يكون قبل النهاية');
       return false;
     }
 

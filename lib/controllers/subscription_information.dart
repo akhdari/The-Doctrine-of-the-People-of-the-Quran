@@ -275,13 +275,11 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
                   // Now validate the form along with the checkboxes.
                   if (widget.subscriptionFormKey.currentState!.validate()) {
                     showSuccessSnackbar(
-                      context,
                       'تم تأكيد الطلب بنجاح',
                     );
                   } else {
                     // Form validation failed, you can show a message
                     showErrorSnackbar(
-                      context,
                       'يرجى ملء جميع الحقول المطلوبة',
                     );
                   }

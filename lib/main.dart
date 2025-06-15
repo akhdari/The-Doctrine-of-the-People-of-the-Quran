@@ -11,11 +11,12 @@ import 'bindings/starter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env"); // Load .env file
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
   dev.log('Environment variables loaded: ${dotenv.env}');
-  WidgetsFlutterBinding.ensureInitialized();
+
   await initializeDateFormatting('ar');
-  WidgetsFlutterBinding.ensureInitialized();
 
   Get.put(ThemeController());
   runApp(MyApp());

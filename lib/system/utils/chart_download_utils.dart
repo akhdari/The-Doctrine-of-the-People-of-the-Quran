@@ -21,7 +21,7 @@ Future<void> downloadChart(GlobalKey chartKey, BuildContext context) async {
     final pngBytes = byteData.buffer.asUint8List();
 
     if (kIsWeb) {
-      showInfoSnackbar(context, "التنزيل غير مدعوم في المعاينة على الويب.");
+      showInfoSnackbar("التنزيل غير مدعوم في المعاينة على الويب.");
       return;
     }
 
@@ -31,8 +31,8 @@ Future<void> downloadChart(GlobalKey chartKey, BuildContext context) async {
     );
     await imagePath.writeAsBytes(pngBytes);
 
-    showSuccessSnackbar(context, "تم حفظ الرسم البياني في: ${imagePath.path}");
+    showSuccessSnackbar("تم حفظ الرسم البياني في: ${imagePath.path}");
   } catch (e) {
-    showErrorSnackbar(context, "فشل في حفظ الرسم البياني: ${e.toString()}");
+    showErrorSnackbar("فشل في حفظ الرسم البياني: ${e.toString()}");
   }
 }

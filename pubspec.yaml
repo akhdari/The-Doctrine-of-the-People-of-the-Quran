@@ -72,6 +72,11 @@ dependencies:
   image_cropper: ^9.1.0
   flutter_image_compress: ^2.4.0
   syncfusion_flutter_datagrid_export: ^29.2.10
+  excel: ^4.0.6
+  file_saver: ^0.2.14
+  open_file: ^3.5.10
+  syncfusion_flutter_xlsio: ^29.2.10
+  typed_data: ^1.4.0
 
 
 

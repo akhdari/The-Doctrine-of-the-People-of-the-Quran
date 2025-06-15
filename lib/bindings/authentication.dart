@@ -39,9 +39,9 @@ class AuthController extends GetxController {
       await _storage.write(key: _userNameKey, value: userName);
       isSignedIn.value = true;
 
-      showSuccessSnackbar(context, 'تم تسجيل الدخول بنجاح!');
+      showSuccessSnackbar('تم تسجيل الدخول بنجاح!');
     } catch (e) {
-      showErrorSnackbar(context, 'فشل تسجيل الدخول. حاول مرة أخرى.');
+      showErrorSnackbar('فشل تسجيل الدخول. حاول مرة أخرى.');
     }
   }
 
@@ -52,9 +52,9 @@ class AuthController extends GetxController {
       await _storage.delete(key: _userNameKey);
       isSignedIn.value = false;
 
-      showInfoSnackbar(context, 'تم تسجيل الخروج!');
+      showInfoSnackbar('تم تسجيل الخروج!');
     } catch (e) {
-      showErrorSnackbar(context, 'فشل تسجيل الخروج. حاول مرة أخرى.');
+      showErrorSnackbar('فشل تسجيل الخروج. حاول مرة أخرى.');
     }
   }
 

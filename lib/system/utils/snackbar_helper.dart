@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+/// Types of snackbars you can show
 enum SnackbarType { success, error, info }
 
-void showCustomSnackbar(
-  BuildContext context, {
+/// Displays a customizable snackbar using GetX
+void showCustomSnackbar({
   required String title,
   required String message,
   SnackbarType type = SnackbarType.info,
   SnackPosition position = SnackPosition.BOTTOM,
   Duration duration = const Duration(seconds: 3),
 }) {
-  final theme = Theme.of(context);
+  final theme = Get.theme;
   final colorScheme = theme.colorScheme;
 
-  IconData icon;
-  Color backgroundColor;
-  Color textColor;
+  // Determine icon and colors based on snackbar type
+  late IconData icon;
+  late Color backgroundColor;
+  late Color textColor;
 
   switch (type) {
     case SnackbarType.success:
@@ -36,6 +38,7 @@ void showCustomSnackbar(
       break;
   }
 
+  // Show the snackbar
   Get.snackbar(
     title,
     message,
@@ -51,39 +54,27 @@ void showCustomSnackbar(
   );
 }
 
-void showSuccessSnackbar(
-  BuildContext context,
-  String message, {
-  String title = "نجاح",
-}) {
+/// Show a success snackbar (default title: "نجاح")
+void showSuccessSnackbar(String message, {String title = "نجاح"}) {
   showCustomSnackbar(
-    context,
     title: title,
     message: message,
     type: SnackbarType.success,
   );
 }
 
-void showErrorSnackbar(
-  BuildContext context,
-  String message, {
-  String title = "خطأ",
-}) {
+/// Show an error snackbar (default title: "خطأ")
+void showErrorSnackbar(String message, {String title = "خطأ"}) {
   showCustomSnackbar(
-    context,
     title: title,
     message: message,
     type: SnackbarType.error,
   );
 }
 
-void showInfoSnackbar(
-  BuildContext context,
-  String message, {
-  String title = "معلومات",
-}) {
+/// Show an info snackbar (default title: "معلومات")
+void showInfoSnackbar(String message, {String title = "معلومات"}) {
   showCustomSnackbar(
-    context,
     title: title,
     message: message,
     type: SnackbarType.info,
