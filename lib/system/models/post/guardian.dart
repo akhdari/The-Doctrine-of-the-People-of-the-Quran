@@ -46,5 +46,5 @@ class GuardianInfoDialog extends AbstractClass implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => guardian.guardianAccountId;
+  List<int> getPrimaryKey() => [guardian.guardianAccountId];
 }

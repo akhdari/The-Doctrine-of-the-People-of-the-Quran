@@ -20,7 +20,8 @@ import '../../../controllers/form_controller.dart' as form;
 import './image_picker_widget.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/date_picker.dart';
 
-class StudentDialog extends GlobalDialog {
+class StudentDialog<GEC extends GenericEditController<StudentInfoDialog>>
+    extends GlobalDialog {
   const StudentDialog({
     super.key,
     super.dialogHeader = "إضافة طالب",
@@ -34,7 +35,6 @@ class StudentDialog extends GlobalDialog {
 
 class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
     extends DialogState<GEC> {
-  final GlobalKey<FormState> studentFormKey = GlobalKey<FormState>();
   late Generate generate;
   StudentInfoDialog studentInfo = StudentInfoDialog();
   bool isClicked = false;
@@ -183,13 +183,13 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
   Future<bool> submit() async {
     return super.editController?.model.value == null
         ? await submitForm<StudentInfoDialog>(
-            studentFormKey,
+            formKey,
             studentInfo,
             ApiEndpoints.submitStudentForm,
             StudentInfoDialog.fromJson,
           )
         : await submitEditDataForm<StudentInfoDialog>(
-            studentFormKey,
+            formKey,
             studentInfo,
             ApiEndpoints.getSpecialStudent(
                 editController?.model.value?.accountInfo.accountId ?? -1),
@@ -217,8 +217,8 @@ class SessionSection extends StatelessWidget {
       headerIcon: Icons.book,
       headerText: "session",
       child: MultiSelect<Lecture>(
-        initialPickedItems: editController?.model.value?.lectures
-            ?.map((e) => MultiSelectItem<Lecture>(
+        initialPickedItems: (editController?.model.value?.lectures ?? [])
+            .map((e) => MultiSelectItem<Lecture>(
                   id: e.lectureId,
                   obj: e,
                   name: e.lectureNameAr,

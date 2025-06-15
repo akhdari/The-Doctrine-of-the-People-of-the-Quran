@@ -180,10 +180,10 @@ class _LectureDialogState<GEC extends GenericEditController<LectureForm>>
   @override
   Future<bool> submit() async {
     return editController?.model.value == null
-        ? await submitForm<LectureForm>(lectureFormKey, lectureInfo,
+        ? await submitForm<LectureForm>(formKey, lectureInfo,
             ApiEndpoints.submitLectureForm, (LectureForm.fromJson))
         : await submitEditDataForm<LectureForm>(
-            lectureFormKey,
+            formKey,
             lectureInfo,
             ApiEndpoints.getSpecialLecture(
                 editController!.model.value!.lecture.lectureId),

@@ -11,7 +11,6 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/ap
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dialog.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_buttons_menu.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_grid.dart';
-import 'dialogs/student.dart';
 import 'error_illustration.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/three_bounce.dart';
 
@@ -122,9 +121,7 @@ class _ManagementScreenState<T extends Model>
                       initialmodel: selectedItem.value,
                       isEdit: true,
                     ));
-                    Get.dialog(StudentDialog(
-                      dialogHeader: "تعديل معلومات",
-                    ));
+                    Get.dialog(widget.dialog);
                   }
                 },
                 onDelete: () async {

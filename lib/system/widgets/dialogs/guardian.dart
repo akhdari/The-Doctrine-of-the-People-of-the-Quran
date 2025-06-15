@@ -10,12 +10,11 @@ import '../../../controllers/generate.dart';
 import '../../../controllers/validator.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
-import '../../../controllers/form_controller.dart' as form;
 import '../../../system/services/network/api_endpoints.dart';
 
 class GuardianDialog extends GlobalDialog {
   const GuardianDialog(
-      {super.key, super.dialogHeader = "إضافة ولي", super.numberInputs = 9});
+      {super.key, super.dialogHeader = "إضافة ولي", super.numberInputs = 10});
 
   @override
   State<GlobalDialog> createState() => _GuardianDialogState();
@@ -24,17 +23,18 @@ class GuardianDialog extends GlobalDialog {
 class _GuardianDialogState<
         GEC extends GenericEditController<GuardianInfoDialog>>
     extends DialogState<GEC> {
-  final GlobalKey<FormState> guardianFormKey = GlobalKey<FormState>();
   late Generate generate;
   var guardianInfo = GuardianInfoDialog();
 
   @override
   void initState() {
     super.initState();
-    generate = Get.find<Generate>();
+    generate = Get.isRegistered<Generate>()
+        ? Get.find<Generate>()
+        : Get.put(Generate());
     formController.controllers[9].text = generate.generatePassword();
 
-    if (editController != null) {
+    if (editController?.model.value != null) {
       guardianInfo = editController?.model.value ?? GuardianInfoDialog();
     } else {
       guardianInfo.accountInfo.accountType = "guardian";
@@ -43,10 +43,7 @@ class _GuardianDialogState<
 
   @override
   void dispose() {
-    scrollController.dispose();
-    formController.dispose();
     generate.dispose();
-    Get.delete<form.FormController>();
     Get.delete<Generate>();
     super.dispose();
   }
@@ -107,9 +104,9 @@ class _GuardianDialogState<
                       inputTitle: "relationship",
                       child: DropDownWidget(
                         items: relationship,
-                        initialValue: editController != null
-                            ? guardianInfo.guardian.relationship
-                            : relationship[0],
+                        initialValue: editController
+                                ?.model.value?.guardian.relationship ??
+                            relationship[0],
                         onSaved: (p0) =>
                             guardianInfo.guardian.relationship = p0!,
                       ),
@@ -236,36 +233,36 @@ class _GuardianDialogState<
   @override
   Future<void> loadData() {
     // TODO: implement loadData
-    throw UnimplementedError();
+    //throw UnimplementedError();
+    return Future(() {});
   }
 
   @override
   void setDefaultFieldsValue() {
-    formController.controllers[0].text = guardianInfo.guardian.firstName;
-    formController.controllers[1].text = guardianInfo.guardian.lastName;
-    formController.controllers[2].text = guardianInfo.guardian.relationship;
-    formController.controllers[3].text =
-        guardianInfo.guardian.dateOfBirth ?? '';
-    formController.controllers[4].text = guardianInfo.contactInfo.phoneNumber;
-    formController.controllers[5].text = guardianInfo.contactInfo.email;
-    formController.controllers[6].text =
-        guardianInfo.guardian.homeAddress ?? '';
-    formController.controllers[7].text = guardianInfo.guardian.job ?? '';
-    formController.controllers[8].text = guardianInfo.accountInfo.username;
-    formController.controllers[9].text = guardianInfo.accountInfo.passcode;
+    final s = editController?.model.value;
+    formController.controllers[0].text = s?.guardian.firstName ?? '';
+    formController.controllers[1].text = s?.guardian.lastName ?? '';
+    formController.controllers[2].text = s?.guardian.relationship ?? '';
+    formController.controllers[3].text = s?.guardian.dateOfBirth ?? '';
+    formController.controllers[4].text = s?.contactInfo.phoneNumber ?? '';
+    formController.controllers[5].text = s?.contactInfo.email ?? '';
+    formController.controllers[6].text = s?.guardian.homeAddress ?? '';
+    formController.controllers[7].text = s?.guardian.job ?? '';
+    formController.controllers[8].text = s?.accountInfo.username ?? '';
+    formController.controllers[9].text = s?.accountInfo.passcode ?? '';
   }
 
   @override
   Future<bool> submit() async {
-    return editController == null
+    return editController?.model.value == null
         ? await submitForm(
-            guardianFormKey,
+            formKey,
             guardianInfo,
             ApiEndpoints.submitGuardianForm,
             (GuardianInfoDialog.fromJson),
           )
         : await submitEditDataForm(
-            guardianFormKey,
+            formKey,
             guardianInfo,
             ApiEndpoints.getSpecialGuardiansById(
                 guardianInfo.accountInfo.accountId ?? 0),
