@@ -25,6 +25,7 @@ class _BaseLayoutState extends State<BaseLayout> {
   final GlobalKey<ScaffoldState> baseLayoutScaffoldKey =
       GlobalKey<ScaffoldState>();
   late ThemeController themeController;
+  bool miniMode = false;
 
   @override
   void initState() {
@@ -36,18 +37,51 @@ class _BaseLayoutState extends State<BaseLayout> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      key: baseLayoutScaffoldKey,
-      backgroundColor: theme.scaffoldBackgroundColor,
-      endDrawer: CustomDrawer(),
-      drawerEnableOpenDragGesture: true,
-      body: Column(
-        children: [
-          _buildHeader(theme),
-          Expanded(child: widget.child),
-          _buildFooter(theme),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 1024) {
+          // visible
+          return Row(
+            children: [
+              Expanded(
+                child: Scaffold(
+                  backgroundColor: theme.scaffoldBackgroundColor,
+                  body: Column(
+                    children: [
+                      _buildHeader(theme),
+                      Expanded(child: SafeArea(child: widget.child)),
+                      _buildFooter(theme),
+                    ],
+                  ),
+                ),
+              ),
+              CustomDrawer(
+                miniMode: miniMode,
+                onToggleMiniMode: () {
+                  setState(() {
+                    miniMode = !miniMode;
+                  });
+                },
+              ),
+            ],
+          );
+        } else {
+          //  drawer hidden, use endDrawer
+          return Scaffold(
+            key: baseLayoutScaffoldKey,
+            backgroundColor: theme.scaffoldBackgroundColor,
+            drawer: CustomDrawer(),
+            drawerEnableOpenDragGesture: true,
+            body: Column(
+              children: [
+                _buildHeader(theme),
+                Expanded(child: SafeArea(child: widget.child)),
+                _buildFooter(theme),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -86,10 +120,18 @@ class _BaseLayoutState extends State<BaseLayout> {
                 icon:
                     Icon(Icons.nightlight_round, color: theme.iconTheme.color),
               ),
-              IconButton(
-                icon: Icon(Icons.menu, color: theme.iconTheme.color),
-                onPressed: () =>
-                    baseLayoutScaffoldKey.currentState?.openEndDrawer(),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 1024) {
+                    return IconButton(
+                      icon: Icon(Icons.menu, color: theme.iconTheme.color),
+                      onPressed: () =>
+                          baseLayoutScaffoldKey.currentState?.openEndDrawer(),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
             ],
           ),

@@ -2,26 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
 import './time_picker.dart';
+import '../utils/snackbar_helper.dart';
 
 class TimeCellController extends GetxController {
   final Map<String, RxBool> weekDays = {
-    'Friday': false.obs,
-    'Saturday': false.obs,
-    'Sunday': false.obs,
-    'Monday': false.obs,
-    'Tuesday': false.obs,
-    'Wednesday': false.obs,
-    'Thursday': false.obs,
+    'الجمعة': false.obs,
+    'السبت': false.obs,
+    'الأحد': false.obs,
+    'الإثنين': false.obs,
+    'الثلاثاء': false.obs,
+    'الأربعاء': false.obs,
+    'الخميس': false.obs,
   };
 
   final Map<String, Map<String, RxString>> dayTimes = {
-    'Friday': {'from': ''.obs, 'to': ''.obs},
-    'Saturday': {'from': ''.obs, 'to': ''.obs},
-    'Sunday': {'from': ''.obs, 'to': ''.obs},
-    'Monday': {'from': ''.obs, 'to': ''.obs},
-    'Tuesday': {'from': ''.obs, 'to': ''.obs},
-    'Wednesday': {'from': ''.obs, 'to': ''.obs},
-    'Thursday': {'from': ''.obs, 'to': ''.obs},
+    'الجمعة': {'from': ''.obs, 'to': ''.obs},
+    'السبت': {'from': ''.obs, 'to': ''.obs},
+    'الأحد': {'from': ''.obs, 'to': ''.obs},
+    'الإثنين': {'from': ''.obs, 'to': ''.obs},
+    'الثلاثاء': {'from': ''.obs, 'to': ''.obs},
+    'الأربعاء': {'from': ''.obs, 'to': ''.obs},
+    'الخميس': {'from': ''.obs, 'to': ''.obs},
   };
 
   void toggleSwitch(String day) => weekDays[day]!.toggle();
@@ -30,13 +31,7 @@ class TimeCellController extends GetxController {
 
   void setTime(String day, String type, String newTime) {
     if (!_isValidTime(newTime)) {
-      Get.snackbar(
-        'Format Error',
-        'Please enter time in HH:MM format',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Theme.of(Get.context!).colorScheme.error,
-        colorText: Theme.of(Get.context!).colorScheme.onError,
-      );
+      showErrorSnackbar('يرجى إدخال الوقت بصيغة HH:MM');
       return;
     }
 
@@ -45,24 +40,12 @@ class TimeCellController extends GetxController {
 
     if (otherTime.isNotEmpty) {
       if (type == 'from' && !_isFromBeforeTo(newTime, otherTime)) {
-        Get.snackbar(
-          'Time Error',
-          'Start time must be before end time',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Theme.of(Get.context!).colorScheme.error,
-          colorText: Theme.of(Get.context!).colorScheme.onError,
-        );
+        showErrorSnackbar('وقت البداية يجب أن يكون قبل وقت النهاية');
         return;
       }
       if (type == 'to' &&
           !_isFromBeforeTo(dayTimes[day]!['from']!.value, newTime)) {
-        Get.snackbar(
-          'Time Error',
-          'End time must be after start time',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Theme.of(Get.context!).colorScheme.error,
-          colorText: Theme.of(Get.context!).colorScheme.onError,
-        );
+        showErrorSnackbar('وقت النهاية يجب أن يكون بعد وقت البداية');
         return;
       }
     }
@@ -86,8 +69,7 @@ class TimeCellController extends GetxController {
   bool _isFromBeforeTo(String from, String to) {
     final fromMinutes = _timeToMinutes(from);
     final toMinutes = _timeToMinutes(to);
-    if (fromMinutes == toMinutes) return false;
-    return true;
+    return fromMinutes < toMinutes;
   }
 
   int _timeToMinutes(String time) {
@@ -107,13 +89,7 @@ class TimeCellController extends GetxController {
         final toTime = dayTimes[day]!['to']!.value;
 
         if (fromTime.isEmpty || toTime.isEmpty) {
-          Get.snackbar(
-            'Error',
-            'Please specify both start and end time for $day',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Theme.of(Get.context!).colorScheme.error,
-            colorText: Theme.of(Get.context!).colorScheme.onError,
-          );
+          showErrorSnackbar('يرجى تحديد وقت البداية والنهاية ليوم $day');
           continue;
         }
 
@@ -151,10 +127,10 @@ class CustomMatrix extends StatelessWidget {
           decoration:
               BoxDecoration(color: Theme.of(context).colorScheme.primary),
           children: [
-            _buildHeaderCell(context, 'Day'),
-            _buildHeaderCell(context, 'Status'),
-            _buildHeaderCell(context, 'From'),
-            _buildHeaderCell(context, 'To'),
+            _buildHeaderCell(context, 'اليوم'),
+            _buildHeaderCell(context, 'الحالة'),
+            _buildHeaderCell(context, 'من'),
+            _buildHeaderCell(context, 'إلى'),
           ],
         ),
         ...controller.weekDays.entries.map((entry) {
@@ -250,7 +226,7 @@ class TimeCell extends StatelessWidget {
           }
         },
         child: Text(
-          timeValue.isEmpty ? (isFrom ? 'Start' : 'End') : timeValue,
+          timeValue.isEmpty ? (isFrom ? 'ابدأ' : 'انتهِ') : timeValue,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: timeValue.isEmpty
                     ? Theme.of(context).hintColor

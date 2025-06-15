@@ -16,8 +16,11 @@ import '../multiselect.dart';
 import 'dart:developer' as dev;
 
 class LectureDialog extends GlobalDialog {
-  const LectureDialog(
-      {super.key, super.dialogHeader = "إضافة حصة", super.numberInputs = 2});
+  const LectureDialog({
+    super.key,
+    super.dialogHeader = "إضافة حصة", // Add Lecture
+    super.numberInputs = 2,
+  });
 
   @override
   State<GlobalDialog> createState() =>
@@ -26,6 +29,7 @@ class LectureDialog extends GlobalDialog {
 
 class _LectureDialogState<GEC extends GenericEditController<LectureForm>>
     extends DialogState<GEC> {
+  // Data Loading
   @override
   Future<void> loadData() async {
     try {
@@ -48,14 +52,15 @@ class _LectureDialogState<GEC extends GenericEditController<LectureForm>>
     }
   }
 
+  // State Variables
   late final TimeCellController timeCellController;
   final lectureInfo = LectureForm();
   MultiSelectResult<Teacher>? teacherResult;
-
   String selectedLectureType = type.isNotEmpty ? type[0] : '';
   bool showOnWebsite = true;
   List<MultiSelectItem<Teacher>>? selectedTeachers = [];
 
+  // Lifecycle Methods
   @override
   void initState() {
     super.initState();
@@ -74,122 +79,142 @@ class _LectureDialogState<GEC extends GenericEditController<LectureForm>>
     }
   }
 
+  // UI Section: Lecture Information
+  Widget _buildLectureInfoSection() {
+    return CustomContainer(
+      headerText: "معلومات الحصة", // Lecture Information
+      headerIcon: Icons.person,
+      child: Column(
+        children: [
+          // Lecture Name Inputs
+          Row(
+            children: [
+              Expanded(
+                child: InputField(
+                  inputTitle: "اسم الحصة بالعربية", // Lecture Name in Arabic
+                  child: CustomTextField(
+                    controller: formController.controllers[0],
+                    validator: (value) => Validator.notEmptyValidator(
+                        value, "يجب إدخال الاسم"), // Must enter the name
+                    focusNode: formController.focusNodes[0],
+                    onSaved: (p0) => lectureInfo.lecture.lectureNameAr = p0!,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: InputField(
+                  inputTitle:
+                      "اسم الحصة بالإنجليزية", // Lecture Name in English
+                  child: CustomTextField(
+                    controller: formController.controllers[1],
+                    validator: (value) => Validator.notEmptyValidator(
+                        value, "يجب إدخال الاسم"), // Must enter the name
+                    focusNode: formController.focusNodes[1],
+                    onSaved: (p0) => lectureInfo.lecture.lectureNameEn = p0!,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Lecture Type Dropdown
+          Row(
+            children: [
+              Expanded(
+                child: InputField(
+                  inputTitle: "نوع الحصة", // Lecture Type
+                  child: DropDownWidget<String>(
+                    items: type,
+                    initialValue: selectedLectureType,
+                    onSaved: (p0) => lectureInfo.lecture.circleType = p0!,
+                    onChanged: (p0) {
+                      setState(() => selectedLectureType = p0!);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Teachers Multi-Select
+          InputField(
+            inputTitle: "المعلمون", // Teachers
+            child: MultiSelect<Teacher>(
+              getPickedItems: (pickedItems) {
+                lectureInfo.teachers = pickedItems.map((e) => e.obj).toList();
+                selectedTeachers = pickedItems;
+              },
+              preparedData: teacherResult?.items ?? [],
+              hintText: "البحث باسم المعلم", // Search by teacher name
+              maxSelectedItems: null,
+              initialPickedItems: selectedTeachers ?? [],
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Show on Website Dropdown
+          InputField(
+            inputTitle: "عرض على الموقع؟", // Show on Website?
+            child: DropDownWidget<bool>(
+              items: trueFalse,
+              initialValue: showOnWebsite,
+              onSaved: (p0) {
+                lectureInfo.lecture.shownOnWebsite = transformBool(p0!);
+              },
+              onChanged: (p0) {
+                setState(() => showOnWebsite = p0!);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // UI Section: Schedule Information
+  Widget _buildScheduleInfoSection() {
+    return CustomContainer(
+      headerIcon: Icons.alarm,
+      headerText: "معلومات الجدول", // Schedule Information
+      child: CustomMatrix(
+        controller: timeCellController,
+      ),
+    );
+  }
+
+  // Form Builder
   @override
   Column formChild() {
     return Column(
       children: [
-        CustomContainer(
-          headerText: "lecture info",
-          headerIcon: Icons.person,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "lecture name in arabic",
-                      child: CustomTextField(
-                        controller: formController.controllers[0],
-                        validator: (value) => Validator.notEmptyValidator(
-                            value, "يجب ادخال الاسم"),
-                        focusNode: formController.focusNodes[0],
-                        onSaved: (p0) =>
-                            lectureInfo.lecture.lectureNameAr = p0!,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "lecture name in english",
-                      child: CustomTextField(
-                        controller: formController.controllers[1],
-                        validator: (value) => Validator.notEmptyValidator(
-                            value, "يجب ادخال الاسم"),
-                        focusNode: formController.focusNodes[1],
-                        onSaved: (p0) =>
-                            lectureInfo.lecture.lectureNameEn = p0!,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "lecture type",
-                      child: DropDownWidget<String>(
-                        items: type,
-                        initialValue: selectedLectureType,
-                        onSaved: (p0) => lectureInfo.lecture.circleType = p0!,
-                        onChanged: (p0) {
-                          setState(() => selectedLectureType = p0!);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              InputField(
-                inputTitle: "teachers",
-                child: MultiSelect<Teacher>(
-                  getPickedItems: (pickedItems) {
-                    lectureInfo.teachers =
-                        pickedItems.map((e) => e.obj).toList();
-                    selectedTeachers = pickedItems;
-                  },
-                  preparedData: teacherResult?.items ?? [],
-                  hintText: "search by teacher name",
-                  maxSelectedItems: null,
-                  initialPickedItems: selectedTeachers ?? [],
-                ),
-              ),
-              const SizedBox(height: 8),
-              InputField(
-                inputTitle: "show on website?",
-                child: DropDownWidget<bool>(
-                  items: trueFalse,
-                  initialValue: showOnWebsite,
-                  onSaved: (p0) {
-                    lectureInfo.lecture.shownOnWebsite = transformBool(p0!);
-                  },
-                  onChanged: (p0) {
-                    setState(() => showOnWebsite = p0!);
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
+        _buildLectureInfoSection(),
         const SizedBox(height: 10),
-        CustomContainer(
-          headerIcon: Icons.alarm,
-          headerText: "schedule info",
-          child: CustomMatrix(
-            controller: timeCellController,
-          ),
-        ),
+        _buildScheduleInfoSection(),
         const SizedBox(height: 10),
       ],
     );
   }
 
+  // Form Submission
   @override
   Future<bool> submit() async {
     return editController?.model.value == null
-        ? await submitForm<LectureForm>(formKey, lectureInfo,
-            ApiEndpoints.submitLectureForm, (LectureForm.fromJson))
+        ? await submitForm<LectureForm>(
+            formKey,
+            lectureInfo,
+            ApiEndpoints.submitLectureForm,
+            (LectureForm.fromJson),
+          )
         : await submitEditDataForm<LectureForm>(
             formKey,
             lectureInfo,
             ApiEndpoints.getSpecialLecture(
                 editController!.model.value!.lecture.lectureId),
-            (LectureForm.fromJson));
+            (LectureForm.fromJson),
+          );
   }
 
+  // Default Values Setup
   @override
   void setDefaultFieldsValue() {
     final s = editController!.model.value!;

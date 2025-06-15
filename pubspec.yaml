@@ -77,6 +77,7 @@ dependencies:
   open_file: ^3.5.10
   syncfusion_flutter_xlsio: ^29.2.10
   typed_data: ^1.4.0
+  google_fonts: ^6.2.1
 
 
 

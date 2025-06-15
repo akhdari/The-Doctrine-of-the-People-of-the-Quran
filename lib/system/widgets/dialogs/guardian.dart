@@ -11,6 +11,7 @@ import '../../../controllers/validator.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../../../system/services/network/api_endpoints.dart';
+//import './image_picker_widget.dart';
 
 class GuardianDialog extends GlobalDialog {
   const GuardianDialog(
@@ -37,7 +38,7 @@ class _GuardianDialogState<
     if (editController?.model.value != null) {
       guardianInfo = editController?.model.value ?? GuardianInfoDialog();
     } else {
-      guardianInfo.accountInfo.accountType = "guardian";
+      guardianInfo.accountInfo.accountType = "ولي";
     }
   }
 
@@ -53,7 +54,7 @@ class _GuardianDialogState<
     return Column(
       children: [
         CustomContainer(
-          headerText: "guardian info",
+          headerText: "معلومات الوصي",
           headerIcon: Icons.person,
           child: Column(
             children: [
@@ -61,11 +62,11 @@ class _GuardianDialogState<
                 children: [
                   Expanded(
                     child: InputField(
-                      inputTitle: "First name ",
+                      inputTitle: "الاسم الأول",
                       child: CustomTextField(
                         controller: formController.controllers[0],
                         validator: (value) => Validator.notEmptyValidator(
-                            value, "يجب ادخال الاسم"),
+                            value, "يجب إدخال الاسم"),
                         focusNode: formController.focusNodes[0],
                         onSaved: (p0) => guardianInfo.guardian.firstName = p0!,
                         onChanged: (_) => formController.controllers[8].text =
@@ -78,11 +79,11 @@ class _GuardianDialogState<
                   const SizedBox(width: 8),
                   Expanded(
                     child: InputField(
-                      inputTitle: "Last name ",
+                      inputTitle: "اسم العائلة",
                       child: CustomTextField(
                         controller: formController.controllers[1],
                         validator: (value) => Validator.notEmptyValidator(
-                            value, "يجب ادخال الاسم"),
+                            value, "يجب إدخال الاسم"),
                         focusNode: formController.focusNodes[1],
                         onSaved: (p0) => guardianInfo.guardian.lastName = p0!,
                         onChanged: (_) => formController.controllers[8].text =
@@ -101,7 +102,7 @@ class _GuardianDialogState<
                 children: [
                   Expanded(
                     child: InputField(
-                      inputTitle: "relationship",
+                      inputTitle: "العلاقة",
                       child: DropDownWidget(
                         items: relationship,
                         initialValue: editController
@@ -115,7 +116,7 @@ class _GuardianDialogState<
                   const SizedBox(width: 8),
                   Expanded(
                     child: InputField(
-                      inputTitle: "Date of Birth",
+                      inputTitle: "تاريخ الميلاد",
                       child: CustomTextField(
                         controller: formController.controllers[3],
                         onSaved: (p0) => guardianInfo.guardian.dateOfBirth = p0,
@@ -132,7 +133,7 @@ class _GuardianDialogState<
                 children: [
                   Expanded(
                     child: InputField(
-                      inputTitle: "phone number",
+                      inputTitle: "رقم الهاتف",
                       child: CustomTextField(
                         controller: formController.controllers[4],
                         validator: (value) =>
@@ -146,7 +147,7 @@ class _GuardianDialogState<
                   const SizedBox(width: 8),
                   Expanded(
                     child: InputField(
-                      inputTitle: "email address",
+                      inputTitle: "عنوان البريد الإلكتروني",
                       child: CustomTextField(
                         controller: formController.controllers[5],
                         validator: (value) => Validator.isValidEmail(value),
@@ -164,7 +165,7 @@ class _GuardianDialogState<
                 children: [
                   Expanded(
                     child: InputField(
-                      inputTitle: "address",
+                      inputTitle: "العنوان",
                       child: CustomTextField(
                         controller: formController.controllers[6],
                         onSaved: (p0) => guardianInfo.guardian.homeAddress = p0,
@@ -176,7 +177,7 @@ class _GuardianDialogState<
                   ),
                   Expanded(
                     child: InputField(
-                      inputTitle: "job",
+                      inputTitle: "الوظيفة",
                       child: CustomTextField(
                         controller: formController.controllers[7],
                         onSaved: (p0) => guardianInfo.guardian.job = p0,
@@ -193,12 +194,12 @@ class _GuardianDialogState<
         ),
         CustomContainer(
           headerIcon: Icons.account_box,
-          headerText: "account info",
+          headerText: "معلومات الحساب",
           child: Row(
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "username",
+                  inputTitle: "اسم المستخدم",
                   child: CustomTextField(
                     controller: formController.controllers[8],
                     onSaved: (p0) => guardianInfo.accountInfo.username = p0!,
@@ -208,7 +209,7 @@ class _GuardianDialogState<
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "password",
+                  inputTitle: "كلمة المرور",
                   child: CustomTextField(
                     controller: formController.controllers[9],
                     onSaved: (p0) => guardianInfo.accountInfo.passcode = p0!,
@@ -220,12 +221,7 @@ class _GuardianDialogState<
         ),
         const SizedBox(height: 10),
 
-        //TODO
-        CustomContainer(
-          headerIcon: Icons.image,
-          headerText: "add account image",
-          child: const Text("add image"),
-        ),
+        //TODO : add profile info
       ],
     );
   }

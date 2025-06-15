@@ -117,8 +117,8 @@ class _GenericDataGridState<T> extends State<GenericDataGrid<T>> {
         Expanded(
           child: SfDataGridTheme(
             data: SfDataGridThemeData(
-              selectionColor:
-                  widget.selectionColor ?? Color(0xFFC78D20).withOpacity(0.1),
+              selectionColor: widget.selectionColor ??
+                  Color(0xFFC78D20).withValues(alpha: 0.1),
             ),
             child: SfDataGrid(
               controller: _controller,

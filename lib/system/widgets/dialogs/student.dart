@@ -76,7 +76,7 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
     if (editController?.model.value != null) {
       studentInfo = editController?.model.value ?? StudentInfoDialog();
     } else {
-      studentInfo.accountInfo.accountType = "student";
+      studentInfo.accountInfo.accountType = "طالب";
     }
   }
 
@@ -147,10 +147,9 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
           studentInfo: studentInfo,
         ),
         const SizedBox(height: 10),
-        ImagePickerWidget.imagePreviewWidget(
-          context,
-          editController?.model.value?.personalInfo.profileImage,
-        ),
+        ImageSection(
+          editController: editController,
+        )
       ],
     );
   }
@@ -215,7 +214,7 @@ class SessionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       headerIcon: Icons.book,
-      headerText: "session",
+      headerText: "الجلسة",
       child: MultiSelect<Lecture>(
         initialPickedItems: (editController?.model.value?.lectures ?? [])
             .map((e) => MultiSelectItem<Lecture>(
@@ -227,7 +226,7 @@ class SessionSection extends StatelessWidget {
         getPickedItems: (pickedItems) {
           studentInfo.lectures = pickedItems.map((e) => e.obj).toList();
         },
-        hintText: "search for sessions",
+        hintText: "البحث عن الجلسات",
         preparedData: sessionResult?.items ?? [],
         maxSelectedItems: null,
       ),
@@ -254,18 +253,18 @@ class PersonalInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       headerIcon: Icons.person,
-      headerText: "Students' Personal Info",
+      headerText: "معلومات الطالب الشخصية",
       child: Column(
         children: [
           Row(
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "First name in Arabic",
+                  inputTitle: "الاسم الأول بالعربية",
                   child: CustomTextField(
                     controller: formController.controllers[0],
                     validator: (value) =>
-                        Validator.notEmptyValidator(value, "يجب ادخال الاسم"),
+                        Validator.notEmptyValidator(value, "يجب إدخال الاسم"),
                     focusNode: formController.focusNodes[0],
                     onSaved: (p0) => studentInfo.personalInfo.firstNameAr = p0!,
                   ),
@@ -274,11 +273,11 @@ class PersonalInfoSection extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "Last name in Arabic",
+                  inputTitle: "اسم العائلة بالعربية",
                   child: CustomTextField(
                     controller: formController.controllers[1],
                     validator: (value) =>
-                        Validator.notEmptyValidator(value, "يجب ادخال الاسم"),
+                        Validator.notEmptyValidator(value, "يجب إدخال الاسم"),
                     focusNode: formController.focusNodes[1],
                     onSaved: (p0) => studentInfo.personalInfo.lastNameAr = p0!,
                   ),
@@ -291,7 +290,7 @@ class PersonalInfoSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "First name in Latin",
+                  inputTitle: "الاسم الأول باللاتينية",
                   child: CustomTextField(
                     controller: formController.controllers[2],
                     textDirection: TextDirection.ltr,
@@ -305,7 +304,7 @@ class PersonalInfoSection extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "Last name in Latin",
+                  inputTitle: "اسم العائلة باللاتينية",
                   child: CustomTextField(
                     controller: formController.controllers[3],
                     textDirection: TextDirection.ltr,
@@ -323,7 +322,7 @@ class PersonalInfoSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "Sex",
+                  inputTitle: "الجنس",
                   child: DropDownWidget(
                     items: sex,
                     initialValue: editController?.model.value != null
@@ -336,7 +335,7 @@ class PersonalInfoSection extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "Date of Birth",
+                  inputTitle: "تاريخ الميلاد",
                   child: CustomTextField(
                     controller: formController.controllers[4],
                     onSaved: (p0) => studentInfo.personalInfo.dateOfBirth = p0,
@@ -350,7 +349,7 @@ class PersonalInfoSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "Place of Birth",
+                  inputTitle: "مكان الميلاد",
                   child: CustomTextField(
                     controller: formController.controllers[14],
                     onSaved: (p0) => studentInfo.personalInfo.placeOfBirth = p0,
@@ -360,7 +359,7 @@ class PersonalInfoSection extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "Address",
+                  inputTitle: "العنوان",
                   child: CustomTextField(
                     controller: formController.controllers[5],
                     onSaved: (p0) => studentInfo.personalInfo.homeAddress = p0,
@@ -374,7 +373,7 @@ class PersonalInfoSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "Nationality",
+                  inputTitle: "الجنسية",
                   child: DropDownWidget(
                     items: nationalities,
                     initialValue:
@@ -407,12 +406,12 @@ class AccountInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       headerIcon: Icons.account_box,
-      headerText: "account info",
+      headerText: "معلومات الحساب",
       child: Row(
         children: [
           Expanded(
             child: InputField(
-              inputTitle: "username",
+              inputTitle: "اسم المستخدم",
               child: CustomTextField(
                 controller: formController.controllers[6],
                 onSaved: (p0) => studentInfo.accountInfo.username = p0!,
@@ -422,7 +421,7 @@ class AccountInfoSection extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: InputField(
-              inputTitle: "password",
+              inputTitle: "كلمة المرور",
               child: CustomTextField(
                 controller: formController.controllers[7],
                 onSaved: (p0) => studentInfo.accountInfo.passcode = p0!,
@@ -452,12 +451,12 @@ class HealthInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       headerIcon: Icons.health_and_safety,
-      headerText: "health info",
+      headerText: "المعلومات الصحية",
       child: Row(
         children: [
           Expanded(
             child: InputField(
-              inputTitle: "blood type",
+              inputTitle: "فصيلة الدم",
               child: DropDownWidget(
                 items: bloodType,
                 initialValue:
@@ -470,7 +469,7 @@ class HealthInfoSection extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: InputField(
-              inputTitle: "disease causes",
+              inputTitle: "أسباب الأمراض",
               child: CustomTextField(
                 controller: formController.controllers[8],
                 onSaved: (p0) => studentInfo.medicalInfo.diseasesCauses = p0,
@@ -480,7 +479,7 @@ class HealthInfoSection extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: InputField(
-              inputTitle: "allergies",
+              inputTitle: "الحساسية",
               child: CustomTextField(
                 controller: formController.controllers[9],
                 onSaved: (p0) => studentInfo.medicalInfo.allergies = p0,
@@ -508,12 +507,12 @@ class ContactInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       headerIcon: Icons.phone,
-      headerText: "contact info",
+      headerText: "معلومات الاتصال",
       child: Row(
         children: [
           Expanded(
             child: InputField(
-              inputTitle: "phone number",
+              inputTitle: "رقم الهاتف",
               child: CustomTextField(
                 controller: formController.controllers[10],
                 validator: (value) => Validator.isValidPhoneNumber(value),
@@ -525,7 +524,7 @@ class ContactInfoSection extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: InputField(
-              inputTitle: "email address",
+              inputTitle: "عنوان البريد الإلكتروني",
               child: CustomTextField(
                 controller: formController.controllers[11],
                 validator: (value) => Validator.isValidEmail(value),
@@ -558,7 +557,7 @@ class ParentStatusSection extends StatelessWidget {
         Expanded(
           child: CustomContainer(
             headerIcon: Icons.person,
-            headerText: "father state",
+            headerText: "حالة الأب",
             child: DropDownWidget(
               items: state,
               initialValue:
@@ -572,7 +571,7 @@ class ParentStatusSection extends StatelessWidget {
         Expanded(
           child: CustomContainer(
             headerIcon: Icons.person,
-            headerText: "mother state",
+            headerText: "حالة الأم",
             child: DropDownWidget(
               items: state,
               initialValue:
@@ -602,12 +601,28 @@ class GuardianInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       headerIcon: Icons.family_restroom,
-      headerText: "info about guardian",
+      headerText: "معلومات عن الوصي",
+      headreActions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: IconButton(
+            onPressed: () async {
+              Get.put(form.FormController(5), tag: "وصي");
+              Get.put(Generate());
+              Get.dialog(const GuardianDialogLite());
+            },
+            icon: Icon(
+              Icons.add,
+              color: Theme.of(context).iconTheme.color,
+            ),
+          ),
+        ),
+      ],
       child: Row(
         children: [
           Expanded(
             child: InputField(
-              inputTitle: "guardian's account",
+              inputTitle: "حساب الوصي",
               child: MultiSelect(
                 getPickedItems: (pickedItems) {
                   if (pickedItems.isNotEmpty) {
@@ -615,20 +630,9 @@ class GuardianInfoSection extends StatelessWidget {
                   }
                 },
                 preparedData: guardianResult?.items ?? [],
-                hintText: "search for guardian account",
+                hintText: "البحث عن حساب الوصي",
                 maxSelectedItems: 1,
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: OutlinedButton(
-              onPressed: () async {
-                Get.put(form.FormController(5), tag: "guardian");
-                Get.put(Generate());
-                Get.dialog(const GuardianDialogLite());
-              },
-              child: const Text("Add Guardian"),
             ),
           ),
         ],
@@ -659,7 +663,7 @@ class SubscriptionInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      headerText: "subscription information",
+      headerText: "معلومات الاشتراك",
       headerIcon: Icons.subscriptions,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -699,7 +703,7 @@ class SubscriptionInfoSection extends StatelessWidget {
   /// Full width exit reason field
   Widget _buildExitReasonField() {
     return InputField(
-      inputTitle: "exit reason",
+      inputTitle: "سبب الخروج",
       child: CustomTextField(
         controller: formController.controllers[12],
         onSaved: (p0) => studentInfo.subscriptionInfo.exitReason = p0,
@@ -710,7 +714,7 @@ class SubscriptionInfoSection extends StatelessWidget {
 
   Widget _buildEnrollmentDatePicker(BuildContext context) {
     return InputField(
-      inputTitle: "enrollment date",
+      inputTitle: "تاريخ التسجيل",
       child: Obx(() => OutlinedButton(
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -733,14 +737,14 @@ class SubscriptionInfoSection extends StatelessWidget {
                 studentInfo.subscriptionInfo.enrollmentDate = dateStr;
               }
             },
-            child: Text(enrollmentDate.value ?? "select date"),
+            child: Text(enrollmentDate.value ?? "اختر التاريخ"),
           )),
     );
   }
 
   Widget _buildExitDatePicker(BuildContext context) {
     return InputField(
-      inputTitle: "exit date",
+      inputTitle: "تاريخ الخروج",
       child: Obx(() => OutlinedButton(
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -763,14 +767,14 @@ class SubscriptionInfoSection extends StatelessWidget {
                 studentInfo.subscriptionInfo.exitDate = dateStr;
               }
             },
-            child: Text(exitDate.value ?? "select date"),
+            child: Text(exitDate.value ?? "اختر التاريخ"),
           )),
     );
   }
 
   Widget _buildIsExemptDropdown() {
     return InputField(
-      inputTitle: "is exempt from payment",
+      inputTitle: "معفى من الدفع",
       child: DropDownWidget<bool>(
         items: trueFalse,
         initialValue: (editController
@@ -785,7 +789,7 @@ class SubscriptionInfoSection extends StatelessWidget {
 
   Widget _buildExemptionPercentageDropdown() {
     return InputField(
-      inputTitle: "exemption percentage",
+      inputTitle: "نسبة الإعفاء",
       child: Obx(() => AbsorbPointer(
             absorbing: !isExempt.value,
             child: Opacity(
@@ -824,7 +828,7 @@ class FormalEducationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      headerText: "formal education",
+      headerText: "التعليم الرسمي",
       headerIcon: Icons.school,
       child: Column(
         children: [
@@ -832,7 +836,7 @@ class FormalEducationSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "school type",
+                  inputTitle: "نوع المدرسة",
                   child: DropDownWidget(
                     items: schoolType,
                     initialValue: editController
@@ -846,7 +850,7 @@ class FormalEducationSection extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "school name",
+                  inputTitle: "اسم المدرسة",
                   child: CustomTextField(
                     controller: formController.controllers[13],
                     onSaved: (p0) =>
@@ -861,7 +865,7 @@ class FormalEducationSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InputField(
-                  inputTitle: "academic level",
+                  inputTitle: "المستوى الأكاديمي",
                   child: DropDownWidget(
                     items: academicLevel,
                     initialValue: editController
@@ -875,7 +879,7 @@ class FormalEducationSection extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: InputField(
-                  inputTitle: "grade",
+                  inputTitle: "الصف",
                   child: DropDownWidget(
                     initialValue: editController
                             ?.model.value?.formalEducationInfo.grade ??
@@ -888,6 +892,26 @@ class FormalEducationSection extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Image Picker Widget
+
+class ImageSection extends StatelessWidget {
+  final GenericEditController<StudentInfoDialog>? editController;
+
+  const ImageSection({super.key, required this.editController});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      headerIcon: Icons.image,
+      headerText: "صورة الطالب",
+      child: ImagePickerWidget.imagePreviewWidget(
+        context,
+        editController?.model.value?.personalInfo.profileImage,
       ),
     );
   }

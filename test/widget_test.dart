@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:the_doctarine_of_the_ppl_of_the_quran/main.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

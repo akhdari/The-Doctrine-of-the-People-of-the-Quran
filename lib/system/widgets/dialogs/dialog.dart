@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
     as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_controller.dart';
+import 'common/dialog_header.dart';
+import 'common/dialog_submit_button.dart';
 
 /// Abstract dialog that provides a template for forms with optional edit support.
 abstract class GlobalDialog extends StatefulWidget {
@@ -94,7 +96,7 @@ abstract class DialogState<GEC extends GenericEditController>
         child: Column(
           children: [
             /// Header section (title + close button)
-            _DialogHeader(title: widget.dialogHeader),
+            DialogHeader(title: widget.dialogHeader),
 
             /// Form content with scroll
             Expanded(
@@ -112,7 +114,7 @@ abstract class DialogState<GEC extends GenericEditController>
             ),
 
             /// Submit button at bottom
-            _DialogSubmitButton(
+            DialogSubmitButton(
               isComplete: isComplete,
               onSubmit: _handleSubmit,
             )
@@ -156,77 +158,5 @@ abstract class DialogState<GEC extends GenericEditController>
           snackPosition: SnackPosition.BOTTOM);
       isComplete.value = true;
     }
-  }
-}
-
-/// Dialog header widget with title + close button
-class _DialogHeader extends StatelessWidget {
-  final String title;
-
-  const _DialogHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: colorScheme.primary,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.white),
-            onPressed: () => Get.back(),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-/// Submit button with loading indicator
-class _DialogSubmitButton extends StatelessWidget {
-  final RxBool isComplete;
-  final VoidCallback onSubmit;
-
-  const _DialogSubmitButton({
-    required this.isComplete,
-    required this.onSubmit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Obx(() => ElevatedButton.icon(
-            onPressed: isComplete.value ? onSubmit : null,
-            icon: isComplete.value
-                ? const Icon(Icons.send)
-                : const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-            label: Text(isComplete.value ? 'Submit' : 'Submitting...'),
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(150, 48),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6), // slight rounding
-              ),
-            ),
-          )),
-    );
   }
 }
