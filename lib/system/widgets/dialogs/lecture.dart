@@ -184,8 +184,9 @@ class _LectureDialogState<GEC extends GenericEditController<LectureForm>>
 
   // Form Builder
   @override
-  Column formChild() {
-    return Column(
+  ListView formChild() {
+    return ListView(
+      shrinkWrap: true,
       children: [
         _buildLectureInfoSection(),
         const SizedBox(height: 10),

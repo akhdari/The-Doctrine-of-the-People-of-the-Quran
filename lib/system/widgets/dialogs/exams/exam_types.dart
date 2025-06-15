@@ -92,8 +92,8 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
   }
 
   @override
-  Column formChild() {
-    return Column(
+  ListView formChild() {
+    return ListView(
       children: [
         Row(children: [
           Expanded(

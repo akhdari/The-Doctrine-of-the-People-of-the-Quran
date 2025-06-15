@@ -50,8 +50,9 @@ class _GuardianDialogState<
   }
 
   @override
-  Column formChild() {
-    return Column(
+  ListView formChild() {
+    return ListView(
+      shrinkWrap: true,
       children: [
         CustomContainer(
           headerText: "معلومات الوصي",
@@ -228,8 +229,6 @@ class _GuardianDialogState<
 
   @override
   Future<void> loadData() {
-    // TODO: implement loadData
-    //throw UnimplementedError();
     return Future(() {});
   }
 

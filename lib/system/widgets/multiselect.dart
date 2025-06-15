@@ -105,7 +105,7 @@ class _MultiSelectState<T> extends State<MultiSelect<T>> {
 
     _multipleSearchController = MultipleSearchController(
       allowDuplicateSelection: false,
-      isSelectable: false,
+      isSelectable: true,
       minCharsToShowItems: 1,
     );
 

@@ -90,67 +90,65 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
   }
 
   @override
-  Column formChild() {
-    return Column(
-      children: [
-        SessionSection(
-          sessionResult: sessionResult,
-          editController: editController,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        PersonalInfoSection(
-          formController: formController,
-          editController: editController,
-          studentInfo: studentInfo,
-          generate: generate,
-        ),
-        const SizedBox(height: 10),
-        AccountInfoSection(
-          formController: formController,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        HealthInfoSection(
-          formController: formController,
-          editController: editController,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        ContactInfoSection(
-          formController: formController,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        ParentStatusSection(
-          editController: editController,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        GuardianInfoSection(
-          guardianResult: guardianResult,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        SubscriptionInfoSection(
-          formController: formController,
-          editController: editController,
-          studentInfo: studentInfo,
-          enrollmentDate: enrollmentDate,
-          exitDate: exitDate,
-          isExempt: isExempt,
-        ),
-        const SizedBox(height: 10),
-        FormalEducationSection(
-          formController: formController,
-          editController: editController,
-          studentInfo: studentInfo,
-        ),
-        const SizedBox(height: 10),
-        ImageSection(
-          editController: editController,
-        )
-      ],
+  ListView formChild() {
+    final sections = [
+      SessionSection(
+        sessionResult: sessionResult,
+        editController: editController,
+        studentInfo: studentInfo,
+      ),
+      PersonalInfoSection(
+        formController: formController,
+        editController: editController,
+        studentInfo: studentInfo,
+        generate: generate,
+      ),
+      AccountInfoSection(
+        formController: formController,
+        studentInfo: studentInfo,
+      ),
+      HealthInfoSection(
+        formController: formController,
+        editController: editController,
+        studentInfo: studentInfo,
+      ),
+      ContactInfoSection(
+        formController: formController,
+        studentInfo: studentInfo,
+      ),
+      ParentStatusSection(
+        editController: editController,
+        studentInfo: studentInfo,
+      ),
+      GuardianInfoSection(
+        guardianResult: guardianResult,
+        studentInfo: studentInfo,
+      ),
+      SubscriptionInfoSection(
+        formController: formController,
+        editController: editController,
+        studentInfo: studentInfo,
+        enrollmentDate: enrollmentDate,
+        exitDate: exitDate,
+        isExempt: isExempt,
+      ),
+      FormalEducationSection(
+        formController: formController,
+        editController: editController,
+        studentInfo: studentInfo,
+      ),
+      ImageSection(
+        editController: editController,
+      )
+    ];
+    return ListView.separated(
+      controller: scrollController,
+      padding: const EdgeInsets.all(20),
+      itemCount: sections.length,
+      itemBuilder: (context, index) => RepaintBoundary(
+        child: sections[index],
+      ),
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
     );
   }
 

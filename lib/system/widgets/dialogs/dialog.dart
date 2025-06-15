@@ -32,7 +32,7 @@ abstract class DialogState<GEC extends GenericEditController>
   RxBool isComplete = true.obs;
 
   /// Returns form fields as a Column.
-  Column formChild();
+  ListView formChild();
 
   /// Load any necessary data (e.g. dropdowns, lists).
   Future<void> loadData();
@@ -100,16 +100,9 @@ abstract class DialogState<GEC extends GenericEditController>
 
             /// Form content with scroll
             Expanded(
-              child: Scrollbar(
-                controller: scrollController,
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(20),
-                  child: Form(
-                    key: formKey,
-                    child: formChild(),
-                  ),
-                ),
+              child: Form(
+                key: formKey,
+                child: formChild(),
               ),
             ),
 

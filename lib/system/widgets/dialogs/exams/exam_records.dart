@@ -34,8 +34,8 @@ class _LectureDialogState<
   MultiSelectResult<Student>? studentList;
 
   @override
-  Column formChild() {
-    return Column(
+  ListView formChild() {
+    return ListView(
       children: [
         const SizedBox(height: 8),
         // Full name (student)
