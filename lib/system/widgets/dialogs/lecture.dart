@@ -184,16 +184,13 @@ class _LectureDialogState<GEC extends GenericEditController<LectureForm>>
 
   // Form Builder
   @override
-  ListView formChild() {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        _buildLectureInfoSection(),
-        const SizedBox(height: 10),
-        _buildScheduleInfoSection(),
-        const SizedBox(height: 10),
-      ],
-    );
+  List<Widget> formChild() {
+    return [
+      _buildLectureInfoSection(),
+      const SizedBox(height: 10),
+      _buildScheduleInfoSection(),
+      const SizedBox(height: 10),
+    ];
   }
 
   // Form Submission

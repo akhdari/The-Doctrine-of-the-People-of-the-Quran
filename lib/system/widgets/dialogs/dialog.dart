@@ -32,7 +32,7 @@ abstract class DialogState<GEC extends GenericEditController>
   RxBool isComplete = true.obs;
 
   /// Returns form fields as a Column.
-  ListView formChild();
+  List<Widget> formChild();
 
   /// Load any necessary data (e.g. dropdowns, lists).
   Future<void> loadData();
@@ -80,6 +80,7 @@ abstract class DialogState<GEC extends GenericEditController>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final sections = formChild();
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -101,9 +102,16 @@ abstract class DialogState<GEC extends GenericEditController>
             /// Form content with scroll
             Expanded(
               child: Form(
-                key: formKey,
-                child: formChild(),
-              ),
+                  key: formKey,
+                  child: ListView.separated(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(20),
+                    itemCount: sections.length,
+                    itemBuilder: (context, index) => RepaintBoundary(
+                      child: sections[index],
+                    ),
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  )),
             ),
 
             /// Submit button at bottom

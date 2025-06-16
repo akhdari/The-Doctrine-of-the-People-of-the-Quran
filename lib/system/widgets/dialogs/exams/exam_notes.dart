@@ -106,7 +106,7 @@ class _AppreciationDialogState<GEC extends GenericEditController<Appreciation>>
   }
 
   @override
-  ListView formChild() {
+  List<Widget> formChild() {
     // TODO: implement formChild
     throw UnimplementedError();
   }

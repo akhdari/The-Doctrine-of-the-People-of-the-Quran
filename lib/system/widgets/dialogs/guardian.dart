@@ -50,181 +50,170 @@ class _GuardianDialogState<
   }
 
   @override
-  ListView formChild() {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        CustomContainer(
-          headerText: "معلومات الوصي",
-          headerIcon: Icons.person,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "الاسم الأول",
-                      child: CustomTextField(
-                        controller: formController.controllers[0],
-                        validator: (value) => Validator.notEmptyValidator(
-                            value, "يجب إدخال الاسم"),
-                        focusNode: formController.focusNodes[0],
-                        onSaved: (p0) => guardianInfo.guardian.firstName = p0!,
-                        onChanged: (_) => formController.controllers[8].text =
-                            generate.generateUsername(
-                                formController.controllers[0],
-                                formController.controllers[1]),
-                      ),
+  List<Widget> formChild() {
+    return [
+      CustomContainer(
+        headerText: "معلومات الوصي",
+        headerIcon: Icons.person,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: InputField(
+                    inputTitle: "الاسم الأول",
+                    child: CustomTextField(
+                      controller: formController.controllers[0],
+                      validator: (value) =>
+                          Validator.notEmptyValidator(value, "يجب إدخال الاسم"),
+                      focusNode: formController.focusNodes[0],
+                      onSaved: (p0) => guardianInfo.guardian.firstName = p0!,
+                      onChanged: (_) => formController.controllers[8].text =
+                          generate.generateUsername(
+                              formController.controllers[0],
+                              formController.controllers[1]),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "اسم العائلة",
-                      child: CustomTextField(
-                        controller: formController.controllers[1],
-                        validator: (value) => Validator.notEmptyValidator(
-                            value, "يجب إدخال الاسم"),
-                        focusNode: formController.focusNodes[1],
-                        onSaved: (p0) => guardianInfo.guardian.lastName = p0!,
-                        onChanged: (_) => formController.controllers[8].text =
-                            generate.generateUsername(
-                                formController.controllers[0],
-                                formController.controllers[1]),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "العلاقة",
-                      child: DropDownWidget(
-                        items: relationship,
-                        initialValue: editController
-                                ?.model.value?.guardian.relationship ??
-                            relationship[0],
-                        onSaved: (p0) =>
-                            guardianInfo.guardian.relationship = p0!,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "تاريخ الميلاد",
-                      child: CustomTextField(
-                        controller: formController.controllers[3],
-                        onSaved: (p0) => guardianInfo.guardian.dateOfBirth = p0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              //contact
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "رقم الهاتف",
-                      child: CustomTextField(
-                        controller: formController.controllers[4],
-                        validator: (value) =>
-                            Validator.isValidPhoneNumber(value),
-                        focusNode: formController.focusNodes[4],
-                        onSaved: (p0) =>
-                            guardianInfo.contactInfo.phoneNumber = p0!,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "عنوان البريد الإلكتروني",
-                      child: CustomTextField(
-                        controller: formController.controllers[5],
-                        validator: (value) => Validator.isValidEmail(value),
-                        focusNode: formController.focusNodes[5],
-                        onSaved: (p0) => guardianInfo.contactInfo.email = p0!,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "العنوان",
-                      child: CustomTextField(
-                        controller: formController.controllers[6],
-                        onSaved: (p0) => guardianInfo.guardian.homeAddress = p0,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    child: InputField(
-                      inputTitle: "الوظيفة",
-                      child: CustomTextField(
-                        controller: formController.controllers[7],
-                        onSaved: (p0) => guardianInfo.guardian.job = p0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        CustomContainer(
-          headerIcon: Icons.account_box,
-          headerText: "معلومات الحساب",
-          child: Row(
-            children: [
-              Expanded(
-                child: InputField(
-                  inputTitle: "اسم المستخدم",
-                  child: CustomTextField(
-                    controller: formController.controllers[8],
-                    onSaved: (p0) => guardianInfo.accountInfo.username = p0!,
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: InputField(
-                  inputTitle: "كلمة المرور",
-                  child: CustomTextField(
-                    controller: formController.controllers[9],
-                    onSaved: (p0) => guardianInfo.accountInfo.passcode = p0!,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: InputField(
+                    inputTitle: "اسم العائلة",
+                    child: CustomTextField(
+                      controller: formController.controllers[1],
+                      validator: (value) =>
+                          Validator.notEmptyValidator(value, "يجب إدخال الاسم"),
+                      focusNode: formController.focusNodes[1],
+                      onSaved: (p0) => guardianInfo.guardian.lastName = p0!,
+                      onChanged: (_) => formController.controllers[8].text =
+                          generate.generateUsername(
+                              formController.controllers[0],
+                              formController.controllers[1]),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
+              ],
+            ),
 
-        //TODO : add profile info
-      ],
-    );
+            Row(
+              children: [
+                Expanded(
+                  child: InputField(
+                    inputTitle: "العلاقة",
+                    child: DropDownWidget(
+                      items: relationship,
+                      initialValue:
+                          editController?.model.value?.guardian.relationship ??
+                              relationship[0],
+                      onSaved: (p0) => guardianInfo.guardian.relationship = p0!,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: InputField(
+                    inputTitle: "تاريخ الميلاد",
+                    child: CustomTextField(
+                      controller: formController.controllers[3],
+                      onSaved: (p0) => guardianInfo.guardian.dateOfBirth = p0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            //contact
+
+            Row(
+              children: [
+                Expanded(
+                  child: InputField(
+                    inputTitle: "رقم الهاتف",
+                    child: CustomTextField(
+                      controller: formController.controllers[4],
+                      validator: (value) => Validator.isValidPhoneNumber(value),
+                      focusNode: formController.focusNodes[4],
+                      onSaved: (p0) =>
+                          guardianInfo.contactInfo.phoneNumber = p0!,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: InputField(
+                    inputTitle: "عنوان البريد الإلكتروني",
+                    child: CustomTextField(
+                      controller: formController.controllers[5],
+                      validator: (value) => Validator.isValidEmail(value),
+                      focusNode: formController.focusNodes[5],
+                      onSaved: (p0) => guardianInfo.contactInfo.email = p0!,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            Row(
+              children: [
+                Expanded(
+                  child: InputField(
+                    inputTitle: "العنوان",
+                    child: CustomTextField(
+                      controller: formController.controllers[6],
+                      onSaved: (p0) => guardianInfo.guardian.homeAddress = p0,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: InputField(
+                    inputTitle: "الوظيفة",
+                    child: CustomTextField(
+                      controller: formController.controllers[7],
+                      onSaved: (p0) => guardianInfo.guardian.job = p0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+      CustomContainer(
+        headerIcon: Icons.account_box,
+        headerText: "معلومات الحساب",
+        child: Row(
+          children: [
+            Expanded(
+              child: InputField(
+                inputTitle: "اسم المستخدم",
+                child: CustomTextField(
+                  controller: formController.controllers[8],
+                  onSaved: (p0) => guardianInfo.accountInfo.username = p0!,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: InputField(
+                inputTitle: "كلمة المرور",
+                child: CustomTextField(
+                  controller: formController.controllers[9],
+                  onSaved: (p0) => guardianInfo.accountInfo.passcode = p0!,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 10),
+
+      //TODO : add profile info
+    ];
   }
 
   @override

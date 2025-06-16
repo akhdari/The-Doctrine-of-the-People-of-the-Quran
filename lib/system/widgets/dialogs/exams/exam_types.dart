@@ -92,56 +92,49 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
   }
 
   @override
-  ListView formChild() {
-    return ListView(
-      children: [
-        Row(children: [
-          Expanded(
-            child: InputField(
-              inputTitle: "اسم الاختبار",
-              child: CustomTextField(
-                controller: formController.controllers[0],
-                validator: (v) => Validator.notEmptyValidator(v, "الاسم مطلوب"),
-                onSaved: (v) => lectureInfo.examNameAr = v!,
-              ),
+  List<Widget> formChild() {
+    return [
+      Row(children: [
+        Expanded(
+          child: InputField(
+            inputTitle: "اسم الاختبار",
+            child: CustomTextField(
+              controller: formController.controllers[0],
+              validator: (v) => Validator.notEmptyValidator(v, "الاسم مطلوب"),
+              onSaved: (v) => lectureInfo.examNameAr = v!,
             ),
           ),
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(
-            child: InputField(
-              inputTitle: "نوع الاختبار",
-              child: DropDownWidget<String>(
-                items: examTypes, // You define this list
-                initialValue: examTypes[0],
-                onSaved: (v) => lectureInfo.examType = v!,
-              ),
+        ),
+      ]),
+      Row(children: [
+        Expanded(
+          child: InputField(
+            inputTitle: "نوع الاختبار",
+            child: DropDownWidget<String>(
+              items: examTypes, // You define this list
+              initialValue: examTypes[0],
+              onSaved: (v) => lectureInfo.examType = v!,
             ),
           ),
-          const SizedBox(width: 8),
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(child: _numericField("الدرجة العظمى", 1)),
-          const SizedBox(width: 8),
-          Expanded(child: _numericField("علامة النجاح", 2)),
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(child: _numericField("درجة الحفظ", 3)),
-          const SizedBox(width: 8),
-          Expanded(child: _numericField("درجة التجويد التطبيقي", 4)),
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(child: _numericField("درجة التجويد النظري", 5)),
-          const SizedBox(width: 8),
-          Expanded(child: _numericField("درجة الأداء", 6)),
-        ]),
-        const SizedBox(height: 8),
-      ],
-    );
+        ),
+        const SizedBox(width: 8),
+      ]),
+      Row(children: [
+        Expanded(child: _numericField("الدرجة العظمى", 1)),
+        const SizedBox(width: 8),
+        Expanded(child: _numericField("علامة النجاح", 2)),
+      ]),
+      Row(children: [
+        Expanded(child: _numericField("درجة الحفظ", 3)),
+        const SizedBox(width: 8),
+        Expanded(child: _numericField("درجة التجويد التطبيقي", 4)),
+      ]),
+      Row(children: [
+        Expanded(child: _numericField("درجة التجويد النظري", 5)),
+        const SizedBox(width: 8),
+        Expanded(child: _numericField("درجة الأداء", 6)),
+      ]),
+    ];
   }
 
   @override

@@ -90,8 +90,8 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
   }
 
   @override
-  ListView formChild() {
-    final sections = [
+  List<Widget> formChild() {
+    return [
       SessionSection(
         sessionResult: sessionResult,
         editController: editController,
@@ -141,15 +141,6 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
         editController: editController,
       )
     ];
-    return ListView.separated(
-      controller: scrollController,
-      padding: const EdgeInsets.all(20),
-      itemCount: sections.length,
-      itemBuilder: (context, index) => RepaintBoundary(
-        child: sections[index],
-      ),
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
-    );
   }
 
   @override

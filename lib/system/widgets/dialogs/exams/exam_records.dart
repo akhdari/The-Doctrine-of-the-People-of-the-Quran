@@ -34,71 +34,65 @@ class _LectureDialogState<
   MultiSelectResult<Student>? studentList;
 
   @override
-  ListView formChild() {
-    return ListView(
-      children: [
-        const SizedBox(height: 8),
-        // Full name (student)
-        Row(children: [
-          Expanded(
-            child: InputField(
-              inputTitle: "الاسم الكامل",
-              child: DropDownWidget<Student>(
-                // Assuming you load this elsewhere
-                items: studentList?.items?.map((s) => s.obj).toList() ?? [],
-                onSaved: (student) {
-                  lectureInfo.student = student!;
+  List<Widget> formChild() {
+    return [
+      // Full name (student)
+      Row(children: [
+        Expanded(
+          child: InputField(
+            inputTitle: "الاسم الكامل",
+            child: DropDownWidget<Student>(
+              // Assuming you load this elsewhere
+              items: studentList?.items?.map((s) => s.obj).toList() ?? [],
+              onSaved: (student) {
+                lectureInfo.student = student!;
+              },
+            ),
+          ),
+        ),
+      ]),
+
+      // Exam type
+      Row(children: [
+        Expanded(
+          child: InputField(
+            inputTitle: "النوع",
+            child: DropDownWidget<String>(
+              items: examTypes,
+              initialValue: examTypes.first,
+              onSaved: (v) => lectureInfo.exam.examType = v!,
+            ),
+          ),
+        ),
+      ]),
+
+      // Exam date
+      Row(children: [
+        Expanded(
+          child: InputField(
+            inputTitle: "تاريخ الاختبار",
+            child: Obx(
+              () => OutlinedButton(
+                onPressed: () async {
+                  await showCustomTimePicker(
+                    context: Get.context!,
+                    initialTime: TimeOfDay.now(),
+                  ).then((value) {
+                    if (value != null) {
+                      // Format time as string or store TimeOfDay directly depending on your model
+                      lectureInfo.examStudent.dateTakeExam =
+                          "${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}";
+                    }
+                  });
                 },
+                child: Text(lectureInfo.examStudent.dateTakeExam.value ??
+                    "select date"),
               ),
             ),
           ),
-        ]),
-        const SizedBox(height: 8),
-
-        // Exam type
-        Row(children: [
-          Expanded(
-            child: InputField(
-              inputTitle: "النوع",
-              child: DropDownWidget<String>(
-                items: examTypes,
-                initialValue: examTypes.first,
-                onSaved: (v) => lectureInfo.exam.examType = v!,
-              ),
-            ),
-          ),
-        ]),
-        const SizedBox(height: 8),
-
-        // Exam date
-        Row(children: [
-          Expanded(
-            child: InputField(
-              inputTitle: "تاريخ الاختبار",
-              child: Obx(
-                () => OutlinedButton(
-                  onPressed: () async {
-                    await showCustomTimePicker(
-                      context: Get.context!,
-                      initialTime: TimeOfDay.now(),
-                    ).then((value) {
-                      if (value != null) {
-                        // Format time as string or store TimeOfDay directly depending on your model
-                        lectureInfo.examStudent.dateTakeExam =
-                            "${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}";
-                      }
-                    });
-                  },
-                  child: Text(lectureInfo.examStudent.dateTakeExam.value ??
-                      "select date"),
-                ),
-              ),
-            ),
-          ),
-        ]),
-        const SizedBox(height: 8),
-      ],
-    );
+        ),
+      ]),
+    ];
   }
 
   @override
