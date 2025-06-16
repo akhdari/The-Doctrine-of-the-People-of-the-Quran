@@ -171,7 +171,7 @@ class _ChartContentState<T> extends State<_ChartContent<T>> {
             _filterData();
           },
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
             return ConstrainedBox(

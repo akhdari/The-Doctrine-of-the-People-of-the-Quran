@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../nav.dart';
 import '../../system/widgets/footer.dart';
-import '../widgets/appbar.dart';
 import '../widgets/features_section.dart';
 import '../widgets/section3.dart';
+import '/system/widgets/nav.dart';
+import '/system/widgets/custom_drawer.dart';
 
 class FeaturesPage extends StatefulWidget {
-  const FeaturesPage({Key? key}) : super(key: key);
+  const FeaturesPage({super.key});
 
   @override
   State<FeaturesPage> createState() => _FeaturesPageState();

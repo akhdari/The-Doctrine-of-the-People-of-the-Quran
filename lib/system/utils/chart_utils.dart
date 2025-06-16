@@ -30,7 +30,6 @@ Widget buildFiltersWithActions(
   return Card(
     elevation: 3,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    margin: const EdgeInsets.only(bottom: 16),
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Wrap(

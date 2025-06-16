@@ -327,6 +327,29 @@ class PersonalInfoSection extends StatelessWidget {
                   inputTitle: "تاريخ الميلاد",
                   child: CustomTextField(
                     controller: formController.controllers[4],
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime initialDate;
+                      if (formController.controllers[4].text.isNotEmpty) {
+                        initialDate = DateTime.tryParse(
+                                formController.controllers[4].text) ??
+                            DateTime.now();
+                      } else {
+                        initialDate = DateTime.now();
+                      }
+
+                      final pickedDate = await showCustomDatePicker(
+                        context: context,
+                        initialDate: initialDate,
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                      );
+
+                      if (pickedDate != null) {
+                        formController.controllers[4].text =
+                            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                      }
+                    },
                     onSaved: (p0) => studentInfo.personalInfo.dateOfBirth = p0,
                   ),
                 ),

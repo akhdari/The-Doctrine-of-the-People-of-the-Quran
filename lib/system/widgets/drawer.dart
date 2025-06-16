@@ -5,12 +5,14 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF0E9D6D)),
+            decoration: BoxDecoration(color: colorScheme.primary),
             child: Text(
               'القائمة',
               style: TextStyle(

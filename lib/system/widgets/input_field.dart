@@ -35,7 +35,6 @@ class InputField extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  // labelText;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
@@ -44,6 +43,8 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final int? maxLines;
   final TextDirection textDirection;
+  final bool readOnly;
+  final void Function()? onTap;
 
   const CustomTextField({
     super.key,
@@ -56,6 +57,8 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.textDirection = TextDirection.rtl,
     this.onChanged,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -70,6 +73,8 @@ class CustomTextField extends StatelessWidget {
       textDirection: textDirection,
       obscureText: obscureText,
       maxLines: maxLines,
+      readOnly: readOnly, // NEW
+      onTap: onTap, // NEW
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
@@ -80,66 +85,5 @@ class CustomTextField extends StatelessWidget {
         color: Theme.of(context).textTheme.bodySmall?.color,
       ),
     );
-  }
-}
-
-/*Widget TextField(
-    {String? Function(String?)? validator,
-    TextEditingController controller,
-    TextAlign textAlign,
-    TextDirection textDirection}) {
-  return TextFormField(
-    controller: controller,
-    validator: validator,
-    textDirection: textDirection,
-    textAlign: textAlign,
-    keyboardType: TextInputType.text,
-    decoration: InputDecoration(
-      border: OutlineInputBorder(),
-      enabledBorder: borderStyle,
-      focusedBorder: borderStyle,
-    ),
-    style: const TextStyle(
-      color: Color(0xffceaa63),
-    ),
-  );
-}*/
-
-Future function(BuildContext context) async {
-  DateTime? time;
-  await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(1900),
-    lastDate: DateTime.now(),
-  ).then((value) {
-    time = value;
-    return dateToString(time);
-  });
-}
-
-String dateToString(DateTime? time) {
-  if (time == null) {
-    return "";
-  } else {
-    return time.toString(); //formattedDate(time);
-  }
-}
-
-class DatePicker extends StatefulWidget {
-  const DatePicker({super.key});
-
-  @override
-  State<DatePicker> createState() => _DatePickerState();
-}
-
-class _DatePickerState extends State<DatePicker> {
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-        onPressed: () async {
-          await function(context);
-        },
-        child: Text("pick date"));
   }
 }
