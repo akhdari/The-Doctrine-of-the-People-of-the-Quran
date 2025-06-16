@@ -39,55 +39,57 @@ class _CustomDrawerState extends State<CustomDrawer> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      width: widget.miniMode ? 70 : 280,
-      color: colorScheme.primaryContainer,
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          if (!widget.miniMode) ...[
-            Obx(() => CircleAvatar(
-                  radius: 30,
-                  backgroundImage:
-                      AssetImage(profileController.avatarPath.value),
-                )),
-            const SizedBox(height: 8),
-            Obx(() => Text(
-                  profileController.userName.value,
-                  style: theme.textTheme.titleMedium,
-                  textAlign: TextAlign.center,
-                )),
-            Obx(() => Text(
-                  profileController.userRole.value,
-                  style: theme.textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                )),
-            const Divider(height: 32),
-          ] else
+    return Material(
+      child: Container(
+        width: widget.miniMode ? 70 : 280,
+        color: colorScheme.primaryContainer,
+        child: Column(
+          children: [
             const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              itemCount: menuItems.length,
-              itemBuilder: (context, index) {
-                final item = menuItems[index];
-                return Obx(() => _buildMenuItem(
-                      context,
-                      item['icon'],
-                      item['title'],
-                      index,
-                      selected: drawerController.selectedIndex.value == index,
-                    ));
-              },
+            if (!widget.miniMode) ...[
+              Obx(() => CircleAvatar(
+                    radius: 30,
+                    backgroundImage:
+                        AssetImage(profileController.avatarPath.value),
+                  )),
+              const SizedBox(height: 8),
+              Obx(() => Text(
+                    profileController.userName.value,
+                    style: theme.textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                  )),
+              Obx(() => Text(
+                    profileController.userRole.value,
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  )),
+              const Divider(height: 32),
+            ] else
+              const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: menuItems.length,
+                itemBuilder: (context, index) {
+                  final item = menuItems[index];
+                  return Obx(() => _buildMenuItem(
+                        context,
+                        item['icon'],
+                        item['title'],
+                        index,
+                        selected: drawerController.selectedIndex.value == index,
+                      ));
+                },
+              ),
             ),
-          ),
-          IconButton(
-            icon: Icon(widget.miniMode
-                ? Icons.arrow_back_ios
-                : Icons.arrow_forward_ios),
-            onPressed: widget.onToggleMiniMode,
-          ),
-          const SizedBox(height: 10),
-        ],
+            IconButton(
+              icon: Icon(widget.miniMode
+                  ? Icons.arrow_back_ios
+                  : Icons.arrow_forward_ios),
+              onPressed: widget.onToggleMiniMode,
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }

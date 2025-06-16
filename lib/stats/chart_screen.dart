@@ -32,14 +32,11 @@ class ChartScreen<T> extends StatelessWidget {
     return BaseLayout(
       title: title,
       child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: _ChartContent<T>(
-            data: data,
-            tag: tag,
-            seriesConfigs: seriesConfigs,
-            axisConfig: axisConfig,
-          ),
+        child: _ChartContent<T>(
+          data: data,
+          tag: tag,
+          seriesConfigs: seriesConfigs,
+          axisConfig: axisConfig,
         ),
       ),
     );

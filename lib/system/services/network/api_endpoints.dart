@@ -117,11 +117,12 @@ class ApiEndpoints {
 
   static String getGuardianAccounts = '$baseUrl/guardians';
 
-  static String getLectureIdName = '$baseUrl/lectures/ar_name-and-id';
+  static String getLectureIdName =
+      '$baseUrl/lectures/ar_name-and-id'; //TODO to be removed
 
   static String getStudentAchievements = '$baseUrl/achievements';
 
-  static String getSpecialAchievements = '$baseUrl/special/achievements';
+  //static String getSpecialAchievements = '$baseUrl/special/achievements'; doesnt exist
 
   static String submitStudentForm = '$baseUrl/special/students/submit';
   static String submitLectureForm = '$baseUrl/special/lectures/submit';

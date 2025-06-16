@@ -37,7 +37,7 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
     extends DialogState<GEC> {
   late Generate generate;
   StudentInfoDialog studentInfo = StudentInfoDialog();
-  bool isClicked = false;
+  bool isClicked = false; //TODO   remove this variable if not needed
   RxBool isExempt = false.obs;
   Rx<String?> enrollmentDate = Rxn<String>();
   Rx<String?> exitDate = Rxn<String>();
