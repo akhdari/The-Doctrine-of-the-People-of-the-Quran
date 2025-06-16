@@ -64,7 +64,7 @@ dependencies:
   flip_card: ^0.7.0
 
   # to use .env files
-  flutter_dotenv: ^5.1.0
+  flutter_dotenv: ^5.2.1
   dotenv: ^4.2.0
   flutter_secure_storage: ^9.2.4
   introduction_screen: ^3.1.17

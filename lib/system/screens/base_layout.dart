@@ -49,7 +49,12 @@ class _BaseLayoutState extends State<BaseLayout> {
                   body: Column(
                     children: [
                       _buildHeader(theme),
-                      Expanded(child: SafeArea(child: widget.child)),
+                      Expanded(
+                          child: SafeArea(
+                              child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: widget.child,
+                      ))),
                       _buildFooter(theme),
                     ],
                   ),
@@ -75,7 +80,12 @@ class _BaseLayoutState extends State<BaseLayout> {
             body: Column(
               children: [
                 _buildHeader(theme),
-                Expanded(child: SafeArea(child: widget.child)),
+                Expanded(
+                    child: SafeArea(
+                        child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: widget.child,
+                ))),
                 _buildFooter(theme),
               ],
             ),

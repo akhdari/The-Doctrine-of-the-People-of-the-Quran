@@ -27,7 +27,7 @@ class AchievementController extends GetxController {
 
     try {
       final result = await ApiService.fetchList<Acheivement>(
-          ApiEndpoints.getSpecialAchievements,
+          ApiEndpoints.getLectureById(lectureId.value ?? 0), //TODO handle null
           (json) => Acheivement.fromJson(json));
 
       if (result.isNotEmpty) {
