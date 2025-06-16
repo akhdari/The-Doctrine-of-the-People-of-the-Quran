@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/login.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/image.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/image.dart';
 
 //TODO use load asset widget to load images
 class OnboardingScreen extends StatelessWidget {

@@ -32,7 +32,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/achievement
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/login.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/attendance/attendance.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/testpage.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/flipcard.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/flipcard.dart';
 
 // Report screens (namespaced)
 import '../screens/report1_screen.dart' as report1;

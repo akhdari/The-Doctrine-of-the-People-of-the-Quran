@@ -18,7 +18,7 @@ import '../../../controllers/generate.dart';
 import '../drop_down.dart';
 import '../../../controllers/form_controller.dart' as form;
 import './image_picker_widget.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/date_picker.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/date_picker.dart';
 
 class StudentDialog<GEC extends GenericEditController<StudentInfoDialog>>
     extends GlobalDialog {

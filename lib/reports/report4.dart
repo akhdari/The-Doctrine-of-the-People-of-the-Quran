@@ -1,10 +1,10 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../../system/models/report4_model.dart';
-import '../helpers/accompanying_curriculum_section.dart';
-import '../helpers/tjweed_section.dart';
-import '../helpers/table_helpers.dart';
-import '../helpers/info_section.dart';
+import '../helpers/reports/accompanying_curriculum_section.dart';
+import '../helpers/reports/tjweed_section.dart';
+import '../helpers/reports/table_helpers.dart';
+import '../helpers/reports/info_section.dart';
 
 List<pw.Widget> buildReport4Content({
   required dynamic reportDataModel,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/image.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/image.dart';
 import '../../controllers/subscription_information.dart';
 import '../../system/widgets/form.dart';
 import 'package:flutter/gestures.dart';
 import '../../system/widgets/footer.dart';
 import '../../system/widgets/drawer.dart';
-import '../../system/widgets/nav.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/nav.dart';
 import '../../controllers/form_controller.dart' as form;
 
 class CopyPage extends StatefulWidget {

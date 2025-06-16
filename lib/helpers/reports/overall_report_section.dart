@@ -1,6 +1,6 @@
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
-import '../system/models/report1_model.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/report1_model.dart';
 
 pw.Widget buildOverallReportSection(
   pw.Font arabicFont,

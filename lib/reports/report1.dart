@@ -1,9 +1,9 @@
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
-import '../helpers/info_section.dart';
-import '../helpers/accompanying_curriculum_section.dart';
-import '../helpers/tjweed_section.dart';
-import '../helpers/table_helpers.dart';
+import '../helpers/reports/info_section.dart';
+import '../helpers/reports/accompanying_curriculum_section.dart';
+import '../helpers/reports/tjweed_section.dart';
+import '../helpers/reports/table_helpers.dart';
 import '../../system/models/report1_model.dart';
 import '../../system/models/shared.dart';
 

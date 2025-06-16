@@ -1,8 +1,8 @@
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
-import '../helpers/table_helpers.dart';
+import '../helpers/reports/table_helpers.dart';
 import '../../system/models/report2_model.dart';
-import '../helpers/info_section.dart';
+import '../helpers/reports/info_section.dart';
 import '../../system/models/shared.dart';
 
 List<pw.Widget> buildReport2Content({

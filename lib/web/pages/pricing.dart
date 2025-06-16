@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '/system/widgets/nav.dart';
-import '/system/widgets/custom_drawer.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/nav.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/custom_drawer.dart';
 import '../../system/widgets/footer.dart';
 import '../widgets/custom_app_section.dart';
 import '../widgets/pricing_content.dart';

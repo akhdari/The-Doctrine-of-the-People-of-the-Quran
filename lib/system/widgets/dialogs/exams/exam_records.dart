@@ -13,7 +13,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dia
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/drop_down.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/input_field.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/multiselect.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/time_picker.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/time_picker.dart';
 
 class ExamRecordsDialog extends GlobalDialog {
   const ExamRecordsDialog(

@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
 
-import '../../system/widgets/date_picker.dart'; // Custom date picker
-import '../../system/utils/snackbar_helper.dart'; // Snackbar helper for showing messages
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/date_picker.dart';
+import '../../system/utils/snackbar_helper.dart';
 
 /// Controller for managing filters in chart/report view
 class ChartFilterController extends GetxController {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'lunch_url.dart';
-import '../../system/widgets/image.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/lunch_url.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/image.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});

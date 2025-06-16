@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
-import './time_picker.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/time_picker.dart';
 import '../utils/snackbar_helper.dart';
 
 class TimeCellController extends GetxController {

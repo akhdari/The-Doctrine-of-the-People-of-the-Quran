@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../widgets/date_picker.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/date_picker.dart';
 import 'base_layout.dart';
 import '../widgets/typehead.dart';
 import '../widgets/grids/acheivement/acheivement_show.dart';

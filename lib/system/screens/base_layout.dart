@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_drawer.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/custom_drawer.dart';
 import 'package:get/get.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '/controllers/theme.dart';
-import '../widgets/image.dart';
-import '../../system/widgets/lunch_url.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/image.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/lunch_url.dart';
 
 class BaseLayout extends StatefulWidget {
   final String title;

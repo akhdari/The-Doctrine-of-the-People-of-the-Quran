@@ -12,7 +12,7 @@ import '../../../controllers/validator.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../../../system/services/network/api_endpoints.dart';
-import '../date_picker.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/date_picker.dart';
 
 class GuardianDialog extends GlobalDialog {
   const GuardianDialog({

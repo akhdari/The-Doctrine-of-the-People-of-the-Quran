@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../system/widgets/footer.dart';
 import '../widgets/features_section.dart';
 import '../widgets/section3.dart';
-import '/system/widgets/nav.dart';
-import '/system/widgets/custom_drawer.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/nav.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/custom_drawer.dart';
 
 class FeaturesPage extends StatefulWidget {
   const FeaturesPage({super.key});

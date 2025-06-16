@@ -6,6 +6,7 @@ class Student implements Model {
   dynamic studentContactId;
   dynamic studentAccountId;
 
+//
   Student({
     this.studentId,
     this.guardianId,

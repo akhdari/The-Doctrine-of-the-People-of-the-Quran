@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../helpers/report_screen.dart';
+import '../helpers/reports/report_screen.dart';
 import '../reports/report3.dart' as report3;
 import '../system/models/report3_model.dart' as model3;
 import '../data/report3_data.dart' as data3;
-import '../helpers/pdf_generator.dart' as pdf_generator;
+import '../helpers/reports/pdf_generator.dart' as pdf_generator;
 import '../system/models/shared.dart' as shared;
 
 import 'package:get/get.dart';

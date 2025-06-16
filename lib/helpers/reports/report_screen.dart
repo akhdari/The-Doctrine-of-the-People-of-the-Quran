@@ -3,7 +3,7 @@ import 'package:printing/printing.dart';
 import 'dart:typed_data'; // Uint8List
 import 'dart:async'; // FutureOr
 import 'package:pdf/pdf.dart'; // PdfPageFormat
-import '../system/utils/snackbar_helper.dart'; // showErrorSnackbar, showSuccessSnackbar
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/utils/snackbar_helper.dart'; // showErrorSnackbar, showSuccessSnackbar
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({

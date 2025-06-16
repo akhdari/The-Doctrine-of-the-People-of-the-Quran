@@ -8,7 +8,7 @@ import '../../../controllers/submit_form.dart';
 import '../../models/post/acheivement.dart';
 
 import '../custom_container.dart';
-import '../image.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/image.dart';
 import '../../utils/const/acheivement.dart';
 import '../acheivement_block.dart';
 import '../../models/post/surah_ayah_list.dart';
