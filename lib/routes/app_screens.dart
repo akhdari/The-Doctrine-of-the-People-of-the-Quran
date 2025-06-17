@@ -49,7 +49,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/stats/stat3.dart';
 // Utility screens
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/forget_password.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/create_account.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/onboarding.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/landing.dart';
 // App routes
 import 'package:the_doctarine_of_the_ppl_of_the_quran/routes/app_routes.dart';
 
@@ -175,7 +175,7 @@ class AppScreens {
     ),
     GetPage(
       name: Routes.dashboardPage,
-      page: () => OnboardingScreen(),
+      page: () => DashboardPage(),
     ),
   ];
 }
