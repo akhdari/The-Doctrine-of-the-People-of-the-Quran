@@ -31,4 +31,5 @@ class Routes {
   static const test = '/test';
   static const card = '/card';
   static const financialManagement = '/financial_management';
+  static const dashboardPage = '/dashboard';
 }

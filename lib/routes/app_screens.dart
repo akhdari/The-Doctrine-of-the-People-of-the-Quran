@@ -25,6 +25,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_teachers.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/exams/exam_types.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/copy.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/landing.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/student_managment.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/guardian_managment.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/lecture_managment.dart';
@@ -48,7 +49,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/stats/stat3.dart';
 // Utility screens
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/forget_password.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/create_account.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/landing_screen.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/onboarding.dart';
 // App routes
 import 'package:the_doctarine_of_the_ppl_of_the_quran/routes/app_routes.dart';
 
@@ -172,6 +173,10 @@ class AppScreens {
     GetPage(
       name: Routes.onboarding,
       page: () => OnboardingScreen(),
+    ),
+    GetPage(
+      name: Routes.dashboardPage,
+      page: () => DashboardPage(),
     ),
   ];
 }

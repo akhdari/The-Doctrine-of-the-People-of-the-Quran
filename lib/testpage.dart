@@ -91,6 +91,10 @@ class TestPage extends StatelessWidget {
               onPressed: () => Get.toNamed(Routes.onboarding),
               child: const Text('Onboarding'),
             ),
+            TextButton(
+              onPressed: () => Get.toNamed(Routes.dashboardPage),
+              child: const Text('dashboard'),
+            ),
           ],
         ),
       ),
