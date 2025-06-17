@@ -70,5 +70,21 @@ class Guardian implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => id;
+  bool get isComplete =>
+      lastName != null &&
+      lastName.toString().trim().isNotEmpty &&
+      firstName != null &&
+      firstName.toString().trim().isNotEmpty &&
+      dateOfBirth != null &&
+      dateOfBirth.toString().trim().isNotEmpty &&
+      relationship != null &&
+      relationship.toString().trim().isNotEmpty &&
+      phoneNumber != null &&
+      phoneNumber.toString().trim().isNotEmpty &&
+      homeAddress != null &&
+      homeAddress.toString().trim().isNotEmpty &&
+      email != null &&
+      email.toString().trim().isNotEmpty &&
+      job != null &&
+      job.toString().trim().isNotEmpty;
 }

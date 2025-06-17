@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/achivement_unit/surah_ayah.dart';
 import './input_field.dart';
 import './drop_down.dart';
 import '/system/utils/const/acheivement.dart';

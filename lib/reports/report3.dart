@@ -1,10 +1,10 @@
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
-import '../../system/models/report3_model.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report3_model.dart';
 import '../helpers/reports/accompanying_curriculum_section.dart';
 import '../helpers/reports/tjweed_section.dart';
 import '../helpers/reports/info_section.dart';
-import '../../system/models/shared.dart';
+import '../system/new_models/reports/shared.dart';
 import '../helpers/reports/table_helpers.dart';
 
 List<pw.Widget> buildReport3Content({

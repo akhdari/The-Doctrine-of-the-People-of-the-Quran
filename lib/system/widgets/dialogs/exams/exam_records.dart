@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_controller.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/submit_form.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_records.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/exam_records_form.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student_relations.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/teacher.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/utils/const/exam.dart';
@@ -31,7 +31,7 @@ class _LectureDialogState<
     extends DialogState<GEC> {
   final lectureInfo = ExamRecordInfoDialog();
   MultiSelectResult<Teacher>? teacherResult;
-  MultiSelectResult<Student>? studentList;
+  MultiSelectResult<StudentRelations>? studentList;
 
   @override
   List<Widget> formChild() {
@@ -41,7 +41,7 @@ class _LectureDialogState<
         Expanded(
           child: InputField(
             inputTitle: "الاسم الكامل",
-            child: DropDownWidget<Student>(
+            child: DropDownWidget<StudentRelations>(
               // Assuming you load this elsewhere
               items: studentList?.items?.map((s) => s.obj).toList() ?? [],
               onSaved: (student) {
@@ -100,8 +100,8 @@ class _LectureDialogState<
     try {
       final fetchedTeachernNames =
           await getItems<Teacher>(ApiEndpoints.getTeachers, Teacher.fromJson);
-      final fetchedStudents =
-          await getItems<Student>(ApiEndpoints.getStudents, Student.fromJson);
+      final fetchedStudents = await getItems<StudentRelations>(
+          ApiEndpoints.getStudents, StudentRelations.fromJson);
       dev.log('teacherNames: ${fetchedTeachernNames.toString()}');
 
       super.setState(() {

@@ -29,5 +29,9 @@ class LectureStudent implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [lectureId, studentId];
+  bool get isComplete =>
+      lectureId != null &&
+      studentId != null &&
+      attendanceStatus != null &&
+      lectureDate != null;
 }

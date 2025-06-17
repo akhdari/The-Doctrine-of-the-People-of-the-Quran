@@ -33,5 +33,10 @@ class MedicalInfo implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => studentId;
+  bool get isComplete =>
+      studentId != null &&
+      bloodType != null &&
+      allergies != null &&
+      diseases != null &&
+      diseasesCauses != null;
 }

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/copy.dart';
 import '../../controllers/validator.dart';
 import '../../controllers/form_controller.dart' as form;
-import 'custom_checkbox.dart';
+import '../../system/widgets/custom_checkbox.dart';
 import '/system/utils/const/form.dart';
-import '../models/post/copy.dart';
 import 'dart:developer' as dev;
 
 class CustomFormWidget extends StatefulWidget {

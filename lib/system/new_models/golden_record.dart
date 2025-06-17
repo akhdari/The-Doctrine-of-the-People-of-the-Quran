@@ -37,5 +37,11 @@ class GoldenRecord implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => goldenRecordId;
+  bool get isComplete =>
+      goldenRecordId != null &&
+      studentId != null &&
+      recordType != null &&
+      riwayah != null &&
+      dateOfCompletion != null &&
+      schoolName != null;
 }

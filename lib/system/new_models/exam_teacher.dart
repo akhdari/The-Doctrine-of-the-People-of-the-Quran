@@ -25,5 +25,5 @@ class ExamTeacher implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [examId, teacherId];
+  bool get isComplete => examId != null && teacherId != null && date != null;
 }

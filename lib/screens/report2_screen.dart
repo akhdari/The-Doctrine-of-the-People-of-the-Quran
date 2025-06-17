@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../helpers/reports/report_screen.dart';
 import '../reports/report2.dart' as report2;
-import '../system/models/report2_model.dart' as model2;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report2_model.dart'
+    as model2;
 import '../data/report2_data.dart' as data2;
 import '../helpers/reports/pdf_generator.dart' as pdf_generator;
 

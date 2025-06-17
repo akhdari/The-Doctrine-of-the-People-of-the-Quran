@@ -49,5 +49,13 @@ class LectureContent implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => id;
+  bool get isComplete {
+    return fromSurah != null &&
+        fromAyah != null &&
+        toSurah != null &&
+        toAyah != null &&
+        studentId != null &&
+        lectureId != null &&
+        type != null;
+  }
 }

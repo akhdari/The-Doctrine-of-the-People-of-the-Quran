@@ -7,7 +7,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dia
 import '../../utils/const/lecture.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
-import '../../models/post/lecture.dart';
+import '../../new_models/forms/lecture_form.dart';
 import '../../../controllers/validator.dart';
 import '../custom_container.dart';
 import '../input_field.dart';

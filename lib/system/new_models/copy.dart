@@ -1,6 +1,6 @@
-import 'abstract_class.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 
-class Copy extends AbstractClass {
+class Copy implements Model {
   String? schoolName;
   String? country;
   String? schoolAddress;
@@ -8,6 +8,8 @@ class Copy extends AbstractClass {
   String? supervisorName;
   String? phoneNumber;
   String? email;
+
+  Copy();
 
   @override
   bool get isComplete {

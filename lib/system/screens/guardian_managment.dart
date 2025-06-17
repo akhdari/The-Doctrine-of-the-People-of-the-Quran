@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/guardian.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/guardian_form.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/guardian.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_grid.dart';
@@ -21,7 +21,8 @@ class AddGuardian extends StatelessWidget {
         title: "Guardians Management",
         child: ManagementScreen<GuardianInfoDialog>(
           dataSourceEndpoint: ApiEndpoints.getSpecialGuardians,
-          deleteEndpoint: (int id) => ApiEndpoints.getAccountInfoById(id),
+          deleteEndpoint: (GuardianInfoDialog item) =>
+              ApiEndpoints.getAccountInfoById(item.accountInfo.accountId),
           dialog: GuardianDialog(),
           managementType: ManagementTypes.guardians,
           rowBuilder: (guardian) => [

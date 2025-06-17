@@ -50,5 +50,14 @@ class StudentLectureAchievements implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [lectureId, studentId];
+  bool get isComplete {
+    return lectureId != null &&
+        studentId != null &&
+        achievementType != null &&
+        lectureDate != null &&
+        fromSurah != null &&
+        fromAyah != null &&
+        toSurah != null &&
+        toAyah != null;
+  }
 }

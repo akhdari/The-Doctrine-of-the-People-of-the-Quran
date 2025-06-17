@@ -1,7 +1,7 @@
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/material.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
-import '../models/get/typehead.dart';
+import '../new_models/typehead.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer' as dev;

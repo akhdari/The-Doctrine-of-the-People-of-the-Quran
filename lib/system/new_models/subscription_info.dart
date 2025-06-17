@@ -42,5 +42,6 @@ class SubscriptionInfo implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [subscriptionId, studentId];
+  bool get isComplete =>
+      subscriptionId != null && studentId != null && enrollmentDate != null;
 }

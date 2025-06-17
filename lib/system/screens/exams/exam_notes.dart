@@ -19,7 +19,9 @@ class ExamNotes extends StatelessWidget {
         body: BaseLayout(
             title: "Exam Notes Management",
             child: ManagementScreen<Appreciation>(
-                deleteEndpoint: (id) => ApiEndpoints.getAccountInfoById(id),
+                deleteEndpoint: (appreciation) =>
+                    ApiEndpoints.getAccountInfoById(
+                        appreciation.appreciationId),
                 dataSourceEndpoint: ApiEndpoints.getAppreciations,
                 managementType: ManagementTypes.examNotes,
                 dialog: AppreciationDialog(),

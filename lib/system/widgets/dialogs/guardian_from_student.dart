@@ -5,7 +5,7 @@ import '../../../controllers/generate.dart';
 import '../../../controllers/validator.dart';
 import '../../../system/services/network/api_endpoints.dart';
 import '../../../controllers/submit_form.dart';
-import '../../models/post/guardian.dart';
+import '../../new_models/forms/guardian_form.dart';
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../drop_down.dart';

@@ -55,5 +55,11 @@ class Teacher implements Model {
   int get hashCode => teacherId.hashCode;
 
   @override
-  List<int> getPrimaryKey() => teacherAccountId;
+  bool get isComplete =>
+      teacherId != null &&
+      workHours != null &&
+      teacherContactId != null &&
+      teacherAccountId != null &&
+      firstName != null &&
+      lastName != null;
 }

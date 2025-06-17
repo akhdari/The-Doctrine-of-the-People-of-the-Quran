@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/get/acheivement_class.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/acheivement_class.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/api_client.dart';
 import '/system/services/network/api_endpoints.dart';
 import 'package:flutter/material.dart';

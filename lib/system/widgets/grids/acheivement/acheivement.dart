@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../models/grid/generic_data_grid.dart';
+import '../../../new_models/grid/generic_data_grid.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import '../../../models/get/acheivement_class.dart';
+import '../../../new_models/acheivement_class.dart';
 import 'package:get/get.dart';
 import '/system/widgets/dialogs/acheivement.dart';
 import '/controllers/latest_acheivement.dart';

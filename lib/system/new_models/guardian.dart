@@ -58,5 +58,16 @@ class Guardian implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => guardianAccountId;
+  bool get isComplete {
+    return guardianId != null &&
+        firstName != null &&
+        lastName != null &&
+        dateOfBirth != null &&
+        relationship != null &&
+        guardianContactId != null &&
+        guardianAccountId != null &&
+        homeAddress != null &&
+        job != null &&
+        profileImage != null;
+  }
 }

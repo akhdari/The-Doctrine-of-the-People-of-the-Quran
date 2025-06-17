@@ -29,5 +29,11 @@ class AccountInfo implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => accountId;
+  bool get isComplete =>
+      accountId != null &&
+      username != null &&
+      passcode != null &&
+      accountType != null &&
+      username.toString().isNotEmpty &&
+      passcode.toString().isNotEmpty;
 }

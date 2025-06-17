@@ -1,60 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/data/flip_card_data.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
 import 'search_field.dart'
     as custom_search; // import the search controller + widget
 
 import 'package:flip_card/flip_card.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
-
-// Student model same as before (you can keep it here or separate)
-class Student {
-  final String schoolName;
-  final String fullName;
-  final String dateOfBirth;
-  final String bloodGroup;
-  final String level;
-  final String academicYear;
-  final String phoneNumber;
-  final String username;
-
-  Student({
-    required this.schoolName,
-    required this.fullName,
-    required this.dateOfBirth,
-    required this.bloodGroup,
-    required this.level,
-    required this.academicYear,
-    required this.phoneNumber,
-    required this.username,
-  });
-//
-  factory Student.fromJson(Map<String, dynamic> json) {
-    return Student(
-      schoolName: json['schoolName'] ?? '',
-      fullName: json['fullName'] ?? '',
-      dateOfBirth: json['dateOfBirth'] ?? '',
-      bloodGroup: json['bloodGroup'] ?? '',
-      level: json['level'] ?? '',
-      academicYear: json['academicYear'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
-      username: json['username'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "schoolName": schoolName,
-      "fullName": fullName,
-      "dateOfBirth": dateOfBirth,
-      "bloodGroup": bloodGroup,
-      "level": level,
-      "academicYear": academicYear,
-      "phoneNumber": phoneNumber,
-      "username": username,
-    };
-  }
-}
 
 // Your sample data
 final List<Map<String, dynamic>> studentList = studentData;
@@ -142,7 +94,7 @@ class StudentCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          student.schoolName,
+          student.formalEducationInfo.schoolName,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.primary,
@@ -170,13 +122,13 @@ class StudentCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        _buildInfoRow('الاسم الكامل', student.fullName),
-        _buildInfoRow('تاريخ الميلاد', student.dateOfBirth),
-        _buildInfoRow('زمرة الدم', student.bloodGroup),
-        _buildInfoRow('المستوى', student.level),
-        _buildInfoRow('السنة الدراسية', student.academicYear),
-        _buildInfoRow('رقم الهاتف', student.phoneNumber),
-        _buildInfoRow('اسم المستخدم', student.username),
+        _buildInfoRow('الاسم الكامل', student.personalInfo.getFullArName()),
+        _buildInfoRow('تاريخ الميلاد', student.personalInfo.dateOfBirth),
+        _buildInfoRow('زمرة الدم', student.medicalInfo.bloodType),
+        _buildInfoRow('المستوى', student.formalEducationInfo.academicLevel),
+        //TODO _buildInfoRow('السنة الدراسية', student.formalEducationInfo.),
+        _buildInfoRow('رقم الهاتف', student.contactInfo.phoneNumber),
+        _buildInfoRow('اسم المستخدم', student.accountInfo.username),
       ],
     );
   }
@@ -227,7 +179,7 @@ class StudentCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              student.schoolName,
+              student.formalEducationInfo.schoolName,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.primaryContainer,
@@ -289,7 +241,9 @@ class StudentSelectionPage extends StatelessWidget {
       custom_search.SearchController<Student>(
         items: students,
         filter: (student, query) =>
-            student.fullName.toLowerCase().contains(query.toLowerCase()),
+            "${student.personalInfo.getFullArName()} ${student.personalInfo.getFullEnName()}"
+                .toLowerCase()
+                .contains(query.toLowerCase()),
       ),
     );
 
@@ -339,7 +293,7 @@ class StudentSelectionPage extends StatelessWidget {
                             final student = filtered[index];
                             return ListTile(
                               title: Text(
-                                student.fullName,
+                                "${student.personalInfo.getFullArName()} ${student.personalInfo.getFullEnName()}",
                                 textDirection: TextDirection.rtl,
                                 style: theme.textTheme.titleMedium,
                               ),

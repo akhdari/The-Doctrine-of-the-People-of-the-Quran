@@ -5,7 +5,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_c
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/dialog.dart';
 import '../drop_down.dart';
 import '../../../controllers/submit_form.dart';
-import '../../models/post/guardian.dart';
+import '../../new_models/forms/guardian_form.dart';
 import '../../utils/const/guardian.dart';
 import '../../../controllers/generate.dart';
 import '../../../controllers/validator.dart';

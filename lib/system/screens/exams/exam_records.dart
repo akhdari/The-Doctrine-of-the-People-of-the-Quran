@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_records.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/exam_records_form.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/exams/exam_records.dart';
@@ -20,7 +20,8 @@ class ExamRecords extends StatelessWidget {
             title: "Exam Records Management",
             child: ManagementScreen<ExamRecordInfoDialog>(
                 dataSourceEndpoint: ApiEndpoints.getSpecialExamRecords,
-                deleteEndpoint: (id) => ApiEndpoints.getAccountInfoById(id),
+                deleteEndpoint: (examRecord) =>
+                    ApiEndpoints.getAccountInfoById(examRecord.exam.examId),
                 managementType: ManagementTypes.students,
                 dialog: ExamRecordsDialog(),
                 rowBuilder: (exam) => [

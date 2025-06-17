@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/exam_teachers.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/exam_teachers_from.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/exams/exam_teachers.dart';
@@ -20,7 +20,8 @@ class ExamTeachers extends StatelessWidget {
             title: "Exam Teachers Management",
             child: ManagementScreen<ExamTeacherInfoDialog>(
               dataSourceEndpoint: ApiEndpoints.getSpecialExamsTeachers,
-              deleteEndpoint: (id) => ApiEndpoints.getAccountInfoById(id),
+              deleteEndpoint: (examTeacher) => ApiEndpoints.getAccountInfoById(
+                  examTeacher.techer.teacherAccountId),
               managementType: ManagementTypes.examTeacher,
               dialog: ExamTeachersDialog(),
               rowBuilder: (exam) => [

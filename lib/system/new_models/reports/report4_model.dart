@@ -1,6 +1,6 @@
 // File: report4_model.dart
 import 'dart:core';
-import './shared.dart';
+import 'shared.dart';
 
 class ReportDataModel {
   final ReportData reportData;
@@ -33,10 +33,9 @@ class ReportData {
     return ReportData(
       headerInfo: HeaderInfo.fromJson(json['header_info']),
       summaryReport: SummaryReport.fromJson(json['summary_report']),
-      detailedReport:
-          (json['detailed_report'] as List)
-              .map((e) => DetailedReport.fromJson(e))
-              .toList(),
+      detailedReport: (json['detailed_report'] as List)
+          .map((e) => DetailedReport.fromJson(e))
+          .toList(),
     );
   }
 }

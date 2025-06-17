@@ -1,12 +1,10 @@
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/account_info.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/account_info.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/contact_info.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/guardian.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/personal_info.dart';
 
-import 'abstract_class.dart';
-
-class GuardianInfoDialog extends AbstractClass implements Model {
+class GuardianInfoDialog implements Model {
   //info
   Guardian guardian = Guardian();
   AccountInfo accountInfo = AccountInfo();
@@ -44,7 +42,4 @@ class GuardianInfoDialog extends AbstractClass implements Model {
       children = [];
     }
   }
-
-  @override
-  List<int> getPrimaryKey() => [guardian.guardianAccountId];
 }

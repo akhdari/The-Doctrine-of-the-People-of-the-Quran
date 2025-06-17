@@ -20,5 +20,5 @@ class Acheivement implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => [studentID];
+  bool get isComplete => studentID != 0 && studentName.isNotEmpty;
 }
