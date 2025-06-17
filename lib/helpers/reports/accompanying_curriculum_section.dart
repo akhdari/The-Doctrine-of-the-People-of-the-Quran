@@ -1,6 +1,6 @@
 import 'package:pdf/widgets.dart' as pw;
 import 'table_helpers.dart';
-import '../../system/models/shared.dart';
+import '../../system/new_models/reports/shared.dart';
 
 pw.Widget buildAccompanyingCurriculumSection(
   AccompanyingCurriculum curriculum,

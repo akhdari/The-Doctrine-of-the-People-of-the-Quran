@@ -1,5 +1,5 @@
 // Data Model Classes
-import './shared.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/shared.dart';
 
 class OverallSummary3 {
   final StatItem attendanceDays;

@@ -1,5 +1,6 @@
-import '../system/models/shared.dart';
-import '../system/models/report1_model.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report1_model.dart';
+
+import '../system/new_models/reports/shared.dart';
 
 FullReport createSampleReport() {
   return FullReport<OverallSummary1>(

@@ -37,5 +37,9 @@ class Appreciation implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => appreciationId;
+  bool get isComplete =>
+      appreciationId != null ||
+      pointMin != null ||
+      pointMax != null ||
+      note != null;
 }

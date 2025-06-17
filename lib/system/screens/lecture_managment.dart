@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/lecture.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/lecture_form.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/lecture.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_grid.dart';
@@ -20,7 +20,8 @@ class AddLecture extends StatelessWidget {
           title: "Lectures Management",
           child: ManagementScreen<LectureForm>(
             dataSourceEndpoint: ApiEndpoints.getSpecialLectures,
-            deleteEndpoint: (id) => ApiEndpoints.getAccountInfoById(id),
+            deleteEndpoint: (item) =>
+                ApiEndpoints.getLectureById(item.lecture.lectureId),
             managementType: ManagementTypes.students,
             dialog: LectureDialog(),
             rowBuilder: (lecture) => [

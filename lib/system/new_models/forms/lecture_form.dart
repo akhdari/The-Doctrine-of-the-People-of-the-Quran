@@ -3,9 +3,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.da
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/teacher.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/weekly_schedule.dart';
 
-import 'abstract_class.dart';
-
-class LectureForm extends AbstractClass implements Model {
+class LectureForm implements Model {
   //lecture info
   //required
   late Lecture lecture = Lecture();
@@ -58,7 +56,4 @@ class LectureForm extends AbstractClass implements Model {
       "student_count": studentCount,
     };
   }
-
-  @override
-  List<int> getPrimaryKey() => [lecture.lectureId];
 }

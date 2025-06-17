@@ -42,5 +42,11 @@ class Lecture implements Model {
   }
 
   @override
-  List<int> getPrimaryKey() => lectureId;
+  bool get isComplete =>
+      lectureId != null &&
+      teamAccomplishmentId != null &&
+      (lectureNameAr != null && lectureNameAr.toString().isNotEmpty) &&
+      (lectureNameEn != null && lectureNameEn.toString().isNotEmpty) &&
+      shownOnWebsite != null &&
+      (circleType != null && circleType.toString().isNotEmpty);
 }

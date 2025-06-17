@@ -25,5 +25,6 @@ class ContactInfo implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => contactId;
+  bool get isComplete =>
+      contactId != null && email != null && phoneNumber != null;
 }

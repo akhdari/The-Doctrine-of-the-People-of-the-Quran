@@ -3,8 +3,9 @@ import '../helpers/reports/report_screen.dart';
 import '../reports/report1.dart' as report1;
 import '../data/report1_data.dart' as data1;
 import '../helpers/reports/pdf_generator.dart' as pdf_generator;
-import '../system/models/shared.dart' as shared;
-import '../system/models/report1_model.dart' as model1;
+import '../system/new_models/reports/shared.dart' as shared;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report1_model.dart'
+    as model1;
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/font_loader.dart';
 

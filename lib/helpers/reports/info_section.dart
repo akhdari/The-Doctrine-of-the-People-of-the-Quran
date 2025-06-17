@@ -1,6 +1,6 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import '../../system/models/shared.dart';
+import '../../system/new_models/reports/shared.dart';
 
 /// Builds the information table section of the PDF report.
 pw.Widget buildInfoTableSection(

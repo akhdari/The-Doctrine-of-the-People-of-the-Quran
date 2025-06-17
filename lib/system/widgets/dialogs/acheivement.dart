@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/surah_ayah.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/achivement_unit/surah_ayah.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student_lecture_achievements.dart';
 import '/system/widgets/input_field.dart';
 import '../drop_down.dart';
@@ -11,7 +11,7 @@ import '../custom_container.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/image.dart';
 import '../../utils/const/acheivement.dart';
 import '../acheivement_block.dart';
-import '../../models/post/surah_ayah_list.dart';
+import '../../new_models/achivement_unit/surah_ayah_list.dart';
 import '/controllers/latest_acheivement.dart';
 import 'dart:developer' as dev;
 

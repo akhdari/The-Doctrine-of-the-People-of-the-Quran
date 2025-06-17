@@ -57,5 +57,16 @@ class ExamStudent implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [examId, studentId];
+  bool get isComplete =>
+      examId != null &&
+      studentId != null &&
+      appreciationId != null &&
+      pointHifd != null &&
+      pointTajwidApplicative != null &&
+      pointTajwidTheoric != null &&
+      pointPerformance != null &&
+      pointDeductionTal != null &&
+      pointDeductionTanbihi != null &&
+      pointDeductionTajwidi != null &&
+      dateTakeExam != null;
 }

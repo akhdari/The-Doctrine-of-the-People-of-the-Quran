@@ -1,4 +1,4 @@
-import '../system/models/report4_model.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report4_model.dart';
 
 ReportDataModel createSampleData() {
   final Map<String, dynamic> jsonData = {

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../controllers/form_controller.dart' as form;
-import '../controllers/subscription_information.dart';
+import '../web/controllers/subscription_information.dart';
 
 class CopyBinding extends Bindings {
   @override

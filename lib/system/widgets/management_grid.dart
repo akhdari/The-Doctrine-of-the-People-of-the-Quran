@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
-import '../models/grid/generic_data_grid.dart';
+import '../new_models/grid/generic_data_grid.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ManagementGrid<T extends Model> extends StatelessWidget {

@@ -7,7 +7,7 @@ import '../controllers/charts/chart_filter_controller.dart';
 import '../../system/utils/chart_utils.dart';
 import '../../system/utils/snackbar_helper.dart';
 import '../../system/utils/chart_download_utils.dart';
-import '../../system/models/chart_data_models.dart';
+import '../system/new_models/charts/chart_data_models.dart';
 import 'download_button.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
 

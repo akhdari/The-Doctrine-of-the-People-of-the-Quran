@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:developer' as dev;
 
-enum AttendanceStatus { present, absent, late, excused, none }
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
 
-class Student {
-  final String id;
-  final String name;
-  Student({required this.id, required this.name});
-}
+enum AttendanceStatus { present, absent, late, excused, none }
 
 class Lecture {
   final String id;
@@ -40,6 +36,7 @@ class AttendanceController extends GetxController {
   final RxBool selectAllExcused = false.obs;
 
   final List<Student> dummyStudents = [
+    /*
     Student(id: 'S001', name: 'أسامة الغناني'),
     Student(id: 'S002', name: 'جمال صحراوي'),
     Student(id: 'S003', name: 'سيف الدين فيصلي'),
@@ -53,7 +50,7 @@ class AttendanceController extends GetxController {
     Student(id: 'S011', name: 'عبد الله محمد'),
     Student(id: 'S012', name: 'عبد الله محمد'),
     Student(id: 'S013', name: 'عبد الله محمد'),
-    Student(id: 'S014', name: 'عبد الله محمد'),
+    Student(id: 'S014', name: 'عبد الله محمد'),*/
   ];
 
   final List<Lecture> dummyLectures = [
@@ -172,7 +169,7 @@ class AttendanceController extends GetxController {
     dev.log('Lecture: ${selectedLecture.value.name}');
     for (var record in students) {
       dev.log(
-        'Student: ${record.student.name}, Status: ${record.status.value.name}',
+        'Student: ${record.student.personalInfo.getFullArName()}, Status: ${record.status.value.name}',
       );
     }
   }
@@ -413,7 +410,8 @@ class AttendanceScreen extends StatelessWidget {
                               final originalIndex = entry
                                   .key; // Use original index for updateStatus
                               return Container(
-                                key: ValueKey(student.student.id),
+                                key: ValueKey(
+                                    student.student.accountInfo.accountId),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4.0),
                                 color: index % 2 == 0
@@ -427,7 +425,8 @@ class AttendanceScreen extends StatelessWidget {
                                       flex: 4,
                                       child: Center(
                                         child: Text(
-                                          student.student.name,
+                                          student.student.personalInfo
+                                              .getFullArName(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium,

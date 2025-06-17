@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../helpers/reports/report_screen.dart';
 import '../reports/report3.dart' as report3;
-import '../system/models/report3_model.dart' as model3;
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report3_model.dart'
+    as model3;
 import '../data/report3_data.dart' as data3;
 import '../helpers/reports/pdf_generator.dart' as pdf_generator;
-import '../system/models/shared.dart' as shared;
+import '../system/new_models/reports/shared.dart' as shared;
 
 import 'package:get/get.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/font_loader.dart';

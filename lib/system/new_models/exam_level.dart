@@ -37,5 +37,11 @@ class ExamLevel implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => examLevelId;
+  bool get isComplete =>
+      examLevelId != null &&
+      level != null &&
+      fromSurah != null &&
+      fromAyah != null &&
+      toSurah != null &&
+      toAyah != null;
 }

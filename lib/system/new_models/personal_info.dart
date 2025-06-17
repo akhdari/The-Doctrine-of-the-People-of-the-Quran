@@ -65,5 +65,21 @@ class PersonalInfo implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => studentId;
+  bool get isComplete =>
+      studentId != null &&
+      firstNameAr != null &&
+      lastNameAr != null &&
+      firstNameEn != null &&
+      lastNameEn != null &&
+      nationality != null &&
+      sex != null &&
+      dateOfBirth != null &&
+      placeOfBirth != null &&
+      homeAddress != null &&
+      fatherStatus != null &&
+      motherStatus != null &&
+      profileImage != null;
+
+  String getFullArName() => "$firstNameAr $lastNameAr";
+  String getFullEnName() => "$firstNameEn $lastNameEn";
 }

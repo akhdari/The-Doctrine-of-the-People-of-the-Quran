@@ -11,7 +11,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/gua
 import '../custom_container.dart';
 import '../input_field.dart';
 import '../../../controllers/validator.dart';
-import '../../models/post/student.dart';
+import '../../new_models/student.dart';
 import '../multiselect.dart';
 import '../../utils/const/student.dart';
 import '../../../controllers/generate.dart';
@@ -20,7 +20,7 @@ import '../../../controllers/form_controller.dart' as form;
 import './image_picker_widget.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/helpers/date_picker.dart';
 
-class StudentDialog<GEC extends GenericEditController<StudentInfoDialog>>
+class StudentDialog<GEC extends GenericEditController<Student>>
     extends GlobalDialog {
   const StudentDialog({
     super.key,
@@ -30,13 +30,13 @@ class StudentDialog<GEC extends GenericEditController<StudentInfoDialog>>
 
   @override
   State<GlobalDialog> createState() =>
-      _StudentDialogState<GenericEditController<StudentInfoDialog>>();
+      _StudentDialogState<GenericEditController<Student>>();
 }
 
-class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
+class _StudentDialogState<GEC extends GenericEditController<Student>>
     extends DialogState<GEC> {
   late Generate generate;
-  StudentInfoDialog studentInfo = StudentInfoDialog();
+  Student studentInfo = Student();
   bool isClicked = false; //TODO   remove this variable if not needed
   RxBool isExempt = false.obs;
   Rx<String?> enrollmentDate = Rxn<String>();
@@ -74,7 +74,7 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
     formController.controllers[7].text = generate.generatePassword();
 
     if (editController?.model.value != null) {
-      studentInfo = editController?.model.value ?? StudentInfoDialog();
+      studentInfo = editController?.model.value ?? Student();
     } else {
       studentInfo.accountInfo.accountType = "طالب";
     }
@@ -170,18 +170,18 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
   @override
   Future<bool> submit() async {
     return super.editController?.model.value == null
-        ? await submitForm<StudentInfoDialog>(
+        ? await submitForm<Student>(
             formKey,
             studentInfo,
             ApiEndpoints.submitStudentForm,
-            StudentInfoDialog.fromJson,
+            Student.fromJson,
           )
-        : await submitEditDataForm<StudentInfoDialog>(
+        : await submitEditDataForm<Student>(
             formKey,
             studentInfo,
             ApiEndpoints.getSpecialStudent(
                 editController?.model.value?.accountInfo.accountId ?? -1),
-            StudentInfoDialog.fromJson,
+            Student.fromJson,
           );
   }
 }
@@ -189,8 +189,8 @@ class _StudentDialogState<GEC extends GenericEditController<StudentInfoDialog>>
 // Session Section
 class SessionSection extends StatelessWidget {
   final MultiSelectResult<Lecture>? sessionResult;
-  final GenericEditController<StudentInfoDialog>? editController;
-  final StudentInfoDialog studentInfo;
+  final GenericEditController<Student>? editController;
+  final Student studentInfo;
 
   const SessionSection({
     super.key,
@@ -226,8 +226,8 @@ class SessionSection extends StatelessWidget {
 // Personal Info Section
 class PersonalInfoSection extends StatelessWidget {
   final form.FormController formController;
-  final GenericEditController<StudentInfoDialog>? editController;
-  final StudentInfoDialog studentInfo;
+  final GenericEditController<Student>? editController;
+  final Student studentInfo;
   final Generate generate;
 
   const PersonalInfoSection({
@@ -406,7 +406,7 @@ class PersonalInfoSection extends StatelessWidget {
 // Account Info Section
 class AccountInfoSection extends StatelessWidget {
   final form.FormController formController;
-  final StudentInfoDialog studentInfo;
+  final Student studentInfo;
 
   const AccountInfoSection({
     super.key,
@@ -449,8 +449,8 @@ class AccountInfoSection extends StatelessWidget {
 // Health Info Section
 class HealthInfoSection extends StatelessWidget {
   final form.FormController formController;
-  final GenericEditController<StudentInfoDialog>? editController;
-  final StudentInfoDialog studentInfo;
+  final GenericEditController<Student>? editController;
+  final Student studentInfo;
 
   const HealthInfoSection({
     super.key,
@@ -507,7 +507,7 @@ class HealthInfoSection extends StatelessWidget {
 // Contact Info Section
 class ContactInfoSection extends StatelessWidget {
   final form.FormController formController;
-  final StudentInfoDialog studentInfo;
+  final Student studentInfo;
 
   const ContactInfoSection({
     super.key,
@@ -553,8 +553,8 @@ class ContactInfoSection extends StatelessWidget {
 
 // Parent Status Section
 class ParentStatusSection extends StatelessWidget {
-  final GenericEditController<StudentInfoDialog>? editController;
-  final StudentInfoDialog studentInfo;
+  final GenericEditController<Student>? editController;
+  final Student studentInfo;
 
   const ParentStatusSection({
     super.key,
@@ -601,7 +601,7 @@ class ParentStatusSection extends StatelessWidget {
 // Guardian Info Section
 class GuardianInfoSection extends StatelessWidget {
   final MultiSelectResult? guardianResult;
-  final StudentInfoDialog studentInfo;
+  final Student studentInfo;
 
   const GuardianInfoSection({
     super.key,
@@ -656,8 +656,8 @@ class GuardianInfoSection extends StatelessWidget {
 // Subscription Info Section
 class SubscriptionInfoSection extends StatelessWidget {
   final form.FormController formController;
-  final GenericEditController<StudentInfoDialog>? editController;
-  final StudentInfoDialog studentInfo;
+  final GenericEditController<Student>? editController;
+  final Student studentInfo;
   final Rx<String?> enrollmentDate;
   final Rx<String?> exitDate;
   final RxBool isExempt;
@@ -827,8 +827,8 @@ class SubscriptionInfoSection extends StatelessWidget {
 // Formal Education Section
 class FormalEducationSection extends StatelessWidget {
   final form.FormController formController;
-  final GenericEditController<StudentInfoDialog>? editController;
-  final StudentInfoDialog studentInfo;
+  final GenericEditController<Student>? editController;
+  final Student studentInfo;
 
   const FormalEducationSection({
     super.key,
@@ -912,7 +912,7 @@ class FormalEducationSection extends StatelessWidget {
 // Image Picker Widget
 
 class ImageSection extends StatelessWidget {
-  final GenericEditController<StudentInfoDialog>? editController;
+  final GenericEditController<Student>? editController;
 
   const ImageSection({super.key, required this.editController});
 

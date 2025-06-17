@@ -32,5 +32,10 @@ class WeeklySchedule implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => weeklyScheduleId;
+  bool get isComplete =>
+      weeklyScheduleId != null &&
+      dayOfWeek != null &&
+      lectureId != null &&
+      startTime != null &&
+      endTime != null;
 }

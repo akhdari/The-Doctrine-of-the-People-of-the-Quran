@@ -34,5 +34,10 @@ class FormalEducationInfo implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => studentId;
+  bool get isComplete =>
+      studentId != null &&
+      schoolName != null &&
+      schoolType != null &&
+      grade != null &&
+      academicLevel != null;
 }

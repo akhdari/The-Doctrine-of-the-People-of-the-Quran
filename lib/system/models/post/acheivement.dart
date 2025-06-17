@@ -1,7 +1,8 @@
-import '/system/models/post/surah_ayah.dart';
-import 'abstract_class.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/model.dart';
 
-class Acheivement extends AbstractClass {
+import '../../new_models/achivement_unit/surah_ayah.dart';
+
+class Acheivement implements Model {
   int? lectureId;
   int? studentId;
   String? date;

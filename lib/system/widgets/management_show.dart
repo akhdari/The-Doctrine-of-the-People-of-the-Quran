@@ -28,7 +28,7 @@ enum ManagementTypes {
 }
 
 class ManagementScreen<T extends Model> extends StatefulWidget {
-  final String Function(int id) deleteEndpoint;
+  final String Function(T selectedModel) deleteEndpoint;
   final String dataSourceEndpoint;
   final List<DataGridCell> Function(T obj) rowBuilder;
   final List<GridColumn> columnsNames;
@@ -130,8 +130,8 @@ class _ManagementScreenState<T extends Model>
                     return;
                   }
 
-                  final id = selectedItem.value!.getPrimaryKey();
-                  await ApiService.delete(widget.deleteEndpoint(id[0]));
+                  await ApiService.delete(
+                      widget.deleteEndpoint(selectedItem.value!));
 
                   selectedItem.value = null;
                   hasSelection.value = false;

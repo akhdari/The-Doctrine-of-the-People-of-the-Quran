@@ -22,5 +22,5 @@ class TeamAccomplishmentStudent implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [teamAccomplishmentId, studentId];
+  bool get isComplete => teamAccomplishmentId != null && studentId != null;
 }

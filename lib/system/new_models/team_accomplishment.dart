@@ -46,5 +46,10 @@ class TeamAccomplishment implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => [teamAccomplishmentId];
+  bool get isComplete =>
+      teamAccomplishmentId != null &&
+      fromSurah != null &&
+      fromAyah != null &&
+      toSurah != null &&
+      toAyah != null;
 }

@@ -1,11 +1,11 @@
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/reports/report1_model.dart';
 import '../helpers/reports/info_section.dart';
 import '../helpers/reports/accompanying_curriculum_section.dart';
 import '../helpers/reports/tjweed_section.dart';
 import '../helpers/reports/table_helpers.dart';
-import '../../system/models/report1_model.dart';
-import '../../system/models/shared.dart';
+import '../system/new_models/reports/shared.dart';
 
 List<pw.Widget> buildReport1Content({
   required dynamic reportDataModel,

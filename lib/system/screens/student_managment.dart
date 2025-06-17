@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/models/post/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/services/network/api_endpoints.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/dialogs/student.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/management_grid.dart';
@@ -18,9 +18,10 @@ class AddStudent extends StatelessWidget {
       backgroundColor: scaffoldBackgroundColor,
       body: BaseLayout(
         title: "Students Management",
-        child: ManagementScreen<StudentInfoDialog>(
+        child: ManagementScreen<Student>(
           dataSourceEndpoint: ApiEndpoints.getStudents,
-          deleteEndpoint: (id) => ApiEndpoints.getAccountInfoById(id),
+          deleteEndpoint: (student) =>
+              ApiEndpoints.getAccountInfoById(student.accountInfo.accountId),
           managementType: ManagementTypes.students,
           dialog: StudentDialog(),
           rowBuilder: (student) => [

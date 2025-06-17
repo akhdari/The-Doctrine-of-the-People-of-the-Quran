@@ -32,6 +32,12 @@ class SupervisorAttendance implements Model {
         'check_in_time': checkInTime,
         'check_out_time': checkOutTime,
       };
+
   @override
-  List<int> getPrimaryKey() => supervisorId;
+  bool get isComplete =>
+      supervisorId != null &&
+      attendanceDate != null &&
+      attendanceStatus != null &&
+      checkInTime != null &&
+      checkOutTime != null;
 }

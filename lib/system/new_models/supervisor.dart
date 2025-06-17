@@ -33,5 +33,9 @@ class Supervisor implements Model {
       };
 
   @override
-  List<int> getPrimaryKey() => supervisorAccountId;
+  bool get isComplete =>
+      supervisorId != null &&
+      firstName != null &&
+      lastName != null &&
+      supervisorAccountId != null;
 }
