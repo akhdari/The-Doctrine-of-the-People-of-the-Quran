@@ -54,6 +54,12 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/landing.dar
 // App routes
 import 'package:the_doctarine_of_the_ppl_of_the_quran/routes/app_routes.dart';
 
+//web
+import 'package:the_doctarine_of_the_ppl_of_the_quran/web/pages/features.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/web/pages/home.dart';
+
+import 'package:the_doctarine_of_the_ppl_of_the_quran/web/pages/pricing.dart';
+
 class AppScreens {
   static final routes = [
     GetPage(
@@ -178,6 +184,19 @@ class AppScreens {
     GetPage(
       name: Routes.dashboardPage,
       page: () => DashboardPage(),
+    ),
+
+    GetPage(
+      name: WebRoutes.home,
+      page: () => HomePage(),
+    ),
+    GetPage(
+      name: WebRoutes.pricing,
+      page: () => PricingPage(),
+    ),
+    GetPage(
+      name: WebRoutes.features,
+      page: () => FeaturesPage(),
     ),
   ];
 }

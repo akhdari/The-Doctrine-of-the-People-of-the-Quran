@@ -12,7 +12,7 @@ import '../widgets/mobile_showcase.dart';
 import '../widgets/nutif_form.dart';
 import '../widgets/pricing_section.dart';
 import '../widgets/section3.dart';
-import '../widgets/section6.dart';
+import '../widgets/additional_services_section.dart';
 import '../widgets/users_section.dart';
 import '../widgets/image_carousel.dart';
 import '../widgets/stats_section.dart';
@@ -26,8 +26,32 @@ class HomePage extends StatefulWidget {
 
 class _Page1State extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
+
   bool _isImageHovered = false;
   bool _isButtonHovered = false;
+  bool showNavbarBackground = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_handleScroll);
+  }
+
+  void _handleScroll() {
+    if (_scrollController.offset > 250 && !showNavbarBackground) {
+      setState(() => showNavbarBackground = true);
+    } else if (_scrollController.offset <= 250 && showNavbarBackground) {
+      setState(() => showNavbarBackground = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_handleScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,86 +60,85 @@ class _Page1State extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: CustomDrawer(),
-      body: Stack(
-        children: [
-          // Background color
-          Container(color: theme.colorScheme.primary),
-          // Background image with opacity
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/back.png'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.white.withValues(alpha: 0.2),
-                  BlendMode.dstIn,
-                ),
-              ),
-            ),
-          ),
-          // Main content column
-          Column(
+      body: Scrollbar(
+        thumbVisibility: true,
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
             children: [
-              // Fixed navigation bar
+              // Fullscreen Header
               Container(
-                color: theme.colorScheme.primary,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: NavBar(scaffoldKey: _scaffoldKey),
-              ),
-              // Main scrollable content
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const SizedBox(height: 120),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isLargeScreen = constraints.maxWidth > 800;
-                          return isLargeScreen
-                              ? _buildLargeScreenHeader(theme)
-                              : _buildSmallScreenHeader(theme);
-                        },
-                      ),
-                      const SizedBox(height: 80),
-                      FeaturesSection(),
-                      const SizedBox(height: 50),
-                      UsersSection(),
-                      const SizedBox(height: 50),
-                      Section3(),
-                      const SizedBox(height: 50),
-                      _buildCarouselSection(),
-                      const SizedBox(height: 50),
-                      MobileShowcase(),
-                      const SizedBox(height: 50),
-                      PricingSection(),
-                      Section6(),
-                      CustomAppSection(),
-                      StatsSection(),
-                      ImageCarousel3(),
-                      PartnersSection(),
-                      SubscriptionSection(),
-                      ContactForm(),
-                      NutifForm(),
-                      FooterSection(),
-                    ],
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondary,
+                  image: DecorationImage(
+                    image: AssetImage('assets/back.png'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withValues(alpha: 0.2),
+                      BlendMode.dstIn,
+                    ),
                   ),
                 ),
+                padding: const EdgeInsets.symmetric(vertical: 60),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      child: NavBar(
+                        scaffoldKey: _scaffoldKey,
+                        showBackground: showNavbarBackground,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isLargeScreen = constraints.maxWidth > 800;
+                        return isLargeScreen
+                            ? _buildLargeScreenHeader(theme)
+                            : _buildSmallScreenHeader(theme);
+                      },
+                    ),
+                  ],
+                ),
               ),
+
+              // Rest of the page
+              SizedBox(height: 80),
+              FeaturesSection(),
+              SizedBox(height: 50),
+              UsersSection(),
+              SizedBox(height: 50),
+              Section3(),
+              SizedBox(height: 50),
+              ImageCarousel(),
+              SizedBox(height: 50),
+              MobileShowcase(),
+              SizedBox(height: 50),
+              PricingSection(),
+              AdditionalServicesSection(),
+              CustomAppPricingSection(),
+              StatsSection(),
+              ImageCarousel3(),
+              PartnersSection(),
+              SubscriptionSection(),
+              ContactForm(),
+              NutifForm(),
+              FooterSection(),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  /// Header for large screens: image and text side by side
   Widget _buildLargeScreenHeader(ThemeData theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Animated image
         Expanded(
           child: MouseRegion(
             onEnter: (_) => setState(() => _isImageHovered = true),
@@ -126,7 +149,7 @@ class _Page1State extends State<HomePage> {
                   ? Matrix4.translationValues(0, -10, 0)
                   : Matrix4.identity(),
               child: Image.asset(
-                'assets/homme.png',
+                'assets/home.png',
                 fit: BoxFit.contain,
                 height: 350,
               ),
@@ -134,16 +157,13 @@ class _Page1State extends State<HomePage> {
           ),
         ),
         const SizedBox(width: 20),
-        // Text content
         Expanded(child: _buildHeaderText(theme)),
       ],
     );
   }
 
-  /// Header for small screens: text above image
   Widget _buildSmallScreenHeader(ThemeData theme) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildHeaderText(theme),
         const SizedBox(height: 40),
@@ -156,7 +176,7 @@ class _Page1State extends State<HomePage> {
                 ? Matrix4.translationValues(0, -10, 0)
                 : Matrix4.identity(),
             child: Image.asset(
-              'assets/homme.png',
+              'assets/men.png',
               fit: BoxFit.contain,
               height: 250,
             ),
@@ -166,10 +186,8 @@ class _Page1State extends State<HomePage> {
     );
   }
 
-  /// Main header text and call-to-action button
   Widget _buildHeaderText(ThemeData theme) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           'نظام أهل القرآن',
@@ -209,7 +227,6 @@ class _Page1State extends State<HomePage> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 25),
-        // Animated call-to-action button
         MouseRegion(
           onEnter: (_) => setState(() => _isButtonHovered = true),
           onExit: (_) => setState(() => _isButtonHovered = false),
@@ -238,14 +255,6 @@ class _Page1State extends State<HomePage> {
           ),
         ),
       ],
-    );
-  }
-
-  /// Carousel section with padding
-  Widget _buildCarouselSection() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 20),
-      child: ImageCarousel(),
     );
   }
 }
