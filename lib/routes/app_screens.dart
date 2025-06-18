@@ -13,7 +13,8 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/ex
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/exam_teachers_from.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/guardian_form.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/lecture_form.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart'
+    as student;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/appreciation.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/exam.dart';
 //import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_teacher_binding.dart'; // Assuming this is correct
@@ -63,7 +64,8 @@ class AppScreens {
     GetPage(
       name: Routes.addStudent,
       page: () => AddStudent(),
-      binding: ManagementBinding<Student>(fromJson: Student.fromJson),
+      binding: ManagementBinding<student.Student>(
+          fromJson: student.Student.fromJson),
     ),
     GetPage(
       name: Routes.addGuardian,
