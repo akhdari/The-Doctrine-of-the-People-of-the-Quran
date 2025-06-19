@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import './section_header.dart';
 
 class ImageCarousel extends StatefulWidget {
   const ImageCarousel({super.key});
@@ -72,11 +73,8 @@ class _ImageCarouselState extends State<ImageCarousel> {
 
     return Column(
       children: [
-        Text(
-          'Platform Images',
-          style: theme.textTheme.headlineMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+        SectionHeader(
+          header: 'صور المنصّة',
         ),
         const SizedBox(height: 40),
         SizedBox(

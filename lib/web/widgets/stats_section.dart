@@ -9,7 +9,7 @@ class StatsSection extends StatelessWidget {
     {'icon': Icons.person, 'label': 'عدد المعلمين', 'value': '+1000'},
     {'icon': Icons.tv, 'label': 'عدد الحلقات', 'value': '+1200'},
   ];
-
+//
   @override
   Widget build(BuildContext context) {
     return Directionality(

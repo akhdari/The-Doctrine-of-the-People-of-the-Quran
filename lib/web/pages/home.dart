@@ -234,7 +234,7 @@ class _Page1State extends State<HomePage> {
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color:
-                  _isButtonHovered ? Colors.white : theme.colorScheme.secondary,
+                  _isButtonHovered ? theme.colorScheme.secondary : Colors.white,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: theme.colorScheme.secondary,
@@ -248,8 +248,8 @@ class _Page1State extends State<HomePage> {
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: _isButtonHovered
-                    ? theme.colorScheme.secondary
-                    : Colors.white,
+                    ? Colors.white
+                    : theme.colorScheme.secondary,
               ),
             ),
           ),
