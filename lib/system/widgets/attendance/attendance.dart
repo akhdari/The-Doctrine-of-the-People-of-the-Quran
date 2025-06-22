@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:developer' as dev;
 
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
-
 enum AttendanceStatus { present, absent, late, excused, none }
+
+class Student {
+  final String id;
+  final String name;
+  Student({required this.id, required this.name});
+}
 
 class Lecture {
   final String id;
@@ -27,8 +31,8 @@ class StudentAttendance {
 class AttendanceController extends GetxController {
   final RxList<StudentAttendance> students = <StudentAttendance>[].obs;
   final Rx<DateTime> selectedDate = DateTime.now().obs;
-  final Rx<Lecture> selectedLecture =
-      Lecture(id: 'L001', name: 'حلقة الشيخ رمضان بدري').obs;
+  final Rx<Student> selectedLecture =
+      Student(id: 'L001', name: 'حلقة الشيخ رمضان بدري').obs;
   // Select all
   final RxBool selectAllPresent = false.obs;
   final RxBool selectAllAbsent = false.obs;
@@ -36,7 +40,6 @@ class AttendanceController extends GetxController {
   final RxBool selectAllExcused = false.obs;
 
   final List<Student> dummyStudents = [
-    /*
     Student(id: 'S001', name: 'أسامة الغناني'),
     Student(id: 'S002', name: 'جمال صحراوي'),
     Student(id: 'S003', name: 'سيف الدين فيصلي'),
@@ -50,13 +53,13 @@ class AttendanceController extends GetxController {
     Student(id: 'S011', name: 'عبد الله محمد'),
     Student(id: 'S012', name: 'عبد الله محمد'),
     Student(id: 'S013', name: 'عبد الله محمد'),
-    Student(id: 'S014', name: 'عبد الله محمد'),*/
+    Student(id: 'S014', name: 'عبد الله محمد'),
   ];
 
-  final List<Lecture> dummyLectures = [
-    Lecture(id: 'L001', name: 'حلقة الشيخ رمضان بدري'),
-    Lecture(id: 'L002', name: 'فقه المعاملات'),
-    Lecture(id: 'L003', name: 'تفسير القرآن'),
+  final List<Student> dummyLectures = [
+    Student(id: 'L001', name: 'حلقة الشيخ رمضان بدري'),
+    Student(id: 'L002', name: 'فقه المعاملات'),
+    Student(id: 'L003', name: 'تفسير القرآن'),
   ];
 
   @override
@@ -87,7 +90,7 @@ class AttendanceController extends GetxController {
     }
   }
 
-  void updateLecture(Lecture newLecture) {
+  void updateLecture(Student newLecture) {
     selectedLecture.value = newLecture;
     _loadStudents();
     _updateAllHeaderCheckboxes();
@@ -169,7 +172,7 @@ class AttendanceController extends GetxController {
     dev.log('Lecture: ${selectedLecture.value.name}');
     for (var record in students) {
       dev.log(
-        'Student: ${record.student.personalInfo.getFullArName()}, Status: ${record.status.value.name}',
+        'Student: ${record.student.id}, Status: ${record.status.value.name}',
       );
     }
   }
@@ -270,7 +273,7 @@ class AttendanceScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Obx(
-                () => DropdownButtonFormField<Lecture>(
+                () => DropdownButtonFormField<Student>(
                   value: controller.selectedLecture.value,
                   decoration: InputDecoration(
                     labelText: 'اختر الحلقة',
@@ -279,12 +282,12 @@ class AttendanceScreen extends StatelessWidget {
                     fillColor: Theme.of(context).colorScheme.surface,
                   ),
                   items: controller.dummyLectures.map((lecture) {
-                    return DropdownMenuItem<Lecture>(
+                    return DropdownMenuItem<Student>(
                       value: lecture,
                       child: Text(lecture.name),
                     );
                   }).toList(),
-                  onChanged: (Lecture? newValue) {
+                  onChanged: (Student? newValue) {
                     if (newValue != null) {
                       controller.updateLecture(newValue);
                       currentPage.value = 0; // Reset to first page
@@ -410,8 +413,7 @@ class AttendanceScreen extends StatelessWidget {
                               final originalIndex = entry
                                   .key; // Use original index for updateStatus
                               return Container(
-                                key: ValueKey(
-                                    student.student.accountInfo.accountId),
+                                key: ValueKey(student.student.id),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4.0),
                                 color: index % 2 == 0
@@ -425,8 +427,7 @@ class AttendanceScreen extends StatelessWidget {
                                       flex: 4,
                                       child: Center(
                                         child: Text(
-                                          student.student.personalInfo
-                                              .getFullArName(),
+                                          student.student.name,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium,

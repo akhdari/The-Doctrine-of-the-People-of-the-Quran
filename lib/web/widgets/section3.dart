@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import './section_header.dart';
 
 class Section3 extends StatelessWidget {
-  const Section3({Key? key}) : super(key: key);
+  const Section3({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,28 +10,15 @@ class Section3 extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      color: colorScheme.background,
+      color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Section title
-          Text(
-            'خصائص النظام',
-            style: textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onBackground,
-            ),
-            textAlign: TextAlign.center,
+          SectionHeader(
+            header: 'خصائص النظام',
           ),
-          const SizedBox(height: 5),
-          // Divider below the title
-          Divider(
-            color: colorScheme.secondary,
-            thickness: 2,
-            indent: 80,
-            endIndent: 80,
-          ),
+
           const SizedBox(height: 10),
 
           // Responsive grid for features

@@ -155,8 +155,8 @@ class _SubscriptionInformationState extends State<SubscriptionInformation>
               //NumberLimitFormatter(minValue: 20),
             ],
             /*onChanged: (value) {
-                  studentCountManagement.updateStudentNum();
-                },*/
+              studentCountManagement.updateStudentNum();
+            },*/
             decoration: InputDecoration(
               hintText: ' عدد الطلاب (اقل من20 ) ',
               prefixIcon: IconButton(

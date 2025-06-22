@@ -1,63 +1,71 @@
 import 'package:flutter/material.dart';
+import './section_header.dart';
 
 class PricingSection extends StatelessWidget {
+  const PricingSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final plans = [
+      {
+        'title': 'المدرسة الكبيرة',
+        'subtitle': 'أكثر من 1000 طالب',
+        'imagePath': 'assets/school2.png',
+        'schoolPrice': 'اشتراك المدرسة سنويا / DA 79900',
+        'studentPrice': 'اشتراك الطالب مدى الحياة / DA 100',
+      },
+      {
+        'title': 'المدرسة المتوسطة',
+        'subtitle': '500 إلى 1000 طالب',
+        'imagePath': 'assets/school2.png',
+        'schoolPrice': 'اشتراك المدرسة سنويا / DA 49900',
+        'studentPrice': 'اشتراك الطالب مدى الحياة / DA 200',
+      },
+      {
+        'title': 'المدرسة الصغيرة',
+        'subtitle': 'أقل من 500 طالب',
+        'imagePath': 'assets/school2.png',
+        'schoolPrice': 'اشتراك المدرسة سنويا / DA 29900',
+        'studentPrice': 'اشتراك الطالب مدى الحياة / DA 300',
+      },
+    ];
+
     return Container(
-      color: colorScheme.onSurface, // Use theme background
+      color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            'عروض النّظام الأساسية',
-            style: textTheme.headlineLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface, // Use theme onBackground
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 5),
-          Divider(
-            color: colorScheme.primary,
-            thickness: 2,
-            indent: 80,
-            endIndent: 80,
-          ),
+          const SectionHeader(header: 'عروض النّظام الأساسية'),
           const SizedBox(height: 20),
-          GridView.count(
-            crossAxisCount: MediaQuery.of(context).size.width > 800 ? 3 : 1,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            childAspectRatio: 0.7,
-            children: const [
-              HoverPricingCard(
-                title: 'المدرسة الكبيرة',
-                subtitle: 'أكثر من 1000 طالب',
-                imagePath: 'assets/school2.png',
-                schoolPrice: 'اشتراك المدرسة سنويا / DA 79900',
-                studentPrice: 'اشتراك الطالب مدى الحياة / DA 100',
-              ),
-              HoverPricingCard(
-                title: 'المدرسة المتوسطة',
-                subtitle: '500 إلى 1000 طالب',
-                imagePath: 'assets/school2.png',
-                schoolPrice: 'اشتراك المدرسة سنويا / DA 49900',
-                studentPrice: 'اشتراك الطالب مدى الحياة / DA 200',
-              ),
-              HoverPricingCard(
-                title: 'المدرسة الصغيرة',
-                subtitle: 'أقل من 500 طالب',
-                imagePath: 'assets/school2.png',
-                schoolPrice: 'اشتراك المدرسة سنويا / DA 29900',
-                studentPrice: 'اشتراك الطالب مدى الحياة / DA 300',
-              ),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = constraints.maxWidth > 800 ? 3 : 1;
+              return GridView.builder(
+                itemCount: plans.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 0.7,
+                ),
+                itemBuilder: (context, index) {
+                  final plan = plans[index];
+                  return HoverPricingCard(
+                    title: plan['title']!,
+                    subtitle: plan['subtitle']!,
+                    imagePath: plan['imagePath']!,
+                    schoolPrice: plan['schoolPrice']!,
+                    studentPrice: plan['studentPrice']!,
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
@@ -73,16 +81,16 @@ class HoverPricingCard extends StatefulWidget {
   final String studentPrice;
 
   const HoverPricingCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     required this.imagePath,
     required this.schoolPrice,
     required this.studentPrice,
-  }) : super(key: key);
+  });
 
   @override
-  _HoverPricingCardState createState() => _HoverPricingCardState();
+  State<HoverPricingCard> createState() => _HoverPricingCardState();
 }
 
 class _HoverPricingCardState extends State<HoverPricingCard> {
@@ -90,6 +98,8 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -111,14 +121,14 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
                 ]
               : [],
         ),
-        child: _buildPricingCard(context),
+        child: _buildPricingCard(theme),
       ),
     );
   }
 
-  Widget _buildPricingCard(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+  Widget _buildPricingCard(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return Container(
       decoration: BoxDecoration(
@@ -126,7 +136,7 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withOpacity(0.08), // Use theme shadow
+            color: colorScheme.shadow.withOpacity(0.08),
             blurRadius: 5,
             offset: const Offset(0, 3),
           ),
@@ -166,10 +176,10 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
+            padding: const EdgeInsets.symmetric(vertical: 40),
             child: Image.asset(
               widget.imagePath,
-              height: 280,
+              height: 200,
               fit: BoxFit.contain,
             ),
           ),
@@ -177,10 +187,11 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
             widget.schoolPrice,
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface, // Use theme onSurface
+              color: colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 4),
           Text(
             widget.studentPrice,
             style: textTheme.bodyMedium?.copyWith(
@@ -191,15 +202,11 @@ class _HoverPricingCardState extends State<HoverPricingCard> {
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
-              // TODO: handle button action
+              //TODO
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: colorScheme.secondary,
-              foregroundColor: colorScheme.onSecondary, // Use theme onSecondary
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-              textStyle: textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
             ),
             child: Text(
               'طلب نسخة',

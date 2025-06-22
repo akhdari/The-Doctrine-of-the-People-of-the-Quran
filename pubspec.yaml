@@ -102,9 +102,12 @@ flutter:
   assets:
     - assets/
     - assets/footer/
+    - assets/images1/
+    - assets/partners/
     - assets/illustration/
     - assets/page.png
     - .env
+
 
 
 

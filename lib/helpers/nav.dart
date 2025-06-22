@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final bool showBackground;
 
-  const NavBar({super.key, required this.scaffoldKey});
+  const NavBar({
+    super.key,
+    required this.scaffoldKey,
+    this.showBackground = false,
+  });
 
   @override
   NavBarState createState() => NavBarState();
@@ -18,28 +23,45 @@ class NavBarState extends State<NavBar> {
     final theme = Theme.of(context);
     final iconTheme = theme.iconTheme;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        bool isLargeScreen = constraints.maxWidth > 800;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      decoration: BoxDecoration(
+        color: widget.showBackground
+            ? Colors.white.withOpacity(0.95)
+            : Colors.transparent,
+        boxShadow: widget.showBackground
+            ? [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                )
+              ]
+            : [],
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isLargeScreen = constraints.maxWidth > 800;
 
-        return isLargeScreen
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _navItems(theme),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(top: 20.0, left: 20.0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: Icon(Icons.menu, color: iconTheme.color),
-                    onPressed: () {
-                      widget.scaffoldKey.currentState?.openDrawer();
-                    },
+          return isLargeScreen
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _navItems(theme),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 20.0, left: 20.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(Icons.menu, color: iconTheme.color),
+                      onPressed: () {
+                        widget.scaffoldKey.currentState?.openDrawer();
+                      },
+                    ),
                   ),
-                ),
-              );
-      },
+                );
+        },
+      ),
     );
   }
 
@@ -72,7 +94,7 @@ class NavBarState extends State<NavBar> {
                       width: textWidth + 24,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surface.withValues(alpha: 0.5),
+                        color: theme.colorScheme.surface.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -88,8 +110,9 @@ class NavBarState extends State<NavBar> {
               child: Text(
                 titles[index],
                 style: TextStyle(
-                  color:
-                      isHovered[index] ? Color(0xFFC78D20) : Color(0xFF8D9440),
+                  color: isHovered[index]
+                      ? theme.colorScheme.secondary
+                      : Colors.white,
                   fontWeight: titles[index] == 'تسجيل الدخول'
                       ? FontWeight.w900
                       : FontWeight.w600,
@@ -103,7 +126,6 @@ class NavBarState extends State<NavBar> {
     });
   }
 
-//
   double _calculateTextWidth(String text) {
     const style = TextStyle(
       fontSize: 18,

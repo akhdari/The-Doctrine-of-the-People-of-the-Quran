@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import 'section_header.dart';
+
 class MobileShowcase extends StatelessWidget {
   // List of image asset paths
   final List<String> imagePaths =
@@ -18,14 +20,10 @@ class MobileShowcase extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "صور من التطبيق",
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onBackground,
-            ),
-            textAlign: TextAlign.center,
+          SectionHeader(
+            header: 'صور من التطبيق',
           ),
+
           const SizedBox(height: 20), // Space between title and carousel
           Center(
             child: Stack(

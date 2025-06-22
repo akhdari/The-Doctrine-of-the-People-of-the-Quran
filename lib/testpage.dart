@@ -95,6 +95,18 @@ class TestPage extends StatelessWidget {
               onPressed: () => Get.toNamed(Routes.dashboardPage),
               child: const Text('dashboard'),
             ),
+            TextButton(
+              onPressed: () => Get.toNamed(WebRoutes.home),
+              child: const Text('home'),
+            ),
+            TextButton(
+              onPressed: () => Get.toNamed(WebRoutes.features),
+              child: const Text('features'),
+            ),
+            TextButton(
+              onPressed: () => Get.toNamed(WebRoutes.pricing),
+              child: const Text('Pricing'),
+            ),
           ],
         ),
       ),

@@ -9,60 +9,63 @@ class UsersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: _Dimensions.verticalPadding,
-        horizontal: _Dimensions.horizontalPadding,
-      ),
-      child: Column(
-        children: [
-          Text(
-            'مستخدمو النظام',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.bodyLarge?.color ??
-                      Colors.white,
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: _Dimensions.verticalPadding,
+          horizontal: _Dimensions.horizontalPadding,
+        ),
+        child: Column(
+          children: [
+            Text(
+              'مستخدمو النظام',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textTheme.bodyLarge?.color ??
+                        Colors.white,
+                  ),
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+            ),
+            const SizedBox(height: _Dimensions.spacingSmall),
+            Text(
+              'يوفر النظام خدمات ومزايا عديدة لمختلف مستخدميه.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).textTheme.bodyLarge?.color ??
+                        Colors.white,
+                  ),
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+            ),
+            const SizedBox(height: _Dimensions.spacing),
+            GridView.count(
+              crossAxisCount: _getCrossAxisCount(context),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: _Dimensions.gridSpacing,
+              mainAxisSpacing: _Dimensions.gridSpacing,
+              children: const [
+                HoverUserCard(
+                  imagePath: _AssetPaths.parent,
+                  title: 'ولي الأمر',
                 ),
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.rtl,
-          ),
-          const SizedBox(height: _Dimensions.spacingSmall),
-          Text(
-            'يوفر النظام خدمات ومزايا عديدة لمختلف مستخدميه.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge?.color ??
-                      Colors.white,
+                HoverUserCard(
+                  imagePath: _AssetPaths.student,
+                  title: 'الطالب',
                 ),
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.rtl,
-          ),
-          const SizedBox(height: _Dimensions.spacing),
-          GridView.count(
-            crossAxisCount: _getCrossAxisCount(context),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: _Dimensions.gridSpacing,
-            mainAxisSpacing: _Dimensions.gridSpacing,
-            children: const [
-              HoverUserCard(
-                imagePath: _AssetPaths.parent,
-                title: 'ولي الأمر',
-              ),
-              HoverUserCard(
-                imagePath: _AssetPaths.student,
-                title: 'الطالب',
-              ),
-              HoverUserCard(
-                imagePath: _AssetPaths.teacher,
-                title: 'المعلم',
-              ),
-              HoverUserCard(
-                imagePath: _AssetPaths.admin,
-                title: 'المشرف',
-              ),
-            ],
-          ),
-        ],
+                HoverUserCard(
+                  imagePath: _AssetPaths.teacher,
+                  title: 'المعلم',
+                ),
+                HoverUserCard(
+                  imagePath: _AssetPaths.admin,
+                  title: 'المشرف',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

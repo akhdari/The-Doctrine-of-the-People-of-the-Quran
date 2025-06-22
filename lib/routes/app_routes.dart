@@ -33,3 +33,9 @@ class Routes {
   static const financialManagement = '/financial_management';
   static const dashboardPage = '/dashboard';
 }
+
+class WebRoutes {
+  static const features = '/features';
+  static const home = '/home';
+  static const pricing = '/pricing';
+}

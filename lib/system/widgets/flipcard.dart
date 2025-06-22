@@ -8,7 +8,6 @@ import 'search_field.dart'
 import 'package:flip_card/flip_card.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/base_layout.dart';
 
-// Your sample data
 final List<Map<String, dynamic>> studentList = studentData;
 
 // Controller to hold selected student data
@@ -126,7 +125,7 @@ class StudentCard extends StatelessWidget {
         _buildInfoRow('تاريخ الميلاد', student.personalInfo.dateOfBirth),
         _buildInfoRow('زمرة الدم', student.medicalInfo.bloodType),
         _buildInfoRow('المستوى', student.formalEducationInfo.academicLevel),
-        //TODO _buildInfoRow('السنة الدراسية', student.formalEducationInfo.),
+        _buildInfoRow('السنة الدراسية', 2019.toString()), //TODO
         _buildInfoRow('رقم الهاتف', student.contactInfo.phoneNumber),
         _buildInfoRow('اسم المستخدم', student.accountInfo.username),
       ],
@@ -234,8 +233,10 @@ class StudentSelectionPage extends StatelessWidget {
 
     // Controller setup
     final StudentController studentController = Get.put(StudentController());
-    final List<Student> students =
-        studentList.map((json) => Student.fromJson(json)).toList();
+    final List<Student> students = studentList
+        .cast<Map<String, dynamic>>()
+        .map((json) => Student.fromJson(json))
+        .toList();
 
     final custom_search.SearchController<Student> searchController = Get.put(
       custom_search.SearchController<Student>(
@@ -298,8 +299,8 @@ class StudentSelectionPage extends StatelessWidget {
                                 style: theme.textTheme.titleMedium,
                               ),
                               onTap: () {
-                                studentController
-                                    .loadStudentFromJson(student.toJson());
+                                studentController.student.value = student;
+
                                 searchController.reset();
                               },
                             );

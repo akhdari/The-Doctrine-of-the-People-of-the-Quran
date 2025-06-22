@@ -13,7 +13,8 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/ex
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/exam_teachers_from.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/guardian_form.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/forms/lecture_form.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/student.dart'
+    as student;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/appreciation.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/system/new_models/exam.dart';
 //import 'package:the_doctarine_of_the_ppl_of_the_quran/bindings/exam_teacher_binding.dart'; // Assuming this is correct
@@ -53,6 +54,12 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/screens/landing.dar
 // App routes
 import 'package:the_doctarine_of_the_ppl_of_the_quran/routes/app_routes.dart';
 
+//web
+import 'package:the_doctarine_of_the_ppl_of_the_quran/web/pages/features.dart';
+import 'package:the_doctarine_of_the_ppl_of_the_quran/web/pages/home.dart';
+
+import 'package:the_doctarine_of_the_ppl_of_the_quran/web/pages/pricing.dart';
+
 class AppScreens {
   static final routes = [
     GetPage(
@@ -63,7 +70,8 @@ class AppScreens {
     GetPage(
       name: Routes.addStudent,
       page: () => AddStudent(),
-      binding: ManagementBinding<Student>(fromJson: Student.fromJson),
+      binding: ManagementBinding<student.Student>(
+          fromJson: student.Student.fromJson),
     ),
     GetPage(
       name: Routes.addGuardian,
@@ -176,6 +184,19 @@ class AppScreens {
     GetPage(
       name: Routes.dashboardPage,
       page: () => DashboardPage(),
+    ),
+
+    GetPage(
+      name: WebRoutes.home,
+      page: () => HomePage(),
+    ),
+    GetPage(
+      name: WebRoutes.pricing,
+      page: () => PricingPage(),
+    ),
+    GetPage(
+      name: WebRoutes.features,
+      page: () => FeaturesPage(),
     ),
   ];
 }
