@@ -20,8 +20,7 @@ class ExamTypes extends StatelessWidget {
             title: "Exam types Management",
             child: ManagementScreen<Exam>(
               dataSourceEndpoint: ApiEndpoints.getExams,
-              deleteEndpoint: (exam) =>
-                  ApiEndpoints.getAccountInfoById(exam.examId),
+              deleteEndpoint: (exam) => ApiEndpoints.getExamById(exam.examId),
               managementType: ManagementTypes.students,
               dialog: ExamTypesDialog(),
               rowBuilder: (exam) => [

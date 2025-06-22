@@ -67,4 +67,9 @@ class Exam implements Model {
       examTjwidAppPoint != null &&
       examTjwidThoPoint != null &&
       examPerformancePoint != null;
+
+  @override
+  String toString() {
+    return '$examNameEn - $examNameAr';
+  }
 }

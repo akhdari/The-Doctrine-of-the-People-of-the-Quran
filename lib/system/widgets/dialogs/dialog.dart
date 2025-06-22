@@ -84,34 +84,57 @@ abstract class DialogState<GEC extends GenericEditController>
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: Get.width * 0.55,
-        maxHeight: Get.height * 0.65,
         minWidth: 300,
-        minHeight: 400,
+        maxWidth: Get.width * 0.55,
       ),
       child: Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // slight rounding
+          borderRadius: BorderRadius.circular(8),
         ),
         backgroundColor: colorScheme.surface,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             /// Header section (title + close button)
             DialogHeader(title: widget.dialogHeader),
 
             /// Form content with scroll
-            Expanded(
-              child: Form(
-                  key: formKey,
-                  child: ListView.separated(
-                    controller: scrollController,
-                    padding: const EdgeInsets.all(20),
-                    itemCount: sections.length,
-                    itemBuilder: (context, index) => RepaintBoundary(
-                      child: sections[index],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                // Estimate the height of each section (adjust as needed)
+                const double itemHeight = 90.0; // or measure dynamically
+                const double separatorHeight = 10.0;
+                final totalHeight = sections.length * itemHeight +
+                    (sections.length - 1) * separatorHeight +
+                    40; // padding
+
+                // Set a max height (e.g., 400 or 60% of screen height if unbounded)
+                final maxHeight = constraints.hasBoundedHeight &&
+                        constraints.maxHeight < double.infinity
+                    ? constraints.maxHeight * 0.8
+                    : Get.height * 0.8;
+
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight:
+                        totalHeight < maxHeight ? totalHeight : maxHeight,
+                  ),
+                  child: Form(
+                    key: formKey,
+                    child: ListView.separated(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(20),
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: sections.length,
+                      itemBuilder: (context, index) => RepaintBoundary(
+                        child: sections[index],
+                      ),
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
                     ),
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  )),
+                  ),
+                );
+              },
             ),
 
             /// Submit button at bottom

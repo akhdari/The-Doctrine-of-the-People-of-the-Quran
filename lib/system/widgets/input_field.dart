@@ -68,7 +68,12 @@ class CustomTextField extends StatelessWidget {
       validator: validator,
       focusNode: focusNode,
       onChanged: onChanged,
-      onSaved: onSaved,
+      onSaved: (value) {
+        debugPrint('onSaved called with value: $value');
+        if (onSaved != null) {
+          onSaved!(value);
+        }
+      },
       keyboardType: keyboardType,
       textDirection: textDirection,
       obscureText: obscureText,

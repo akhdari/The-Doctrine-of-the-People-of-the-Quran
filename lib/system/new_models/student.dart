@@ -26,13 +26,16 @@ class Student implements Model {
   @override
   // Method to check if all required fields are filled
   bool get isComplete {
-    return personalInfo.firstNameAr.isNotEmpty &&
-        personalInfo.lastNameAr.isNotEmpty &&
-        personalInfo.sex.isNotEmpty &&
-        accountInfo.username.isNotEmpty &&
-        accountInfo.passcode.isNotEmpty &&
-        contactInfo.phoneNumber.isNotEmpty &&
-        contactInfo.email.isNotEmpty;
+    return (personalInfo.firstNameAr != null &&
+            personalInfo.firstNameAr!.isNotEmpty) &&
+        (personalInfo.lastNameAr != null &&
+            personalInfo.lastNameAr!.isNotEmpty) &&
+        (personalInfo.sex != null && personalInfo.sex!.isNotEmpty) &&
+        (accountInfo.username != null && accountInfo.username!.isNotEmpty) &&
+        (accountInfo.passcode != null && accountInfo.passcode!.isNotEmpty) &&
+        (contactInfo.phoneNumber != null &&
+            contactInfo.phoneNumber!.isNotEmpty) &&
+        (contactInfo.email != null && contactInfo.email.isNotEmpty);
   }
 
   @override

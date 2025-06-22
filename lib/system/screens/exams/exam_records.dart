@@ -20,8 +20,8 @@ class ExamRecords extends StatelessWidget {
             title: "Exam Records Management",
             child: ManagementScreen<ExamRecordInfoDialog>(
                 dataSourceEndpoint: ApiEndpoints.getSpecialExamRecords,
-                deleteEndpoint: (examRecord) =>
-                    ApiEndpoints.getAccountInfoById(examRecord.exam.examId),
+                deleteEndpoint: (examRecord) => ApiEndpoints.getExamStudentById(
+                    examRecord.exam.examId, examRecord.student.studentId),
                 managementType: ManagementTypes.students,
                 dialog: ExamRecordsDialog(),
                 rowBuilder: (exam) => [
@@ -53,6 +53,9 @@ class ExamRecords extends StatelessWidget {
                       DataGridCell<int>(
                           columnName: 'exam_performance_point',
                           value: exam.examStudent.pointPerformance),
+                      DataGridCell<String>(
+                          columnName: 'appreciation',
+                          value: exam.appreciation.note),
                       DataGridCell<String>(columnName: 'button', value: null),
                     ],
                 columnsNames: [
@@ -87,6 +90,9 @@ class ExamRecords extends StatelessWidget {
                   GridColumn(
                       columnName: 'exam_performance_point',
                       label: ManagementGrid.buildHeader('Performance Point')),
+                  GridColumn(
+                      columnName: 'appreciation',
+                      label: ManagementGrid.buildHeader('Appreciation')),
                   GridColumn(
                     columnName: 'button',
                     label: ManagementGrid.buildHeader('Action'),

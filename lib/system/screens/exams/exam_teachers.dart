@@ -20,8 +20,9 @@ class ExamTeachers extends StatelessWidget {
             title: "Exam Teachers Management",
             child: ManagementScreen<ExamTeacherInfoDialog>(
               dataSourceEndpoint: ApiEndpoints.getSpecialExamsTeachers,
-              deleteEndpoint: (examTeacher) => ApiEndpoints.getAccountInfoById(
-                  examTeacher.techer.teacherAccountId),
+              deleteEndpoint: (examTeacher) =>
+                  ApiEndpoints.deleteExamTeacherByTeacherId(
+                      examTeacher.techer.teacherId),
               managementType: ManagementTypes.examTeacher,
               dialog: ExamTeachersDialog(),
               rowBuilder: (exam) => [
@@ -30,7 +31,9 @@ class ExamTeachers extends StatelessWidget {
                     value: exam.techer.teacherAccountId.toString()),
                 DataGridCell<String>(
                     columnName: 'exam_name',
-                    value: exam.exam.map((e) => e.examNameAr).join(', ')),
+                    value: exam.exam.isNotEmpty
+                        ? exam.exam.map((e) => e.examNameAr).join(', ')
+                        : "غير مسؤول عن اي اختبار"),
                 DataGridCell<String>(
                     columnName: 'teacher_name',
                     value: '${exam.techer.firstName} ${exam.techer.lastName}'),

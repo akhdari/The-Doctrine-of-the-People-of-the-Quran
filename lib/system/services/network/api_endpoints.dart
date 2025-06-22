@@ -35,6 +35,9 @@ class ApiEndpoints {
   static String getExamTeacherById(int examId, int teacherId) =>
       '$baseUrl/examteachers/exams/$examId/teachers/$teacherId';
 
+  static String deleteExamTeacherByTeacherId(int teacherId) =>
+      '$baseUrl/examteachers/exams/teachers/$teacherId';
+
   // FormalEducationInfo endpoints
   static final String getFormalEducationInfos = '$baseUrl/formaleducationinfos';
   static String getFormalEducationInfoById(int id) =>
@@ -155,5 +158,8 @@ class ApiEndpoints {
   static String updateSpecialExamsTeacher(int id) =>
       '$baseUrl/special/exams-teachers/$id';
 
-  static String uploadImage = '$baseUrl/upload-image'; // example
+  static String uploadImage = '$baseUrl/upload-image';
+
+  static String getSpecialExamRecordsById(int id) =>
+      '$baseUrl/special/exams-records/';
 }

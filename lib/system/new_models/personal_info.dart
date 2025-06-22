@@ -82,4 +82,9 @@ class PersonalInfo implements Model {
 
   String getFullArName() => "$firstNameAr $lastNameAr";
   String getFullEnName() => "$firstNameEn $lastNameEn";
+
+  @override
+  String toString() {
+    return "${getFullEnName()} - ${getFullArName()}";
+  }
 }

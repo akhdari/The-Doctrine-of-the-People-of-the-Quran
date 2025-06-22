@@ -42,7 +42,7 @@ class _GuardianDialogState<
     if (editController?.model.value != null) {
       guardianInfo = editController?.model.value ?? GuardianInfoDialog();
     } else {
-      guardianInfo.accountInfo.accountType = "ولي";
+      guardianInfo.accountInfo.accountType = "guardian";
     }
   }
 

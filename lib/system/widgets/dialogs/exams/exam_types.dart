@@ -1,9 +1,6 @@
 import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/form_controller.dart'
-    as form;
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/generic_edit_controller.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/submit_form.dart';
 import 'package:the_doctarine_of_the_ppl_of_the_quran/controllers/validator.dart';
@@ -18,9 +15,7 @@ import 'package:the_doctarine_of_the_ppl_of_the_quran/system/widgets/multiselect
 
 class ExamTypesDialog extends GlobalDialog {
   const ExamTypesDialog(
-      {super.key,
-      super.dialogHeader = "إضافة اختبار",
-      super.numberInputs = 10});
+      {super.key, super.dialogHeader = "إضافة اختبار", super.numberInputs = 8});
 
   @override
   State<GlobalDialog> createState() =>
@@ -46,18 +41,8 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
     }
   }
 
-  final lectureInfo = Exam();
+  Exam exam = Exam();
   MultiSelectResult<Teacher>? teacherResult;
-  GenericEditController<Exam>? editExam;
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    if (Get.isRegistered<form.FormController>()) {
-      Get.delete<form.FormController>();
-    }
-    super.dispose();
-  }
 
   Widget _numericField(String title, int controllerIndex) {
     return InputField(
@@ -67,23 +52,23 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
         keyboardType: TextInputType.number,
         onSaved: (v) {
           switch (controllerIndex) {
-            case 1:
-              lectureInfo.examMaxPoint = double.tryParse(v ?? '') ?? 0;
-              break;
             case 2:
-              lectureInfo.examSucessMinPoint = double.tryParse(v ?? '') ?? 0;
+              exam.examMaxPoint = double.tryParse(v ?? '') ?? 0;
               break;
             case 3:
-              lectureInfo.examMemoPoint = double.tryParse(v ?? '') ?? 0;
+              exam.examSucessMinPoint = double.tryParse(v ?? '') ?? 0;
               break;
             case 4:
-              lectureInfo.examTjwidAppPoint = double.tryParse(v ?? '') ?? 0;
+              exam.examMemoPoint = double.tryParse(v ?? '') ?? 0;
               break;
             case 5:
-              lectureInfo.examTjwidThoPoint = double.tryParse(v ?? '') ?? 0;
+              exam.examTjwidAppPoint = double.tryParse(v ?? '') ?? 0;
               break;
             case 6:
-              lectureInfo.examPerformancePoint = double.tryParse(v ?? '') ?? 0;
+              exam.examTjwidThoPoint = double.tryParse(v ?? '') ?? 0;
+              break;
+            case 7:
+              exam.examPerformancePoint = double.tryParse(v ?? '') ?? 0;
               break;
           }
         },
@@ -101,7 +86,19 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
             child: CustomTextField(
               controller: formController.controllers[0],
               validator: (v) => Validator.notEmptyValidator(v, "الاسم مطلوب"),
-              onSaved: (v) => lectureInfo.examNameAr = v!,
+              onSaved: (v) => exam.examNameAr = v!,
+            ),
+          ),
+        ),
+      ]),
+      Row(children: [
+        Expanded(
+          child: InputField(
+            inputTitle: "(en) اسم الاختبار",
+            child: CustomTextField(
+              controller: formController.controllers[1],
+              validator: (v) => Validator.notEmptyValidator(v, "الاسم مطلوب"),
+              onSaved: (v) => exam.examNameEn = v!,
             ),
           ),
         ),
@@ -113,44 +110,57 @@ class _ExamTypesDialogState<GEC extends GenericEditController<Exam>>
             child: DropDownWidget<String>(
               items: examTypes, // You define this list
               initialValue: examTypes[0],
-              onSaved: (v) => lectureInfo.examType = v!,
+              onSaved: (v) => exam.examType = v!,
             ),
           ),
         ),
         const SizedBox(width: 8),
       ]),
       Row(children: [
-        Expanded(child: _numericField("الدرجة العظمى", 1)),
+        Expanded(child: _numericField("الدرجة العظمى", 2)),
         const SizedBox(width: 8),
-        Expanded(child: _numericField("علامة النجاح", 2)),
+        Expanded(child: _numericField("علامة النجاح", 3)),
       ]),
       Row(children: [
-        Expanded(child: _numericField("درجة الحفظ", 3)),
+        Expanded(child: _numericField("درجة الحفظ", 4)),
         const SizedBox(width: 8),
-        Expanded(child: _numericField("درجة التجويد التطبيقي", 4)),
+        Expanded(child: _numericField("درجة التجويد التطبيقي", 5)),
       ]),
       Row(children: [
-        Expanded(child: _numericField("درجة التجويد النظري", 5)),
+        Expanded(child: _numericField("درجة التجويد النظري", 6)),
         const SizedBox(width: 8),
-        Expanded(child: _numericField("درجة الأداء", 6)),
+        Expanded(child: _numericField("درجة الأداء", 7)),
       ]),
     ];
   }
 
   @override
   void setDefaultFieldsValue() {
-    // TODO: implement setDefaultFieldsValue
+    final s = editController?.model.value;
+    formController.controllers[0].text = s?.examNameAr ?? '';
+    formController.controllers[1].text = s?.examNameEn ?? '';
+    formController.controllers[2].text = s?.examMaxPoint?.toString() ?? '';
+    formController.controllers[3].text =
+        s?.examSucessMinPoint?.toString() ?? '';
+    formController.controllers[4].text = s?.examMemoPoint?.toString() ?? '';
+    formController.controllers[5].text = s?.examTjwidAppPoint?.toString() ?? '';
+    formController.controllers[6].text = s?.examTjwidThoPoint?.toString() ?? '';
+    formController.controllers[7].text =
+        s?.examPerformancePoint?.toString() ?? '';
+
+    exam = editController?.model.value ?? Exam();
   }
 
   @override
   Future<bool> submit() async {
-    return editExam!.model.value == null
-        ? await submitForm<Exam>(formKey, lectureInfo,
-            ApiEndpoints.submitLectureForm, (Exam.fromJson))
+    exam.examLevelId = 1; // todo ;
+    return editController!.model.value == null
+        ? await submitForm<Exam>(
+            formKey, exam, ApiEndpoints.getExams, (Exam.fromJson))
         : await submitEditDataForm<Exam>(
             formKey,
-            lectureInfo,
-            ApiEndpoints.getSpecialLecture(editExam!.model.value!.examId),
+            exam,
+            ApiEndpoints.getExamById(editController?.model.value!.examId),
             (Exam.fromJson));
   }
 }
